@@ -2,6 +2,7 @@ import { SecondaryButton } from '@unifiprotocol/uikit'
 import styled from 'styled-components'
 
 export const BridgeWrapper = styled.div`
+  padding-top: 2rem;
   max-width: 1051px;
   display: flex;
   gap: 1rem;
@@ -20,4 +21,6 @@ export const InfoLinks = styled.div`
   }
 `
 
-export const BridgePanel = styled.div``
+export const BridgePanel = styled.div`
+  padding-top: 2rem;
+`
