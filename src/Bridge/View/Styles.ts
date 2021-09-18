@@ -10,6 +10,15 @@ export const BridgeWrapper = styled.div`
   > div {
     width: 50%;
   }
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    > div {
+      width: 100%;
+    }
+  }
 `
 export const InfoPanel = styled.div``
 
