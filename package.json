@@ -8,7 +8,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint  src/**/*.ts*",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "uikit:link": "ln -s $(pwd)/../unifi-sdk/packages/uikit/dist $(pwd)/node_modules/@unifiprotocol/uikit",
+    "uikit:unlink": "rm -fr node_modules/@unifiprotocol/uikit"
   },
   "dependencies": {
     "@unifiprotocol/uikit": "^1.2.1",

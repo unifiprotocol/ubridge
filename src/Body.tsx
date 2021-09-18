@@ -1,10 +1,10 @@
-import { BrandedHeader } from '@unifiprotocol/uikit'
 import React from 'react'
+import { Topbar } from './Template/Topbar'
 
 export const Body: React.FC = ({ children }) => {
   return (
     <>
-      <BrandedHeader />
+      <Topbar />
       {children}
     </>
   )
