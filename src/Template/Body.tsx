@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { useScroll } from '../Shared/Hooks/useScroll'
 import { Topbar } from './Topbar'
@@ -23,10 +23,8 @@ export const Body: React.FC = ({ children }) => {
 
   const { scrollTop } = useScroll()
 
-  const offset = useMemo(() => {
-    console.log('scrollTop', scrollTop)
-    return Math.min(25, scrollTop)
-  }, [scrollTop])
+  const offset = Math.min(25, scrollTop)
+
   return (
     <BodyWrapper offset={offset}>
       <TopbarWrapper ref={topbarRef} offset={offset}>
