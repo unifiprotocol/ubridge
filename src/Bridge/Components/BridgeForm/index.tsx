@@ -1,6 +1,12 @@
-import { Card, CardBody, PrimaryButton, TokenInput, useModal } from '@unifiprotocol/uikit'
+import { Card, CardBody, TokenInput, useModal } from '@unifiprotocol/uikit'
 import React, { useMemo, useState } from 'react'
-import { BridgeDirection, From, To, TransactionDetailsWrapper } from './Styles'
+import {
+  BridgeDirection,
+  From,
+  To,
+  TransactionDetailsWrapper,
+  TransferOverviewButton
+} from './Styles'
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { Config } from '../../../Config'
@@ -48,9 +54,9 @@ export const BridgeForm: React.FC = () => {
           <TransactionDetailsWrapper>
             <TransactionDetails />
           </TransactionDetailsWrapper>
-          <PrimaryButton block={true} size="xl" onClick={overviewTransaction}>
-            <CgArrowsExchangeV size={12} /> Transfer ovewview
-          </PrimaryButton>
+          <TransferOverviewButton block={true} size="xl" onClick={overviewTransaction}>
+            <CgArrowsExchangeV size={30} /> Transfer overview
+          </TransferOverviewButton>
         </CardBody>
       </Card>
     </>

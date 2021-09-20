@@ -1,3 +1,4 @@
+import { PrimaryButton } from '@unifiprotocol/uikit'
 import styled from 'styled-components'
 
 export const InputHead = styled.div``
@@ -24,4 +25,9 @@ export const BridgeDirection = styled.div`
 
 export const TransactionDetailsWrapper = styled.div`
   padding: 1rem 0.3rem;
+`
+
+export const TransferOverviewButton = styled(PrimaryButton)`
+  font-weight: bold;
+  font-size: 110%;
 `
