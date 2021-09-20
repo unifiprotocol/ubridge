@@ -70,6 +70,7 @@ export const InfoLinks = styled.div`
 
 export const BridgePanel = styled.div`
   padding-top: 2rem;
+  z-index: 2;
   @media (max-width: 600px) {
     ${Card} {
       box-shadow: none;

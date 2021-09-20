@@ -39,7 +39,7 @@ interface BlockchainSelectorProps {
   label: string
 }
 
-export const BlockchainSelector: React.FC<BlockchainSelectorProps> = ({
+export const BlockchainAccountInput: React.FC<BlockchainSelectorProps> = ({
   blockchain,
   getAddressFromWallet = false,
   label

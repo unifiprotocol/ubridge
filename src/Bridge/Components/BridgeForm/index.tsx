@@ -11,7 +11,7 @@ import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { Config } from '../../../Config'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { TransferDirection } from './TransferDirection'
+import { TransferAccounts } from './TransferAccounts'
 
 export const BridgeForm: React.FC = () => {
   const [token] = useState(Config.unfiToken)
@@ -25,9 +25,9 @@ export const BridgeForm: React.FC = () => {
   const [amount, setAmount] = useState('0')
   return (
     <>
-      <TransferDirection />
       <Card>
         <CardBody>
+          <TransferAccounts />
           <From>
             <TokenInput
               label="Send"
