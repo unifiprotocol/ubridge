@@ -1,5 +1,5 @@
 import { Card, CardBody, CardHeader, SecondaryButton } from '@unifiprotocol/uikit'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 export const BridgeWrapper = styled.div`
   max-width: 1051px;
@@ -20,7 +20,28 @@ export const BridgeWrapper = styled.div`
     }
   }
 `
-export const InfoPanel = styled.div``
+const kfShine = keyframes`
+ to {
+      background-position: 200% center;
+    }
+  `
+export const InfoPanel = styled.div`
+  h1 {
+    background: ${(p) => p.theme.shinyGradient};
+    // red background: linear-gradient(to right, #ff0000 20%, #ff5a00 40%, #ff9a00 60%, #ff5a00 80%);
+    background-size: 200% auto;
+
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: ${kfShine} 2s linear infinite;
+  }
+  p {
+    font-size: 115%;
+  }
+`
 
 export const InfoLink = styled(SecondaryButton)``
 
