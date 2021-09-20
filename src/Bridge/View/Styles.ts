@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 
 export const BridgeWrapper = styled.div`
   max-width: 1051px;
-  padding: 2rem;
+  padding: 0 2rem;
   display: flex;
   gap: 4rem;
   margin: auto;
@@ -26,6 +26,8 @@ const kfShine = keyframes`
     }
   `
 export const InfoPanel = styled.div`
+  position: relative;
+  padding-top: 5rem;
   h1 {
     background: ${(p) => p.theme.shinyGradient};
     // red background: linear-gradient(to right, #ff0000 20%, #ff5a00 40%, #ff9a00 60%, #ff5a00 80%);
@@ -41,6 +43,22 @@ export const InfoPanel = styled.div`
   p {
     font-size: 115%;
   }
+`
+
+export const InfoBackground = styled.div`
+  position: absolute;
+  z-index: 1;
+  opacity: 0.1;
+  top: 2rem;
+  left: -2rem;
+  width: 50%;
+  img {
+    width: 100%;
+  }
+`
+export const InfoForeground = styled.div`
+  position: relative;
+  z-index: 2;
 `
 
 export const InfoLink = styled(SecondaryButton)``

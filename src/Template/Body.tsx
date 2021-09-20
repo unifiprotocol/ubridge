@@ -11,6 +11,7 @@ const BodyWrapper = styled.div<{ offset: number }>`
 
 const TopbarWrapper = styled.div<{ offset: number }>`
   position: fixed;
+  z-index: 100;
   margin-top: ${(p) => -p.offset}px;
   top: 0;
   right: 0;
