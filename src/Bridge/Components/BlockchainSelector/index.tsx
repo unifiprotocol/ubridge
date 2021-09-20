@@ -11,7 +11,7 @@ const BlockchainSelectorWrapper = styled.div`
   border-radius: ${(p) => p.theme.borderRadius};
 `
 const BlockchainLogo = styled.img`
-  width: 1.5rem;
+  width: 1rem;
 `
 const BlockchainName = styled.div``
 

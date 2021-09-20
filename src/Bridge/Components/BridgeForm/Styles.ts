@@ -8,30 +8,17 @@ export const Account = styled.div`
   align-items: center;
 `
 export const BridgeDirection = styled.div`
-  cursor: pointer;
-  padding: 1rem;
+  padding: 0.3rem;
   line-height: 0;
   text-align: center;
-  color: ${(p) => p.theme.primary};
   display: flex;
   align-items: center;
   justify-content: center;
-
+  font-size: 90%;
+  color: ${(p) => p.theme.txt200};
   svg {
     vertical-align: middle;
-    margin-right: 0.5rem;
-  }
-  span {
-    transition: 0.25s all;
-    text-transform: uppercase;
-    font-size: 80%;
-    opacity: 0.1;
-  }
-  &:hover {
-    color: ${(p) => p.theme.primaryLight};
-    span {
-      opacity: 1;
-    }
+    margin-right: 0.3rem;
   }
 `
 

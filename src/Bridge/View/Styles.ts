@@ -1,4 +1,4 @@
-import { SecondaryButton } from '@unifiprotocol/uikit'
+import { Card, CardBody, CardHeader, SecondaryButton } from '@unifiprotocol/uikit'
 import styled from 'styled-components'
 
 export const BridgeWrapper = styled.div`
@@ -31,4 +31,13 @@ export const InfoLinks = styled.div`
 
 export const BridgePanel = styled.div`
   padding-top: 2rem;
+  @media (max-width: 600px) {
+    ${Card} {
+      box-shadow: none;
+      background: transparent;
+    }
+    ${CardBody}, ${CardHeader} {
+      padding: 0;
+    }
+  }
 `

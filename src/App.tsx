@@ -1,6 +1,6 @@
 import { UnifiThemeProvider, Themes, ModalProvider } from '@unifiprotocol/uikit'
 import { TokenLogoResolvers } from '@unifiprotocol/utils'
-import { Body } from './Body'
+import { Body } from './Template/Body'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Bridge } from './Bridge/View'
 

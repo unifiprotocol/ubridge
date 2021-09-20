@@ -33,7 +33,7 @@ export const BridgeForm: React.FC = () => {
             />
           </From>
           <BridgeDirection>
-            <CgArrowsExchangeV size={30} /> <span>Reverse amounts</span>
+            <CgArrowsExchangeV size={30} /> <span>You will receive</span>
           </BridgeDirection>
           <To>
             <TokenInput
