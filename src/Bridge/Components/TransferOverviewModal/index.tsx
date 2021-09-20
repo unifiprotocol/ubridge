@@ -9,8 +9,8 @@ import {
   PrimaryButton,
   TokenAmount
 } from '@unifiprotocol/uikit'
+import { shortAddress } from '@unifiprotocol/utils'
 import React, { useState } from 'react'
-import { CgArrowsExchangeAlt } from 'react-icons/cg'
 import styled from 'styled-components'
 import { Config } from '../../../Config'
 import { TransactionDetails } from '../BridgeForm/TransactionDetails'
@@ -21,8 +21,9 @@ const Swap = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
 `
+
 const SwapPart = styled.div`
-  width: 45%;
+  width: 50%;
   b {
     color: ${(p) => p.theme.primary};
   }
@@ -31,17 +32,16 @@ const SwapPart = styled.div`
 
     margin-bottom: 0.5rem;
   }
+  padding: 0.5rem;
+  border: 3px solid ${(p) => p.theme.bgAlt2};
+  border-radius: ${(p) => p.theme.borderRadius};
 `
 
-const Separator = styled.div`
-  width: 10%;
-  text-align: center;
-  padding-top: 2rem;
-  color: ${(p) => p.theme.primary};
-`
 const Send = styled(SwapPart)``
 const Receive = styled(SwapPart)``
-
+const Address = styled.div`
+  margin-bottom: 0.5rem;
+`
 const Confirm = styled.div`
   margin: 2rem 0 1rem 0;
 `
@@ -52,6 +52,7 @@ const TransferOverviewModalWrapper = styled(Modal)`
 const Desc = styled.div`
   margin-bottom: 2rem;
 `
+
 export interface TransferOverviewModalProps extends ModalProps {}
 
 export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ close }) => {
@@ -67,19 +68,18 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
         <Swap>
           <Send>
             <span>
-              Sent from <b>Binance</b>
+              From <b>Binance</b>
             </span>
-
+            <Address>{shortAddress('0x52856Ca4ddb55A1420950857C7882cFC8E02281C')}</Address>
             <TokenAmount token={Config.unfiToken} amount={'100'} />
           </Send>
-          <Separator>
-            <CgArrowsExchangeAlt size={30} />
-          </Separator>
+
           <Receive>
             <span>
-              Received at <b>Ethereum</b>
+              To <b>Ethereum</b>
             </span>
 
+            <Address>{shortAddress('0x49506Ca4ddb55A1420950857C7882cFC8E02123A')}</Address>
             <TokenAmount token={Config.unfiToken} amount={'99'} />
           </Receive>
         </Swap>
