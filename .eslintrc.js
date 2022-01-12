@@ -1,26 +1,24 @@
 module.exports = {
   env: {
-    browser: true,
-    es2021: true
+    browser: false,
+    es2021: true,
+    mocha: true,
+    node: true,
   },
-
-  extends: ['plugin:react/recommended', 'standard', 'plugin:prettier/recommended'],
-  parser: '@typescript-eslint/parser',
+  plugins: ["@typescript-eslint"],
+  extends: [
+    "standard",
+    "plugin:prettier/recommended",
+    "plugin:node/recommended",
+  ],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true
-    },
     ecmaVersion: 12,
-    sourceType: 'module'
   },
-  plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
-    'no-use-before-define': 'off',
-    'react/react-in-jsx-scope': 'off' // Not needed in React v17
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      { ignores: ["modules"] },
+    ],
   },
-  settings: {
-    react: {
-      version: '17.0.2'
-    }
-  }
-}
+};
