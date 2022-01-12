@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
-import '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
-import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import '@openzeppelin/contracts/security/Pausable.sol';
-import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 pragma solidity ^0.8.0;
 
@@ -15,8 +15,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   uint256 public count;
   address public verifyAddress;
+  bool pausedDeposits;
 
-  mapping(bytes32 => bool) public filledSwaps;
+  mapping(bytes => bool) public filledSwaps;
   mapping(uint256 => bool) public chainIdSupported;
   mapping(address => mapping(uint256 => bool)) public tokensSupported; // originERC20Addr[chainIdTarget] = bool
 
@@ -24,9 +25,21 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     address sender,
     address tokenAddress,
     uint256 amount,
-    uint256 chainId,
+    uint256 targetChainId,
     uint256 count
   );
+
+  event Withdraw(
+    address receiver,
+    address tokenAddress,
+    uint256 amount,
+    uint256 count
+  );
+
+  modifier whenNotDepositsPaused() {
+    require(!pausedDeposits);
+    _;
+  }
 
   constructor(address _verifyAddress, uint256 _chainId) {
     verifyAddress = _verifyAddress;
@@ -34,12 +47,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
   }
 
   function changeVerifySigner(address newVerifier) public onlyOwner {
-    require(newVerifier != address(0), 'New verifier is the zero address');
+    require(newVerifier != address(0), "New verifier is the zero address");
     verifyAddress = newVerifier;
   }
 
   function addToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
-    require(tokenAddress != address(0), 'New tokenAddress is the zero address');
+    require(tokenAddress != address(0), "New tokenAddress is the zero address");
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
       require(!tokensSupported[tokenAddress][chainIdsTarget[i]]);
       tokensSupported[tokenAddress][chainIdsTarget[i]] = true;
@@ -72,11 +85,15 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     _unpause();
   }
 
+  function changeDepositsState(bool isPaused) public onlyOwner {
+    pausedDeposits = isPaused;
+  }
+
   function deposit(
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId
-  ) public nonReentrant whenNotPaused {
+  ) public nonReentrant whenNotDepositsPaused whenNotPaused {
     require(tokensSupported[tokenAddress][targetChainId]);
     require(chainIdSupported[targetChainId]);
     count += 1;
@@ -84,23 +101,22 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     emit Deposit(msg.sender, tokenAddress, amount, targetChainId, count);
   }
 
-  // Check signature === verifyAddress
-  // Transfer tokens
-  // Register the withdraw
-  // Event
   function withdraw(
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId,
     uint256 _count,
-    bytes32 signature
-  ) external nonReentrant whenNotPaused returns (bool) {
+    bytes memory signature
+  ) external nonReentrant whenNotPaused {
     require(targetChainId == chainId);
     require(!filledSwaps[signature]);
+    require(verify(tokenAddress, amount, targetChainId, _count, signature));
+    filledSwaps[signature] = true;
+    IERC20(tokenAddress).safeTransferFrom(address(this), msg.sender, amount);
+    emit Withdraw(msg.sender, tokenAddress, amount, _count);
   }
 
   function verify(
-    address sender,
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId,
@@ -108,7 +124,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      abi.encode(sender, tokenAddress, amount, targetChainId, _count, signature)
+      abi.encode(msg.sender, tokenAddress, amount, targetChainId, _count, signature)
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }
