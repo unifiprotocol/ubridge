@@ -18,20 +18,21 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   mapping(bytes32 => bool) public filledSwaps;
   mapping(uint256 => bool) public chainIdSupported;
-  mapping(address => mapping(uint256 => bool)) public tokensSupported; // address[chainIdTarget] = bool
+  mapping(address => mapping(uint256 => bool)) public tokensSupported; // originERC20Addr[chainIdTarget] = bool
+
+  event Deposit(
+    address sender,
+    address tokenAddress,
+    uint256 amount,
+    uint256 chainId,
+    uint256 count
+  );
 
   constructor(address _verifyAddress, uint256 _chainId) {
     verifyAddress = _verifyAddress;
     chainId = _chainId;
   }
 
-  // modifiers
-  // events
-
-  // admin - in charge of change fee, set/get verifyAddress
-
-  // verifySigner - setters
-  // tokensSupported - setters
   function changeVerifySigner(address newVerifier) public onlyOwner {
     require(newVerifier != address(0), 'New verifier is the zero address');
     verifyAddress = newVerifier;
@@ -58,9 +59,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     }
   }
 
-  function removeChainId(uint256 chainId) public onlyOwner {
-    require(chainIdSupported[chainId]);
-    chainIdSupported[chainId] = false;
+  function removeChainId(uint256 _chainId) public onlyOwner {
+    require(chainIdSupported[_chainId]);
+    chainIdSupported[_chainId] = false;
   }
 
   function pause() public onlyOwner {
@@ -71,17 +72,16 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     _unpause();
   }
 
-  // Transfer tokens to the SC
-  // Events
-  // Requires
-  // Is the token allowed?
   function deposit(
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId
   ) public nonReentrant whenNotPaused {
-    count++;
+    require(tokensSupported[tokenAddress][targetChainId]);
+    require(chainIdSupported[targetChainId]);
+    count += 1;
     IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
+    emit Deposit(msg.sender, tokenAddress, amount, targetChainId, count);
   }
 
   // Check signature === verifyAddress
@@ -91,8 +91,25 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
   function withdraw(
     address tokenAddress,
     uint256 amount,
-    uint256 count,
-    uint256 chainId,
+    uint256 targetChainId,
+    uint256 _count,
     bytes32 signature
-  ) external nonReentrant whenNotPaused returns (bool) {}
+  ) external nonReentrant whenNotPaused returns (bool) {
+    require(targetChainId == chainId);
+    require(!filledSwaps[signature]);
+  }
+
+  function verify(
+    address sender,
+    address tokenAddress,
+    uint256 amount,
+    uint256 targetChainId,
+    uint256 _count,
+    bytes memory signature
+  ) private view returns (bool) {
+    bytes32 message = ECDSA.toEthSignedMessageHash(
+      abi.encode(sender, tokenAddress, amount, targetChainId, _count, signature)
+    );
+    return ECDSA.recover(message, signature) == verifyAddress;
+  }
 }
