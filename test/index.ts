@@ -107,6 +107,7 @@ describe("uBridge", function () {
     let second: string | Signer | Provider
     let secondInstance: UBridge
     let secondTokenInstance: BridgeToken
+
     beforeEach(async () => {
       const [signer, _second] = await ethers.getSigners()
       second = _second
@@ -119,6 +120,7 @@ describe("uBridge", function () {
       secondTokenInstance = tokenInstance.connect(second)
       await tokenInstance.transfer(secondAddress, 10 ** 9)
     })
+
     it("Should create a successful deposit", async function () {
       const AMOUNT = 10
       await contractInstance.addChainId([3])
@@ -128,6 +130,7 @@ describe("uBridge", function () {
         .to.emit(contractInstance, "Deposit")
         .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, AMOUNT, 3, 1)
     })
+
     it("Should deposit fail by CHAIN_ID_NOT_SUPPORTED", async function () {
       const AMOUNT = 10
       await secondTokenInstance.approve(contractInstance.address, AMOUNT)
@@ -135,6 +138,7 @@ describe("uBridge", function () {
         "CHAIN_ID_NOT_SUPPORTED"
       )
     })
+
     it("Should deposit fail by UNSUPPORTED_TOKEN_ON_CHAIN_ID", async function () {
       const AMOUNT = 10
       contractInstance.addChainId([3])
@@ -143,9 +147,9 @@ describe("uBridge", function () {
         "UNSUPPORTED_TOKEN_ON_CHAIN_ID"
       )
     })
+
     it("Should sign a message with the owner address and recover the address from the signature", async function () {
       const [owner] = await ethers.getSigners()
-
       const encodedMsg = ethers.utils.solidityKeccak256(
         ["address", "address", "uint256", "uint256", "uint256"],
         [secondAddress, tokenInstance.address, 10, 1, 0]

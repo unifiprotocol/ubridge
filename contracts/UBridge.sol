@@ -48,7 +48,11 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     verifyAddress = newVerifier;
   }
 
-  function addToken(address originTokenAddress, address[] memory destinationTokenAddresses, uint256[] memory chainIdsTarget) public onlyOwner {
+  function addToken(
+    address originTokenAddress,
+    address[] memory destinationTokenAddresses,
+    uint256[] memory chainIdsTarget
+  ) public onlyOwner {
     require(originTokenAddress != address(0), "ADDRESS_0");
     require(destinationTokenAddresses.length == chainIdsTarget.length, "ARRAYS_LENGTH_DIFFER");
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
@@ -96,7 +100,14 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     require(destinationTokenAddress != address(0), "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
     count += 1;
     IERC20(originTokenAddress).safeTransferFrom(msg.sender, address(this), amount);
-    emit Deposit(msg.sender, originTokenAddress, destinationTokenAddress, amount, targetChainId, count);
+    emit Deposit(
+      msg.sender,
+      originTokenAddress,
+      destinationTokenAddress,
+      amount,
+      targetChainId,
+      count
+    );
   }
 
   function withdraw(
@@ -111,7 +122,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     require(!filledSwaps[signature], "ALREADY_FILLED");
     require(verify(sender, tokenAddress, amount, targetChainId, _count, signature), "WRONG_SIGNER");
     filledSwaps[signature] = true;
-    IERC20(tokenAddress).safeTransferFrom(address(this), sender, amount);
+    IERC20(tokenAddress).safeTransfer(sender, amount);
     emit Withdraw(msg.sender, tokenAddress, amount, _count);
   }
 
@@ -124,7 +135,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      abi.encode(sender, tokenAddress, amount, targetChainId, _count)
+      keccak256(abi.encodePacked(sender, tokenAddress, amount, targetChainId, _count))
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }
