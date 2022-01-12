@@ -42,14 +42,14 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
   }
 
   function changeVerifySigner(address newVerifier) public onlyOwner {
-    require(newVerifier != address(0), "New verifier is the zero address");
+    require(newVerifier != address(0), "ADDRESS_0");
     verifyAddress = newVerifier;
   }
 
   function addToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
-    require(tokenAddress != address(0), "New tokenAddress is the zero address");
+    require(tokenAddress != address(0), "ADDRESS_0");
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
-      require(!tokensSupported[tokenAddress][chainIdsTarget[i]]);
+      require(chainIdSupported[chainIdsTarget[i]], "CHAIN_ID_NOT_SUPPORTED");
       tokensSupported[tokenAddress][chainIdsTarget[i]] = true;
     }
   }
@@ -62,13 +62,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
-      require(tokensSupported[tokenAddress][chainIdsTarget[i]]);
       tokensSupported[tokenAddress][chainIdsTarget[i]] = false;
     }
   }
 
   function removeChainId(uint256 _chainId) public onlyOwner {
-    require(chainIdSupported[_chainId]);
+    require(chainIdSupported[_chainId], "CHAIN_ID_NOT_SUPPORTED");
     chainIdSupported[_chainId] = false;
   }
 
@@ -89,29 +88,31 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     uint256 amount,
     uint256 targetChainId
   ) public nonReentrant whenNotDepositsPaused whenNotPaused {
-    require(tokensSupported[tokenAddress][targetChainId]);
-    require(chainIdSupported[targetChainId]);
+    require(tokensSupported[tokenAddress][targetChainId], "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
+    require(chainIdSupported[targetChainId], "CHAIN_ID_NOT_SUPPORTED");
     count += 1;
     IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
     emit Deposit(msg.sender, tokenAddress, amount, targetChainId, count);
   }
 
   function withdraw(
+    address sender,
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId,
     uint256 _count,
     bytes memory signature
   ) external nonReentrant whenNotPaused {
-    require(targetChainId == chainId);
-    require(!filledSwaps[signature]);
-    require(verify(tokenAddress, amount, targetChainId, _count, signature));
+    require(targetChainId == chainId, "WRONG_CHAIN_ID");
+    require(!filledSwaps[signature], "ALREADY_FILLED");
+    require(verify(sender, tokenAddress, amount, targetChainId, _count, signature), "WRONG_SIGNER");
     filledSwaps[signature] = true;
-    IERC20(tokenAddress).safeTransferFrom(address(this), msg.sender, amount);
+    IERC20(tokenAddress).safeTransferFrom(address(this), sender, amount);
     emit Withdraw(msg.sender, tokenAddress, amount, _count);
   }
 
   function verify(
+    address sender,
     address tokenAddress,
     uint256 amount,
     uint256 targetChainId,
@@ -119,7 +120,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      abi.encode(msg.sender, tokenAddress, amount, targetChainId, _count, signature)
+      abi.encode(sender, tokenAddress, amount, targetChainId, _count, signature)
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }
