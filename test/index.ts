@@ -71,14 +71,14 @@ describe("uBridge", function () {
     it("Should add token and verify it in the tokensSupported", async function () {
       await contractInstance.addChainId([1])
       const tokenAddress = tokenInstance.address
-      await contractInstance.addToken(tokenAddress, [1])
+      await contractInstance.addToken(tokenAddress, [tokenAddress], [1])
       const isTokenSupported = await contractInstance.tokensSupported(tokenAddress, 1)
-      expect(isTokenSupported).equal(true)
+      expect(isTokenSupported).equal(tokenAddress)
     })
 
     it("Should try add token on an unsupported chainId", async function () {
       const tokenAddress = tokenInstance.address
-      await expect(contractInstance.addToken(tokenAddress, [4])).to.be.revertedWith(
+      await expect(contractInstance.addToken(tokenAddress, [tokenAddress], [4])).to.be.revertedWith(
         "CHAIN_ID_NOT_SUPPORTED"
       )
     })
@@ -86,19 +86,19 @@ describe("uBridge", function () {
       const chainIds = [1, 2]
       await contractInstance.addChainId(chainIds)
       const tokenAddress = tokenInstance.address
-      await contractInstance.addToken(tokenAddress, chainIds)
+      await contractInstance.addToken(tokenAddress, [tokenAddress, tokenAddress], chainIds)
       const [c1, c2] = await Promise.all(
         chainIds.map((chainId) => contractInstance.tokensSupported(tokenAddress, chainId))
       )
-      expect(c1).equal(true)
-      expect(c2).equal(true)
+      expect(c1).equal(tokenAddress)
+      expect(c2).equal(tokenAddress)
       await contractInstance.removeToken(tokenAddress, chainIds)
 
       const [c3, c4] = await Promise.all(
         chainIds.map((chainId) => contractInstance.tokensSupported(tokenAddress, chainId))
       )
-      expect(c3).eq(false)
-      expect(c4).eq(false)
+      expect(Number(c3)).eq(0)
+      expect(Number(c4)).eq(0)
     })
   })
 
@@ -122,11 +122,39 @@ describe("uBridge", function () {
     it("Should create a successful deposit", async function () {
       const AMOUNT = 10
       await contractInstance.addChainId([3])
-      await contractInstance.addToken(tokenInstance.address, [3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, AMOUNT)
       await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3))
         .to.emit(contractInstance, "Deposit")
-        .withArgs(secondAddress, tokenInstance.address, AMOUNT, 3, 1)
+        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, AMOUNT, 3, 1)
+    })
+    it("Should deposit fail by CHAIN_ID_NOT_SUPPORTED", async function () {
+      const AMOUNT = 10
+      await secondTokenInstance.approve(contractInstance.address, AMOUNT)
+      await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3)).revertedWith(
+        "CHAIN_ID_NOT_SUPPORTED"
+      )
+    })
+    it("Should deposit fail by UNSUPPORTED_TOKEN_ON_CHAIN_ID", async function () {
+      const AMOUNT = 10
+      contractInstance.addChainId([3])
+      await secondTokenInstance.approve(contractInstance.address, AMOUNT)
+      await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3)).revertedWith(
+        "UNSUPPORTED_TOKEN_ON_CHAIN_ID"
+      )
+    })
+    it("Should sign a message with the owner address and recover the address from the signature", async function () {
+      const [owner] = await ethers.getSigners()
+
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        ["address", "address", "uint256", "uint256", "uint256"],
+        [secondAddress, tokenInstance.address, 10, 1, 0]
+      )
+      await secondTokenInstance.transfer(contractInstance.address, 10)
+      const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      await secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 1, 0, signature)
     })
   })
 })

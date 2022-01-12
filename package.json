@@ -32,6 +32,9 @@
     "typechain": "^5.2.0",
     "typescript": "^4.5.4"
   },
+  "scripts": {
+    "test": "yarn hardhat test"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.1",
     "openzeppelin-solidity": "^4.4.1"

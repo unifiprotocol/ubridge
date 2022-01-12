@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "hardhat/console.sol";
 
 pragma solidity ^0.8.0;
 
@@ -19,11 +20,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   mapping(bytes => bool) public filledSwaps;
   mapping(uint256 => bool) public chainIdSupported;
-  mapping(address => mapping(uint256 => bool)) public tokensSupported; // originERC20Addr[chainIdTarget] = bool
+  mapping(address => mapping(uint256 => address)) public tokensSupported; // originERC20Addr[chainIdTarget] = bool
 
   event Deposit(
     address sender,
-    address tokenAddress,
+    address originTokenAddress,
+    address destinationTokenAddress,
     uint256 amount,
     uint256 targetChainId,
     uint256 count
@@ -46,11 +48,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     verifyAddress = newVerifier;
   }
 
-  function addToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
-    require(tokenAddress != address(0), "ADDRESS_0");
+  function addToken(address originTokenAddress, address[] memory destinationTokenAddresses, uint256[] memory chainIdsTarget) public onlyOwner {
+    require(originTokenAddress != address(0), "ADDRESS_0");
+    require(destinationTokenAddresses.length == chainIdsTarget.length, "ARRAYS_LENGTH_DIFFER");
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
       require(chainIdSupported[chainIdsTarget[i]], "CHAIN_ID_NOT_SUPPORTED");
-      tokensSupported[tokenAddress][chainIdsTarget[i]] = true;
+      tokensSupported[originTokenAddress][chainIdsTarget[i]] = destinationTokenAddresses[i];
     }
   }
 
@@ -62,7 +65,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
-      tokensSupported[tokenAddress][chainIdsTarget[i]] = false;
+      tokensSupported[tokenAddress][chainIdsTarget[i]] = address(0);
     }
   }
 
@@ -84,15 +87,16 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
   }
 
   function deposit(
-    address tokenAddress,
+    address originTokenAddress,
     uint256 amount,
     uint256 targetChainId
   ) public nonReentrant whenNotDepositsPaused whenNotPaused {
-    require(tokensSupported[tokenAddress][targetChainId], "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
     require(chainIdSupported[targetChainId], "CHAIN_ID_NOT_SUPPORTED");
+    address destinationTokenAddress = tokensSupported[originTokenAddress][targetChainId];
+    require(destinationTokenAddress != address(0), "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
     count += 1;
-    IERC20(tokenAddress).safeTransferFrom(msg.sender, address(this), amount);
-    emit Deposit(msg.sender, tokenAddress, amount, targetChainId, count);
+    IERC20(originTokenAddress).safeTransferFrom(msg.sender, address(this), amount);
+    emit Deposit(msg.sender, originTokenAddress, destinationTokenAddress, amount, targetChainId, count);
   }
 
   function withdraw(
@@ -120,7 +124,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      abi.encode(sender, tokenAddress, amount, targetChainId, _count, signature)
+      abi.encode(sender, tokenAddress, amount, targetChainId, _count)
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }
