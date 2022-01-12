@@ -15,7 +15,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
 
   uint256 public count;
   address public verifyAddress;
-  bool pausedDeposits;
+  bool public pausedDeposits;
 
   mapping(bytes => bool) public filledSwaps;
   mapping(uint256 => bool) public chainIdSupported;
@@ -29,12 +29,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard {
     uint256 count
   );
 
-  event Withdraw(
-    address receiver,
-    address tokenAddress,
-    uint256 amount,
-    uint256 count
-  );
+  event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
   modifier whenNotDepositsPaused() {
     require(!pausedDeposits);
