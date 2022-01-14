@@ -24,22 +24,26 @@ describe("Proxy", function () {
     const BrokenUBridgeFactory = await ethers.getContractFactory("UBridgeBroken")
     brokenImplentationContract = await BrokenUBridgeFactory.deploy()
     const ProxyFactory = await ethers.getContractFactory("ProxyBridge")
-    proxyInterfacedContract = await ProxyFactory.deploy(firstImplementationContract.address, "0x")
+    const initCallData = UBridgeFactory.interface.encodeFunctionData(
+      UBridgeFactory.interface.getFunction("init"),
+      [secondAddress, 1]
+    )
+    proxyInterfacedContract = await ProxyFactory.deploy(
+      firstImplementationContract.address,
+      initCallData
+    )
     proxyContract = UBridgeFactory.attach(proxyInterfacedContract.address)
   })
   it("Should instantiate proxy successfully", async function () {
-    await proxyContract.init(secondAddress, 1)
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
   })
   it("Should fail second initializer by 'Initializable: contract is already initialized'.", async function () {
-    await proxyContract.init(secondAddress, 1)
     await expect(proxyContract.init(secondAddress, 1)).revertedWith(
       "Initializable: contract is already initialized"
     )
   })
   it("Should change of implementation successfully", async function () {
-    await proxyContract.init(secondAddress, 1)
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
@@ -49,7 +53,6 @@ describe("Proxy", function () {
     expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
   })
   it("Should fail recalling init after changing implementation by 'Initializable: contract is already initialized'", async function () {
-    await proxyContract.init(secondAddress, 1)
     expect(await proxyContract.chainId()).eq(1)
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
     const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
