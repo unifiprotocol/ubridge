@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 pragma solidity ^0.8.0;
 
-contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
+contract UBridgeBroken is Ownable, Pausable, ReentrancyGuard, Initializable {
   using SafeERC20 for IERC20;
 
   uint256 public chainId;
@@ -46,7 +46,6 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function changeVerifySigner(address newVerifier) public onlyOwner {
-    require(newVerifier != address(0), "ADDRESS_0");
     verifyAddress = newVerifier;
   }
 

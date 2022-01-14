@@ -1,5 +1,6 @@
 {
   "name": "hardhat-project",
+  "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.3",
     "@nomiclabs/hardhat-etherscan": "^2.1.8",
@@ -33,7 +34,8 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "test": "yarn hardhat test"
+    "test": "yarn hardhat test",
+    "compile": "yarn hardhat compile"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.1",
