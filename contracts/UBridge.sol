@@ -34,11 +34,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
   modifier whenNotDepositsPaused() {
-    require(!pausedDeposits);
+    require(!pausedDeposits, "Deposits have been suspended");
     _;
   }
-
-  constructor() {}
 
   function init(address _verifyAddress, uint256 _chainId) public initializer {
     verifyAddress = _verifyAddress;

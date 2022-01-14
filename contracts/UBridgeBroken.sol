@@ -33,13 +33,6 @@ contract UBridgeBroken is Ownable, Pausable, ReentrancyGuard, Initializable {
 
   event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
-  modifier whenNotDepositsPaused() {
-    require(!pausedDeposits);
-    _;
-  }
-
-  constructor() {}
-
   function init(address _verifyAddress, uint256 _chainId) public initializer {
     verifyAddress = _verifyAddress;
     chainId = _chainId;
@@ -49,95 +42,4 @@ contract UBridgeBroken is Ownable, Pausable, ReentrancyGuard, Initializable {
     verifyAddress = newVerifier;
   }
 
-  function addToken(
-    address originTokenAddress,
-    address[] memory destinationTokenAddresses,
-    uint256[] memory chainIdsTarget
-  ) public onlyOwner {
-    require(originTokenAddress != address(0), "ADDRESS_0");
-    require(destinationTokenAddresses.length == chainIdsTarget.length, "ARRAYS_LENGTH_DIFFER");
-    for (uint256 i = 0; i < chainIdsTarget.length; i++) {
-      require(chainIdSupported[chainIdsTarget[i]], "CHAIN_ID_NOT_SUPPORTED");
-      tokensSupported[originTokenAddress][chainIdsTarget[i]] = destinationTokenAddresses[i];
-    }
-  }
-
-  function addChainId(uint256[] memory newChainId) public onlyOwner {
-    for (uint256 i = 0; i < newChainId.length; i++) {
-      chainIdSupported[newChainId[i]] = true;
-    }
-  }
-
-  function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
-    for (uint256 i = 0; i < chainIdsTarget.length; i++) {
-      tokensSupported[tokenAddress][chainIdsTarget[i]] = address(0);
-    }
-  }
-
-  function removeChainId(uint256 _chainId) public onlyOwner {
-    require(chainIdSupported[_chainId], "CHAIN_ID_NOT_SUPPORTED");
-    chainIdSupported[_chainId] = false;
-  }
-
-  function pause() public onlyOwner {
-    _pause();
-  }
-
-  function unpause() public onlyOwner {
-    _unpause();
-  }
-
-  function changeDepositsState(bool isPaused) public onlyOwner {
-    pausedDeposits = isPaused;
-  }
-
-  function deposit(
-    address originTokenAddress,
-    uint256 amount,
-    uint256 targetChainId
-  ) public nonReentrant whenNotDepositsPaused whenNotPaused {
-    require(chainIdSupported[targetChainId], "CHAIN_ID_NOT_SUPPORTED");
-    address destinationTokenAddress = tokensSupported[originTokenAddress][targetChainId];
-    require(destinationTokenAddress != address(0), "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
-    count += 1;
-    IERC20(originTokenAddress).safeTransferFrom(msg.sender, address(this), amount);
-    emit Deposit(
-      msg.sender,
-      originTokenAddress,
-      destinationTokenAddress,
-      amount,
-      targetChainId,
-      count
-    );
-  }
-
-  function withdraw(
-    address sender,
-    address tokenAddress,
-    uint256 amount,
-    uint256 targetChainId,
-    uint256 _count,
-    bytes memory signature
-  ) external nonReentrant whenNotPaused {
-    require(targetChainId == chainId, "WRONG_CHAIN_ID");
-    require(!filledSwaps[signature], "ALREADY_FILLED");
-    require(verify(sender, tokenAddress, amount, targetChainId, _count, signature), "WRONG_SIGNER");
-    filledSwaps[signature] = true;
-    IERC20(tokenAddress).safeTransfer(sender, amount);
-    emit Withdraw(msg.sender, tokenAddress, amount, _count);
-  }
-
-  function verify(
-    address sender,
-    address tokenAddress,
-    uint256 amount,
-    uint256 targetChainId,
-    uint256 _count,
-    bytes memory signature
-  ) private view returns (bool) {
-    bytes32 message = ECDSA.toEthSignedMessageHash(
-      keccak256(abi.encodePacked(sender, tokenAddress, amount, targetChainId, _count))
-    );
-    return ECDSA.recover(message, signature) == verifyAddress;
-  }
 }
