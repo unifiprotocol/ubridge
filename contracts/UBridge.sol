@@ -13,14 +13,13 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   using SafeERC20 for IERC20;
 
   uint256 public chainId;
-
   uint256 public count;
   address public verifyAddress;
   bool public pausedDeposits;
 
   mapping(bytes => bool) public filledSwaps;
   mapping(uint256 => bool) public chainIdSupported;
-  mapping(address => mapping(uint256 => address)) public tokensSupported; // originERC20Addr[chainIdTarget] = bool
+  mapping(address => mapping(uint256 => address)) public tokensSupported; // originERC20Addr[chainIdTarget] = targetERC20Addr
 
   event Deposit(
     address sender,
@@ -30,7 +29,6 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 targetChainId,
     uint256 count
   );
-
   event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
   modifier whenNotDepositsPaused() {

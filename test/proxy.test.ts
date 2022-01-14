@@ -9,11 +9,12 @@ describe("Proxy", function () {
   let proxyContract: UBridge
   let firstImplementationContract: UBridge
   let brokenImplentationContract: UBridgeBroken
-  let signer: string | Signer | Provider
+  let signer: Signer | Provider
   let signerAddress: string
-  let second: string | Signer | Provider
+  let second: Signer | Provider
   let secondAddress: string
-  this.beforeEach(async () => {
+
+  beforeEach(async () => {
     const [_signer, _second] = await ethers.getSigners()
     signer = _signer
     signerAddress = await signer.getAddress()
@@ -46,7 +47,7 @@ describe("Proxy", function () {
     )
   })
 
-  it("Should fail by misssing fallback", async function () {
+  it("Should fail by missing fallback", async function () {
     const secondProxyContract = proxyInterfacedContract.connect(second)
     await expect(secondProxyContract.upgradeTo(secondProxyContract.address)).revertedWith(
       "function selector was not recognized and there's no fallback function"
@@ -76,6 +77,44 @@ describe("Proxy", function () {
     await expect(proxyUBridgeBrokenInstance.init(signerAddress, 1)).revertedWith(
       "Initializable: contract is already initialized"
     )
+  })
+
+  it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens should be still there", async function () {
+    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.chainId()).eq(1)
+
+    const amount = 10
+    const BridgeToken = await ethers.getContractFactory("BridgeToken")
+    const tokenInstance = await BridgeToken.deploy(10 ** 9)
+    await tokenInstance.transfer(secondAddress, amount)
+
+    const bridgeFactory = await ethers.getContractFactory("UBridge")
+    const ownerProxiedBridge = new ethers.Contract(
+      proxyInterfacedContract.address,
+      bridgeFactory.interface,
+      signer
+    )
+    await ownerProxiedBridge.addChainId([2])
+    await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [2])
+
+    const addr2ProxiedBridge = new ethers.Contract(
+      proxyInterfacedContract.address,
+      bridgeFactory.interface,
+      second
+    )
+
+    const addr2TokenInstance = tokenInstance.connect(second)
+    await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
+    await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
+
+    await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
+    const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
+    const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
+    await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
+    expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
+
+    // Check that the tokens are still there
+    expect(await addr2TokenInstance.balanceOf(ownerProxiedBridge.address)).equal(amount)
   })
 })
 

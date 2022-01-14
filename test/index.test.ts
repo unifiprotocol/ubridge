@@ -122,13 +122,13 @@ describe("uBridge", function () {
     })
 
     it("Should create a successful deposit", async function () {
-      const AMOUNT = 10
+      const amount = 10
       await contractInstance.addChainId([3])
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
-      await secondTokenInstance.approve(contractInstance.address, AMOUNT)
-      await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3))
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(secondInstance.deposit(tokenInstance.address, amount, 3))
         .to.emit(contractInstance, "Deposit")
-        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, AMOUNT, 3, 1)
+        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, amount, 3, 1)
     })
 
     it('Should fail calling for second time initializer by "Initializable: contract is already initialized"', async function () {
@@ -138,18 +138,18 @@ describe("uBridge", function () {
     })
 
     it("Should deposit fail by CHAIN_ID_NOT_SUPPORTED", async function () {
-      const AMOUNT = 10
-      await secondTokenInstance.approve(contractInstance.address, AMOUNT)
-      await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3)).revertedWith(
+      const amount = 10
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
         "CHAIN_ID_NOT_SUPPORTED"
       )
     })
 
     it("Should deposit fail by UNSUPPORTED_TOKEN_ON_CHAIN_ID", async function () {
-      const AMOUNT = 10
+      const amount = 10
       contractInstance.addChainId([3])
-      await secondTokenInstance.approve(contractInstance.address, AMOUNT)
-      await expect(secondInstance.deposit(tokenInstance.address, AMOUNT, 3)).revertedWith(
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
         "UNSUPPORTED_TOKEN_ON_CHAIN_ID"
       )
     })
