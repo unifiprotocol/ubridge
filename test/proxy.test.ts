@@ -111,7 +111,7 @@ describe("Proxy", function () {
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
 
     // Check that the tokens are still there
-    expect(await addr2TokenInstance.balanceOf(ownerProxiedBridge.address)).equal(amount)
+    expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
 })
 
