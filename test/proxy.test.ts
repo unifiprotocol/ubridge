@@ -107,11 +107,8 @@ describe("Proxy", function () {
     await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
     await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
 
+    // Upgrade proxy to another SC
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
-    const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
-    const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
-    await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
-    expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
 
     // Check that the tokens are still there
     expect(await addr2TokenInstance.balanceOf(ownerProxiedBridge.address)).equal(amount)
