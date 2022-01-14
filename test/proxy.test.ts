@@ -34,15 +34,25 @@ describe("Proxy", function () {
     )
     proxyContract = UBridgeFactory.attach(proxyInterfacedContract.address)
   })
+
   it("Should instantiate proxy successfully", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
   })
+
   it("Should fail second initializer by 'Initializable: contract is already initialized'.", async function () {
     await expect(proxyContract.init(secondAddress, 1)).revertedWith(
       "Initializable: contract is already initialized"
     )
   })
+
+  it("Should fail by misssing fallback", async function () {
+    const secondProxyContract = proxyInterfacedContract.connect(second)
+    await expect(secondProxyContract.upgradeTo(secondProxyContract.address)).revertedWith(
+      "function selector was not recognized and there's no fallback function"
+    )
+  })
+
   it("Should change of implementation successfully", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
@@ -52,6 +62,7 @@ describe("Proxy", function () {
     await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
     expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
   })
+
   it("Should fail recalling init after changing implementation by 'Initializable: contract is already initialized'", async function () {
     expect(await proxyContract.chainId()).eq(1)
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
