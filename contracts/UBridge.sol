@@ -12,12 +12,15 @@ pragma solidity ^0.8.0;
 contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   using SafeERC20 for IERC20;
 
+  uint256 public constant EXPIRATION_TIME = 1 days;
+
   uint256 public chainId;
   uint256 public count;
   address public verifyAddress;
   bool public pausedDeposits;
 
   mapping(bytes => bool) public filledSwaps;
+  mapping(bytes => bool) public expiredSwaps;
   mapping(uint256 => bool) public chainIdSupported;
   mapping(address => mapping(uint256 => address)) public tokensSupported; // originERC20Addr[chainIdTarget] = targetERC20Addr
 
@@ -27,7 +30,8 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     address destinationTokenAddress,
     uint256 amount,
     uint256 targetChainId,
-    uint256 count
+    uint256 count,
+    uint256 expirationDate
   );
   event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
@@ -98,13 +102,16 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(destinationTokenAddress != address(0), "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
     count += 1;
     IERC20(originTokenAddress).safeTransferFrom(msg.sender, address(this), amount);
+    uint256 expirationDate = block.timestamp + EXPIRATION_TIME;
+
     emit Deposit(
       msg.sender,
       originTokenAddress,
       destinationTokenAddress,
       amount,
       targetChainId,
-      count
+      count,
+      expirationDate
     );
   }
 
@@ -114,17 +121,44 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 amount,
     uint256 targetChainId,
     uint256 _count,
+    uint256 expirationDate,
     bytes memory signature
   ) external nonReentrant whenNotPaused {
+    require(block.timestamp > expirationDate, "EXPIRED_DEPOSIT");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(!filledSwaps[signature], "ALREADY_FILLED");
-    require(verify(sender, tokenAddress, amount, targetChainId, _count, signature), "WRONG_SIGNER");
+    require(
+      verify(1, sender, tokenAddress, amount, targetChainId, _count, signature),
+      "WRONG_SIGNER"
+    );
     filledSwaps[signature] = true;
     IERC20(tokenAddress).safeTransfer(sender, amount);
+
     emit Withdraw(msg.sender, tokenAddress, amount, _count);
   }
 
+  function withdrawExpiredDeposit(
+    address sender,
+    address originTokenAddress,
+    uint256 amount,
+    uint256 originChainId,
+    uint256 _count,
+    uint256 expirationDate,
+    bytes memory signature
+  ) external nonReentrant whenNotPaused {
+    require(block.timestamp <= expirationDate, "DEPOSIT_NOT_EXPIRED");
+    require(originChainId == chainId, "WRONG_CHAIN_ID");
+    require(!expiredSwaps[signature], "ALREADY_FILLED");
+    require(
+      verify(0, sender, originTokenAddress, amount, originChainId, _count, signature),
+      "WRONG_SIGNER"
+    );
+    expiredSwaps[signature] = true;
+    IERC20(originTokenAddress).safeTransfer(sender, amount);
+  }
+
   function verify(
+    uint256 isWithdraw, // 0 = Expired deposit, 1 = Withdraw
     address sender,
     address tokenAddress,
     uint256 amount,
@@ -133,7 +167,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      keccak256(abi.encodePacked(sender, tokenAddress, amount, targetChainId, _count))
+      keccak256(abi.encodePacked(isWithdraw, sender, tokenAddress, amount, targetChainId, _count))
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }
