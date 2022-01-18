@@ -3,6 +3,8 @@ import { expect } from "chai"
 import { Contract, Signer } from "ethers"
 import { ethers } from "hardhat"
 import { UBridge, BridgeToken } from "../typechain"
+const utils = require("./helpers/utils")
+const time = require("./helpers/time")
 
 describe("uBridge", function () {
   let contractInstance: UBridge
@@ -157,62 +159,113 @@ describe("uBridge", function () {
     it("Should withdraw token amount", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256"],
-        [secondAddress, tokenInstance.address, 10, 1, 0]
+        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [secondAddress, tokenInstance.address, 10, 1, 0, 999999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
-      await secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 1, 0, signature)
+      await secondInstance.withdraw(
+        secondAddress,
+        tokenInstance.address,
+        10,
+        1,
+        0,
+        999999999999,
+        signature
+      )
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
     })
 
     it("Should fail second withdrawal", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256"],
-        [secondAddress, tokenInstance.address, 10, 1, 0]
+        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [secondAddress, tokenInstance.address, 10, 1, 0, 9999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
-      await secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 1, 0, signature)
+      await secondInstance.withdraw(
+        secondAddress,
+        tokenInstance.address,
+        10,
+        1,
+        0,
+        9999999999,
+        signature
+      )
       await expect(
-        secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 1, 0, signature)
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          10,
+          1,
+          0,
+          9999999999,
+          signature
+        )
       ).revertedWith("ALREADY_FILLED")
     })
 
     it("Should fail withdrawing token amount due to WRONG_SIGNER #1", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256"],
-        [secondAddress, contractInstance.address, 10, 1, 0]
+        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [secondAddress, contractInstance.address, 10, 1, 0, 9999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
       await expect(
-        secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 1, 0, signature)
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          10,
+          1,
+          0,
+          9999999999,
+          signature
+        )
       ).revertedWith("WRONG_SIGNER")
     })
 
     it("Should fail withdrawing token amount due to WRONG_SIGNER #2", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256"],
-        [secondAddress, contractInstance.address, 10, 2, 0]
+        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [secondAddress, contractInstance.address, 10, 2, 0, 9999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
       await expect(
-        secondInstance.withdraw(secondAddress, tokenInstance.address, 10, 2, 0, signature)
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          10,
+          2,
+          0,
+          9999999999,
+          signature
+        )
       ).revertedWith("WRONG_CHAIN_ID")
+    })
+
+    it("Should allow a user to withdraw an expired deposit", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(secondInstance.deposit(tokenInstance.address, amount, 3))
+        .to.emit(contractInstance, "Deposit")
+        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, amount, 3, 1)
+      await time.increase(time.duration.days(1))
     })
   })
 })
