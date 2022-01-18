@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-License-Identifier: MIT
 
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -34,6 +34,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 expirationDate
   );
   event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
+  event ExpiredWithdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
 
   modifier whenNotDepositsPaused() {
     require(!pausedDeposits, "Deposits have been suspended");
@@ -134,7 +135,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     filledSwaps[signature] = true;
     IERC20(tokenAddress).safeTransfer(sender, amount);
 
-    emit Withdraw(msg.sender, tokenAddress, amount, _count);
+    emit Withdraw(sender, tokenAddress, amount, _count);
   }
 
   function withdrawExpiredDeposit(
@@ -155,6 +156,8 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     );
     expiredSwaps[signature] = true;
     IERC20(originTokenAddress).safeTransfer(sender, amount);
+
+    emit ExpiredWithdraw(sender, originTokenAddress, amount, _count);
   }
 
   function verify(
