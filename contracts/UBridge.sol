@@ -125,11 +125,11 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 expirationDate,
     bytes memory signature
   ) external nonReentrant whenNotPaused {
-    require(block.timestamp > expirationDate, "EXPIRED_DEPOSIT");
+    require(block.timestamp < expirationDate, "EXPIRED_DEPOSIT");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(!filledSwaps[signature], "ALREADY_FILLED");
     require(
-      verify(1, sender, tokenAddress, amount, targetChainId, _count, signature),
+      verify(1, sender, tokenAddress, amount, targetChainId, _count, expirationDate, signature),
       "WRONG_SIGNER"
     );
     filledSwaps[signature] = true;
@@ -151,7 +151,16 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(originChainId == chainId, "WRONG_CHAIN_ID");
     require(!expiredSwaps[signature], "ALREADY_FILLED");
     require(
-      verify(0, sender, originTokenAddress, amount, originChainId, _count, signature),
+      verify(
+        0,
+        sender,
+        originTokenAddress,
+        amount,
+        originChainId,
+        _count,
+        expirationDate,
+        signature
+      ),
       "WRONG_SIGNER"
     );
     expiredSwaps[signature] = true;
@@ -167,10 +176,21 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 amount,
     uint256 targetChainId,
     uint256 _count,
+    uint256 expirationDate,
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      keccak256(abi.encodePacked(isWithdraw, sender, tokenAddress, amount, targetChainId, _count))
+      keccak256(
+        abi.encodePacked(
+          isWithdraw,
+          sender,
+          tokenAddress,
+          amount,
+          targetChainId,
+          _count,
+          expirationDate
+        )
+      )
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }

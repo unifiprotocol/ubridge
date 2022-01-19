@@ -1,10 +1,9 @@
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
-import { Contract, Signer } from "ethers"
+import { Signer } from "ethers"
 import { ethers } from "hardhat"
 import { UBridge, BridgeToken } from "../typechain"
-const utils = require("./helpers/utils")
-const time = require("./helpers/time")
+import * as time from "./helpers/time"
 
 describe("uBridge", function () {
   let contractInstance: UBridge
@@ -128,9 +127,10 @@ describe("uBridge", function () {
       await contractInstance.addChainId([3])
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, amount)
-      await expect(secondInstance.deposit(tokenInstance.address, amount, 3))
-        .to.emit(contractInstance, "Deposit")
-        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, amount, 3, 1)
+      expect(secondInstance.deposit(tokenInstance.address, amount, 3)).to.emit(
+        contractInstance,
+        "Deposit"
+      )
     })
 
     it('Should fail calling for second time initializer by "Initializable: contract is already initialized"', async function () {
@@ -159,8 +159,8 @@ describe("uBridge", function () {
     it("Should withdraw token amount", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
-        [secondAddress, tokenInstance.address, 10, 1, 0, 999999999999]
+        ["uint256", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [1, secondAddress, tokenInstance.address, 10, 1, 0, 999999999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
@@ -173,7 +173,7 @@ describe("uBridge", function () {
         10,
         1,
         0,
-        999999999999,
+        999999999999999,
         signature
       )
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
