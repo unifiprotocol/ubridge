@@ -133,6 +133,17 @@ describe("uBridge", function () {
       )
     })
 
+    it("Should fail to deposit while paused", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await contractInstance.pause()
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
+        "Pausable: paused"
+      )
+    })
+
     it('Should fail calling for second time initializer by "Initializable: contract is already initialized"', async function () {
       await expect(contractInstance.init(secondAddress, 1)).revertedWith(
         "Initializable: contract is already initialized"
@@ -177,6 +188,32 @@ describe("uBridge", function () {
         signature
       )
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
+    })
+
+    it("Should fail to withdraw token amount when paused", async function () {
+      const [owner] = await ethers.getSigners()
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        ["uint256", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [1, secondAddress, tokenInstance.address, 10, 1, 0, 999999999999999]
+      )
+      await secondTokenInstance.transfer(contractInstance.address, 10)
+      const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
+      await contractInstance.pause()
+      expect(
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          10,
+          1,
+          0,
+          999999999999999,
+          signature
+        )
+      ).revertedWith("Pausable: paused")
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
     })
 
     it("Should fail second withdrawal", async function () {
