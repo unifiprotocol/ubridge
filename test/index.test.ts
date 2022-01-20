@@ -43,6 +43,9 @@ describe("uBridge", function () {
       )
       expect(c1).equal(true)
       expect(c2).equal(true)
+      const [chain2, chain3] = await contractInstance.getChainIds()
+      expect(chain2.toNumber()).equal(2)
+      expect(chain3.toNumber()).equal(3)
     })
 
     it("Should add chainId=2,3 to supportedChainIds and after remove chainId 3", async function () {
@@ -55,6 +58,23 @@ describe("uBridge", function () {
       expect(c2).equal(true)
       await contractInstance.removeChainId(3)
       const c3 = await contractInstance.chainIdSupported(3)
+      const [chainId] = await contractInstance.getChainIds()
+      expect(chainId.toNumber()).equal(2)
+      expect(c3).equal(false)
+    })
+
+    it("Should add chainId=2,3 to supportedChainIds and after remove chainId 2", async function () {
+      const chainIdsToAdd = [2, 3]
+      await contractInstance.addChainId(chainIdsToAdd)
+      const [c1, c2] = await Promise.all(
+        chainIdsToAdd.map((chainId) => contractInstance.chainIdSupported(chainId))
+      )
+      expect(c1).equal(true)
+      expect(c2).equal(true)
+      await contractInstance.removeChainId(2)
+      const c3 = await contractInstance.chainIdSupported(2)
+      const [chainId] = await contractInstance.getChainIds()
+      expect(chainId.toNumber()).equal(3)
       expect(c3).equal(false)
     })
 
@@ -73,6 +93,7 @@ describe("uBridge", function () {
       await contractInstance.addChainId([1])
       const tokenAddress = tokenInstance.address
       await contractInstance.addToken(tokenAddress, [tokenAddress], [1])
+      expect(await contractInstance.getOriginAddresses()).deep.eq([tokenAddress])
       const isTokenSupported = await contractInstance.tokensSupported(tokenAddress, 1)
       expect(isTokenSupported).equal(tokenAddress)
     })
@@ -83,17 +104,20 @@ describe("uBridge", function () {
         "CHAIN_ID_NOT_SUPPORTED"
       )
     })
+
     it("Should add token to multiple chains, verify them in the tokensSupported, remove them and verify again", async function () {
       const chainIds = [1, 2]
       await contractInstance.addChainId(chainIds)
       const tokenAddress = tokenInstance.address
       await contractInstance.addToken(tokenAddress, [tokenAddress, tokenAddress], chainIds)
+      expect(await contractInstance.getOriginAddresses()).deep.eq([tokenAddress])
       const [c1, c2] = await Promise.all(
         chainIds.map((chainId) => contractInstance.tokensSupported(tokenAddress, chainId))
       )
       expect(c1).equal(tokenAddress)
       expect(c2).equal(tokenAddress)
       await contractInstance.removeToken(tokenAddress, chainIds)
+      expect(await contractInstance.getOriginAddresses()).deep.eq([])
 
       const [c3, c4] = await Promise.all(
         chainIds.map((chainId) => contractInstance.tokensSupported(tokenAddress, chainId))
