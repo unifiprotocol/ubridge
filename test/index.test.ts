@@ -219,8 +219,8 @@ describe("uBridge", function () {
     it("Should fail second withdrawal", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["address", "address", "uint256", "uint256", "uint256", "uint256"],
-        [secondAddress, tokenInstance.address, 10, 1, 0, 9999999999]
+        ["uint256", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [1, secondAddress, tokenInstance.address, 10, 1, 0, 9999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
@@ -299,9 +299,10 @@ describe("uBridge", function () {
       await contractInstance.addChainId([3])
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, amount)
-      await expect(secondInstance.deposit(tokenInstance.address, amount, 3))
-        .to.emit(contractInstance, "Deposit")
-        .withArgs(secondAddress, tokenInstance.address, tokenInstance.address, amount, 3, 1)
+      await expect(secondInstance.deposit(tokenInstance.address, amount, 3)).to.emit(
+        contractInstance,
+        "Deposit"
+      )
       await time.increase(time.duration.days(1))
     })
   })

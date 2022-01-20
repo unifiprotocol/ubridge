@@ -79,6 +79,7 @@ describe("Proxy", function () {
     )
   })
 
+  // Deployment is the Bridge + Proxy, this bridge is the implamentation that sets the proxy. Deposit +
   it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens should be still there", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
