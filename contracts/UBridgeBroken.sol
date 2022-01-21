@@ -41,5 +41,4 @@ contract UBridgeBroken is Ownable, Pausable, ReentrancyGuard, Initializable {
   function changeVerifySigner(address newVerifier) public onlyOwner {
     verifyAddress = newVerifier;
   }
-
 }
