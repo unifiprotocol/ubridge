@@ -25,9 +25,13 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
+    bsctestnet: {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+    },
     ropsten: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["7615c08ece8a0d497a8d2a28b0ded74e1a78aa4f6ad2296835306b2c54a7e4b0"]
+      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
     }
   },
   gasReporter: {

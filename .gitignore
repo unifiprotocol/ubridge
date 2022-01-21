@@ -31,3 +31,4 @@ typechain
 #Hardhat files
 cache
 artifacts
+scripts/checker.ts

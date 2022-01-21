@@ -33,12 +33,31 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
+    uint256 originChainId,
     uint256 targetChainId,
     uint256 count,
     uint256 expirationDate
   );
-  event Withdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
-  event ExpiredWithdraw(address receiver, address tokenAddress, uint256 amount, uint256 count);
+  event Withdraw(
+    address sender,
+    address originTokenAddress,
+    address destinationTokenAddress,
+    uint256 amount,
+    uint256 originChainId,
+    uint256 targetChainId,
+    uint256 count,
+    uint256 expirationDate
+  );
+  event ExpiredWithdraw(
+    address sender,
+    address originTokenAddress,
+    address destinationTokenAddress,
+    uint256 amount,
+    uint256 originChainId,
+    uint256 targetChainId,
+    uint256 count,
+    uint256 expirationDate
+  );
 
   modifier whenNotDepositsPaused() {
     require(!pausedDeposits, "Deposits have been suspended");
@@ -145,6 +164,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
       originTokenAddress,
       destinationTokenAddress,
       amount,
+      chainId,
       targetChainId,
       count,
       expirationDate
@@ -153,8 +173,10 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
 
   function withdraw(
     address sender,
-    address tokenAddress,
+    address originTokenAddress,
+    address destinationTokenAddress,
     uint256 amount,
+    uint256 originChainId,
     uint256 targetChainId,
     uint256 _count,
     uint256 expirationDate,
@@ -164,20 +186,22 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(!filledSwaps[signature], "ALREADY_FILLED");
     require(
-      verify(1, sender, tokenAddress, amount, targetChainId, _count, signature),
+      verify(1, sender, originTokenAddress, destinationTokenAddress, amount, originChainId, targetChainId, _count, expirationDate, signature),
       "WRONG_SIGNER"
     );
     filledSwaps[signature] = true;
-    IERC20(tokenAddress).safeTransfer(sender, amount);
+    IERC20(destinationTokenAddress).safeTransfer(sender, amount);
 
-    emit Withdraw(sender, tokenAddress, amount, _count);
+    emit Withdraw(sender, originTokenAddress, destinationTokenAddress, amount, originChainId, targetChainId, _count, expirationDate);
   }
 
   function withdrawExpiredDeposit(
     address sender,
     address originTokenAddress,
+    address destinationTokenAddress,
     uint256 amount,
     uint256 originChainId,
+    uint256 targetChainId,
     uint256 _count,
     uint256 expirationDate,
     bytes memory signature
@@ -186,26 +210,29 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(originChainId == chainId, "WRONG_CHAIN_ID");
     require(!expiredSwaps[signature], "ALREADY_FILLED");
     require(
-      verify(0, sender, originTokenAddress, amount, originChainId, _count, signature),
+      verify(0, sender, originTokenAddress, destinationTokenAddress, amount, originChainId, targetChainId, _count, expirationDate, signature),
       "WRONG_SIGNER"
     );
     expiredSwaps[signature] = true;
     IERC20(originTokenAddress).safeTransfer(sender, amount);
 
-    emit ExpiredWithdraw(sender, originTokenAddress, amount, _count);
+    emit ExpiredWithdraw(sender, originTokenAddress, destinationTokenAddress, amount, originChainId, targetChainId, _count, expirationDate);
   }
 
   function verify(
     uint256 isWithdraw, // 0 = Expired deposit, 1 = Withdraw
     address sender,
-    address tokenAddress,
+    address originTokenAddress,
+    address destinationTokenAddress,
     uint256 amount,
+    uint256 originChainId,
     uint256 targetChainId,
     uint256 _count,
+    uint256 expirationDate,
     bytes memory signature
   ) private view returns (bool) {
     bytes32 message = ECDSA.toEthSignedMessageHash(
-      keccak256(abi.encodePacked(isWithdraw, sender, tokenAddress, amount, targetChainId, _count))
+      keccak256(abi.encodePacked(isWithdraw, sender, originTokenAddress, destinationTokenAddress, amount, originChainId, targetChainId, _count, signature, expirationDate))
     );
     return ECDSA.recover(message, signature) == verifyAddress;
   }

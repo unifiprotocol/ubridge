@@ -8,14 +8,14 @@ import { ethers } from "hardhat"
 async function main() {
   const [signer] = await ethers.getSigners()
   const VERIFIER_ADDRESS = await signer.getAddress()
-  const CHAIN_ID = 1
+  const CHAIN_ID = 97
   const UBridgeFactory = await ethers.getContractFactory("UBridge")
   const bridgeInstance = await UBridgeFactory.deploy()
   const BridgeProxyFactory = await ethers.getContractFactory("ProxyBridge")
   const initFunction = UBridgeFactory.interface.getFunction("init")
   const initCallData = UBridgeFactory.interface.encodeFunctionData(initFunction, [
     VERIFIER_ADDRESS,
-    CHAIN_ID
+    (await ethers.provider.getNetwork()).chainId
   ])
   console.log(initCallData) // 0x399ae724000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660000000000000000000000000000000000000000000000000000000000000001
 
