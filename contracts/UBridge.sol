@@ -183,7 +183,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 expirationDate,
     bytes memory signature
   ) external nonReentrant whenNotPaused {
-    require(block.timestamp > expirationDate, "EXPIRED_DEPOSIT");
+    require(block.timestamp < expirationDate, "EXPIRED_DEPOSIT");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(!filledSwaps[signature], "ALREADY_FILLED");
     require(
