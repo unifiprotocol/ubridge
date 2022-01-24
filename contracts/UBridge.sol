@@ -227,7 +227,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 expirationDate,
     bytes memory signature
   ) external nonReentrant whenNotPaused {
-    require(block.timestamp <= expirationDate, "DEPOSIT_NOT_EXPIRED");
+    require(block.timestamp >= expirationDate, "DEPOSIT_NOT_EXPIRED");
     require(originChainId == chainId, "WRONG_CHAIN_ID");
     require(!expiredSwaps[signature], "ALREADY_FILLED");
     require(
@@ -283,7 +283,6 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
           originChainId,
           targetChainId,
           _count,
-          signature,
           expirationDate
         )
       )
