@@ -6,6 +6,7 @@ import "@nomiclabs/hardhat-waffle"
 import "@typechain/hardhat"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
+import { deployBridge } from "./tasks/deployer"
 
 dotenv.config()
 
@@ -19,6 +20,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 })
 
+task("deploy", deployBridge)
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -26,12 +28,10 @@ const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     bsctestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545/"
     },
     ropsten: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      url: "https://ropsten.infura.io/v3/b0deef0f9a7845f8a62259bc03272f8d"
     }
   },
   gasReporter: {
@@ -39,7 +39,10 @@ const config: HardhatUserConfig = {
     currency: "USD"
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+      ropsten: "6329MS2FHP9NCKF6DKPDMR5RIE3HYCYGW1",
+      bscTestnet: "BC9318STPGVMNCWWBSKTUTZ5CTVK8DDD1B"
+    }
   }
 }
 
