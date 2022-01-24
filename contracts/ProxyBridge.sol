@@ -19,4 +19,8 @@ contract ProxyBridge is Ownable, ERC1967Proxy {
   function upgradeTo(address newImplementation) public ifAdmin {
     _upgradeTo(newImplementation);
   }
+
+  function getImplementationAddress() public view returns (address) {
+    return ERC1967Upgrade._getImplementation();
+  }
 }

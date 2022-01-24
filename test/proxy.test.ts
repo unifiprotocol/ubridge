@@ -39,6 +39,9 @@ describe("Proxy", function () {
   it("Should instantiate proxy successfully", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
+    expect(await proxyInterfacedContract.getImplementationAddress()).eq(
+      firstImplementationContract.address
+    )
   })
 
   it("Should fail second initializer by 'Initializable: contract is already initialized'.", async function () {
@@ -108,8 +111,11 @@ describe("Proxy", function () {
     await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
     await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
 
+    // deploy again the same contract
+    const newContract = await deployContract(signerAddress, 1)
     // Upgrade proxy to another SC
-    await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
+    await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
+    expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
 
     // Check that the tokens are still there
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
