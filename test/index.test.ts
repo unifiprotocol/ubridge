@@ -36,6 +36,16 @@ describe("uBridge", function () {
       expect(verifyAddress).equal(secondAddress)
     })
 
+    it("Should update owner", async function () {
+      const [, second] = await ethers.getSigners()
+      const secondAddress = await second.getAddress()
+      expect(await contractInstance.transferOwnership(secondAddress)).to.emit(
+        contractInstance,
+        "OwnershipTransferred"
+      )
+      expect(await contractInstance.owner()).equal(secondAddress)
+    })
+
     it("Should add chainId=2,3 to supportedChainIds", async function () {
       const chainIdsToAdd = [2, 3]
       await contractInstance.addChainId(chainIdsToAdd)
