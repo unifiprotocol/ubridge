@@ -120,6 +120,12 @@ describe("Proxy", function () {
     // Check that the tokens are still there
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
+
+  // Following the previous tests... deploy a proxy, deploy the bridge,  ...
+  // using the proxy and the example from "index.test.ts:L205", make a withdraw
+  // deploy again the bridge, attach it to the proxy (like in Line 117) ...
+  // Finally, try to withdraw the same deposit
+  // We expect that the last withdraw invocation is gonna throw ALREADY_FILLED
 })
 
 async function deployContract(verifyAddress: string, chainId: number) {
