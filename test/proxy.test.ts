@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { Signer } from "ethers"
@@ -9,9 +10,9 @@ describe("Proxy", function () {
   let proxyContract: UBridge
   let firstImplementationContract: UBridge
   let brokenImplentationContract: UBridgeBroken
-  let signer: Signer | Provider
+  let signer: Signer
   let signerAddress: string
-  let second: Signer | Provider
+  let second: Signer
   let secondAddress: string
 
   beforeEach(async () => {
@@ -119,6 +120,70 @@ describe("Proxy", function () {
 
     // Check that the tokens are still there
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
+  })
+
+  it("Should deploy the proxied bridge, make a deposit, withdraw, and fail to withdraw again", async function () {
+    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.chainId()).eq(1)
+
+    const amount = 10
+    const BridgeToken = await ethers.getContractFactory("BridgeToken")
+    const tokenInstance = await BridgeToken.deploy(10 ** 9)
+    await tokenInstance.transfer(proxyContract.address, amount)
+
+    const bridgeFactory = await ethers.getContractFactory("UBridge")
+    const ownerProxiedBridge = new ethers.Contract(
+      proxyInterfacedContract.address,
+      bridgeFactory.interface,
+      signer
+    )
+    await ownerProxiedBridge.addChainId([1])
+    await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [1])
+
+    const encodedMsg = ethers.utils.solidityKeccak256(
+      [
+        "uint256",
+        "address",
+        "address",
+        "address",
+        "uint256",
+        "uint256",
+        "uint256",
+        "uint256",
+        "uint256"
+      ],
+      [1, signerAddress, tokenInstance.address, tokenInstance.address, 10, 1, 1, 0, 999999999999999]
+    )
+    const signature = await second.signMessage(ethers.utils.arrayify(encodedMsg))
+    await proxyContract.withdraw(
+      signerAddress,
+      tokenInstance.address,
+      tokenInstance.address,
+      10,
+      1,
+      1,
+      0,
+      999999999999999,
+      signature
+    )
+    // deploy again the same contract
+    const newContract = await deployContract(signerAddress, 1)
+    // Upgrade proxy to another SC
+    await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
+    expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
+    await expect(
+      proxyContract.withdraw(
+        signerAddress,
+        tokenInstance.address,
+        tokenInstance.address,
+        10,
+        1,
+        1,
+        0,
+        999999999999999,
+        signature
+      )
+    ).revertedWith("ALREADY_FILLED")
   })
 
   // Following the previous tests... deploy a proxy, deploy the bridge,  ...
