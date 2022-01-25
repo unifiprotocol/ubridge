@@ -146,44 +146,6 @@ describe("Proxy", function () {
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
 
-  it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens cannot be withdrawn by an outside", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
-    expect(await proxyContract.chainId()).eq(1)
-
-    const amount = 10
-    const BridgeToken = await ethers.getContractFactory("BridgeToken")
-    const tokenInstance = await BridgeToken.deploy(10 ** 9)
-    await tokenInstance.transfer(secondAddress, amount)
-
-    const bridgeFactory = await ethers.getContractFactory("UBridge")
-    const ownerProxiedBridge = new ethers.Contract(
-      proxyInterfacedContract.address,
-      bridgeFactory.interface,
-      signer
-    )
-    await ownerProxiedBridge.addChainId([2])
-    await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [2])
-
-    const addr2ProxiedBridge = new ethers.Contract(
-      proxyInterfacedContract.address,
-      bridgeFactory.interface,
-      second
-    )
-
-    const addr2TokenInstance = tokenInstance.connect(second)
-    await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
-    await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
-
-    // deploy again the same contract
-    const newContract = await deployContract(signerAddress, 1)
-    // Upgrade proxy to another SC
-    await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
-    expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
-
-    // Check that the tokens are still there
-    expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
-  })
-
   it("Should deploy the proxied bridge, make a deposit, withdraw, change the impl, and fail to withdraw again", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
