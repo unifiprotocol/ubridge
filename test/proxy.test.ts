@@ -14,6 +14,8 @@ describe("Proxy", function () {
   let signerAddress: string
   let second: Signer
   let secondAddress: string
+  let evilThird: Signer
+  let evilThirdAddress: string
 
   beforeEach(async () => {
     const [_signer, _second] = await ethers.getSigners()
@@ -66,6 +68,28 @@ describe("Proxy", function () {
     const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
     await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
     expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
+  })
+
+  // it("Should not allow change of implementation by outside address", async function () {
+  //   expect(await proxyContract.verifyAddress()).eq(secondAddress)
+  //   expect(await proxyContract.chainId()).eq(1)
+  //   const [, , _evilThird] = await ethers.getSigners()
+  //   let evilThird = _evilThird
+  //   evilThirdAddress = await evilThird.getAddress()
+  //   await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
+  //   const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
+  //   const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
+  //   await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
+  //   expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
+  // })
+
+  it("Should not allow change of verify signer to a non-address", async function () {
+    expect(await proxyContract.verifyAddress()).eq(secondAddress) // Verifies the proxy contract equals the second address.
+    expect(await proxyContract.chainId()).eq(1) //Verifies the first proxy contract is on Chain 1
+    await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted //Upgrades Proxy Implentation
+    const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
+    const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
+    await expect(proxyUBridgeBrokenInstance.changeVerifySigner("Poopoopeepee")).to.reverted
   })
 
   it("Should fail recalling init after changing implementation by 'Initializable: contract is already initialized'", async function () {
@@ -122,7 +146,45 @@ describe("Proxy", function () {
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
 
-  it("Should deploy the proxied bridge, make a deposit, withdraw, and fail to withdraw again", async function () {
+  it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens cannot be withdrawn by an outside", async function () {
+    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.chainId()).eq(1)
+
+    const amount = 10
+    const BridgeToken = await ethers.getContractFactory("BridgeToken")
+    const tokenInstance = await BridgeToken.deploy(10 ** 9)
+    await tokenInstance.transfer(secondAddress, amount)
+
+    const bridgeFactory = await ethers.getContractFactory("UBridge")
+    const ownerProxiedBridge = new ethers.Contract(
+      proxyInterfacedContract.address,
+      bridgeFactory.interface,
+      signer
+    )
+    await ownerProxiedBridge.addChainId([2])
+    await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [2])
+
+    const addr2ProxiedBridge = new ethers.Contract(
+      proxyInterfacedContract.address,
+      bridgeFactory.interface,
+      second
+    )
+
+    const addr2TokenInstance = tokenInstance.connect(second)
+    await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
+    await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
+
+    // deploy again the same contract
+    const newContract = await deployContract(signerAddress, 1)
+    // Upgrade proxy to another SC
+    await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
+    expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
+
+    // Check that the tokens are still there
+    expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
+  })
+
+  it("Should deploy the proxied bridge, make a deposit, withdraw, change the impl, and fail to withdraw again", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
 
@@ -185,12 +247,6 @@ describe("Proxy", function () {
       )
     ).revertedWith("ALREADY_FILLED")
   })
-
-  // Following the previous tests... deploy a proxy, deploy the bridge,  ...
-  // using the proxy and the example from "index.test.ts:L205", make a withdraw
-  // deploy again the bridge, attach it to the proxy (like in Line 117) ...
-  // Finally, try to withdraw the same deposit
-  // We expect that the last withdraw invocation is gonna throw ALREADY_FILLED
 })
 
 async function deployContract(verifyAddress: string, chainId: number) {
