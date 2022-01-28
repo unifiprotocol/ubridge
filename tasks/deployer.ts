@@ -27,6 +27,6 @@ export async function deployBridge(_: any, { ethers, hardhatArguments }: any) {
     `verify uBridge: yarn hardhat verify --network ${hardhatArguments.network} ${bridgeInstance.address}`
   )
   console.log(
-    `verify Proxy: yarn hardhat verify --network ${hardhatArguments.network} ${bridgeProxyInstance.address} ${initCallData}`
+    `verify Proxy: yarn hardhat verify --network ${hardhatArguments.network} ${bridgeProxyInstance.address} ${bridgeInstance.address} ${initCallData}`
   )
 }
