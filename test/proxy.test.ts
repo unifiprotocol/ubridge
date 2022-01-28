@@ -134,7 +134,8 @@ describe("Proxy", function () {
 
     const addr2TokenInstance = tokenInstance.connect(second)
     await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
-    await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
+    const sender = await addr2ProxiedBridge.signer.getAddress()
+    await addr2ProxiedBridge.deposit(sender, tokenInstance.address, amount, 2)
 
     // deploy again the same contract
     const newContract = await deployContract(signerAddress, 1)
@@ -172,7 +173,8 @@ describe("Proxy", function () {
 
     const addr2TokenInstance = tokenInstance.connect(second)
     await addr2TokenInstance.approve(addr2ProxiedBridge.address, amount)
-    await addr2ProxiedBridge.deposit(tokenInstance.address, amount, 2)
+    const sender = await addr2ProxiedBridge.signer.getAddress()
+    await addr2ProxiedBridge.deposit(sender, tokenInstance.address, amount, 2)
 
     // deploy again the same contract
     const newContract = await deployContract(signerAddress, 1)

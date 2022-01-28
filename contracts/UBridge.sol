@@ -149,10 +149,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function deposit(
+    address withdrawalAddress,
     address originTokenAddress,
     uint256 amount,
     uint256 targetChainId
   ) public nonReentrant whenNotDepositsPaused whenNotPaused {
+    require(withdrawalAddress != address(0), "WRONG_ADDRESS");
     require(chainIdSupported[targetChainId], "CHAIN_ID_NOT_SUPPORTED");
     address destinationTokenAddress = tokensSupported[originTokenAddress][targetChainId];
     require(destinationTokenAddress != address(0), "UNSUPPORTED_TOKEN_ON_CHAIN_ID");
@@ -161,7 +163,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 expirationDate = block.timestamp + EXPIRATION_TIME;
 
     emit Deposit(
-      msg.sender,
+      withdrawalAddress,
       originTokenAddress,
       destinationTokenAddress,
       amount,
@@ -173,7 +175,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function withdraw(
-    address sender,
+    address withdrawalAddress,
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
@@ -189,7 +191,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(
       verify(
         1,
-        sender,
+        withdrawalAddress,
         originTokenAddress,
         destinationTokenAddress,
         amount,
@@ -202,10 +204,10 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
       "WRONG_SIGNER"
     );
     filledSwaps[signature] = true;
-    IERC20(destinationTokenAddress).safeTransfer(sender, amount);
+    IERC20(destinationTokenAddress).safeTransfer(withdrawalAddress, amount);
 
     emit Withdraw(
-      sender,
+      withdrawalAddress,
       originTokenAddress,
       destinationTokenAddress,
       amount,
@@ -217,7 +219,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function withdrawExpiredDeposit(
-    address sender,
+    address withdrawalAddress,
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
@@ -233,7 +235,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(
       verify(
         0,
-        sender,
+        withdrawalAddress,
         originTokenAddress,
         destinationTokenAddress,
         amount,
@@ -246,10 +248,10 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
       "WRONG_SIGNER"
     );
     expiredSwaps[signature] = true;
-    IERC20(originTokenAddress).safeTransfer(sender, amount);
+    IERC20(originTokenAddress).safeTransfer(withdrawalAddress, amount);
 
     emit ExpiredWithdraw(
-      sender,
+      withdrawalAddress,
       originTokenAddress,
       destinationTokenAddress,
       amount,

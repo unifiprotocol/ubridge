@@ -139,6 +139,7 @@ describe("uBridge", function () {
   })
 
   describe("Deposits and Withdraws", () => {
+    let signerAddress: string
     let secondAddress: string
     let second: string | Signer | Provider
     let secondInstance: UBridge
@@ -147,7 +148,7 @@ describe("uBridge", function () {
     beforeEach(async () => {
       const [signer, _second] = await ethers.getSigners()
       second = _second
-      const signerAddress = await signer.getAddress()
+      signerAddress = await signer.getAddress()
       contractInstance = await deployContract(signerAddress, 1)
       secondInstance = contractInstance.connect(second)
       const BridgeToken = await ethers.getContractFactory("BridgeToken")
@@ -162,7 +163,7 @@ describe("uBridge", function () {
       await contractInstance.addChainId([3])
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, amount)
-      expect(secondInstance.deposit(tokenInstance.address, amount, 3)).to.emit(
+      expect(secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)).to.emit(
         contractInstance,
         "Deposit"
       )
@@ -174,7 +175,7 @@ describe("uBridge", function () {
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await contractInstance.pause()
       await secondTokenInstance.approve(contractInstance.address, amount)
-      expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
+      expect(secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)).revertedWith(
         "Pausable: paused"
       )
     })
@@ -188,18 +189,18 @@ describe("uBridge", function () {
     it("Should deposit fail by CHAIN_ID_NOT_SUPPORTED", async function () {
       const amount = 10
       await secondTokenInstance.approve(contractInstance.address, amount)
-      await expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
-        "CHAIN_ID_NOT_SUPPORTED"
-      )
+      await expect(
+        secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)
+      ).revertedWith("CHAIN_ID_NOT_SUPPORTED")
     })
 
     it("Should deposit fail by UNSUPPORTED_TOKEN_ON_CHAIN_ID", async function () {
       const amount = 10
       contractInstance.addChainId([3])
       await secondTokenInstance.approve(contractInstance.address, amount)
-      await expect(secondInstance.deposit(tokenInstance.address, amount, 3)).revertedWith(
-        "UNSUPPORTED_TOKEN_ON_CHAIN_ID"
-      )
+      await expect(
+        secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)
+      ).revertedWith("UNSUPPORTED_TOKEN_ON_CHAIN_ID")
     })
 
     it("Should withdraw token amount", async function () {
@@ -396,7 +397,7 @@ describe("uBridge", function () {
       await contractInstance.addChainId([3])
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, amount)
-      const deposit = secondInstance.deposit(tokenInstance.address, amount, 3)
+      const deposit = secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)
       await expect(deposit).to.emit(contractInstance, "Deposit")
       const depositReceipt = await (await deposit).wait()
 
