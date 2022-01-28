@@ -28,12 +28,10 @@ const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     bsctestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545/"
     },
     ropsten: {
-      url: "https://ropsten.infura.io/v3/b0deef0f9a7845f8a62259bc03272f8d",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      url: "https://ropsten.infura.io/v3/b0deef0f9a7845f8a62259bc03272f8d"
     }
   },
   gasReporter: {
