@@ -170,6 +170,17 @@ describe("uBridge", function () {
       )
     })
 
+    it("Should create a successful deposit to another address besides origin address", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      expect(secondInstance.deposit(secondAddress, tokenInstance.address, amount, 3)).to.emit(
+        contractInstance,
+        "Deposit"
+      )
+    })
+
     it("Should fail to deposit with withdrawal address = addr(0)", async function () {
       const amount = 10
       await contractInstance.addChainId([3])
