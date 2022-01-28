@@ -147,6 +147,7 @@ describe("Proxy", function () {
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
 
+<<<<<<< HEAD
   it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens cannot be withdrawn by an outside", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
@@ -186,6 +187,8 @@ describe("Proxy", function () {
     expect(await addr2TokenInstance.balanceOf(proxyInterfacedContract.address)).equal(amount)
   })
 
+=======
+>>>>>>> 6d3a4716d5e816bd77f4d769053ee2b47e9f50b3
   it("Should deploy the proxied bridge, make a deposit, withdraw, change the impl, and fail to withdraw again", async function () {
     expect(await proxyContract.verifyAddress()).eq(secondAddress)
     expect(await proxyContract.chainId()).eq(1)

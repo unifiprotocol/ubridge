@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { Signer } from "ethers"
@@ -449,6 +450,19 @@ describe("uBridge", function () {
         ]
       )
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      expect(
+        secondInstance.withdraw(
+          sender,
+          tokenInstance.address,
+          tokenInstance.address,
+          amount,
+          originChainId,
+          targetChainId,
+          count,
+          expirationDate,
+          signature
+        )
+      ).revertedWith("EXPIRED_DEPOSIT")
       expect(
         secondInstance.withdrawExpiredDeposit(
           sender,
