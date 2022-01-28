@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
-import { Signer } from "ethers"
-import { LogDescription } from "ethers/lib/utils"
+import { constants, Signer } from "ethers"
+import { getAddress, hexZeroPad, LogDescription } from "ethers/lib/utils"
 import { ethers } from "hardhat"
 import { UBridge, BridgeToken } from "../typechain"
 import * as time from "./helpers/time"
@@ -170,6 +170,16 @@ describe("uBridge", function () {
       )
     })
 
+    it("Should fail to deposit with withdrawal address = addr(0)", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      expect(
+        secondInstance.deposit(constants.AddressZero, tokenInstance.address, amount, 3)
+      ).to.revertedWith("WRONG_ADDRESS")
+    })
+
     it("Should fail to deposit while paused", async function () {
       const amount = 10
       await contractInstance.addChainId([3])
@@ -180,7 +190,6 @@ describe("uBridge", function () {
         "Pausable: paused"
       )
     })
-
     it('Should fail calling for second time initializer by "Initializable: contract is already initialized"', async function () {
       await expect(contractInstance.init(secondAddress, 1)).revertedWith(
         "Initializable: contract is already initialized"
