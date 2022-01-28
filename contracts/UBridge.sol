@@ -33,9 +33,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
-    uint256 originChainId,
+    uint256 indexed originChainId,
     uint256 targetChainId,
-    uint256 count,
+    uint256 indexed count,
     uint256 expirationDate
   );
   event Withdraw(
@@ -43,9 +43,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
-    uint256 originChainId,
+    uint256 indexed originChainId,
     uint256 targetChainId,
-    uint256 count,
+    uint256 indexed count,
     uint256 expirationDate
   );
   event ExpiredWithdraw(
