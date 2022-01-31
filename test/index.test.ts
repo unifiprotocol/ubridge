@@ -2,7 +2,7 @@
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { constants, Signer } from "ethers"
-import { getAddress, hexZeroPad, LogDescription } from "ethers/lib/utils"
+import { LogDescription } from "ethers/lib/utils"
 import { ethers } from "hardhat"
 import { UBridge, BridgeToken } from "../typechain"
 import * as time from "./helpers/time"
@@ -23,18 +23,20 @@ describe("uBridge", function () {
     it("Should deploy contract and have the passed parameters", async function () {
       const [signer] = await ethers.getSigners()
       const signerAddress = await signer.getAddress()
-      expect(await contractInstance.verifyAddress(), "Wrong verify address").to.be.equal(
+      expect(await contractInstance.getVerifyAddresses(), "Wrong verify address").to.contains(
         signerAddress
       )
-      expect(await (await contractInstance.chainId()).toNumber(), "Wrong chain id").equal(1)
+      expect((await contractInstance.chainId()).toNumber(), "Wrong chain id").equal(1)
     })
 
     it("Should change verify address and return new one", async function () {
-      const [, second] = await ethers.getSigners()
+      const [signer, second] = await ethers.getSigners()
       const secondAddress = await second.getAddress()
-      await contractInstance.changeVerifySigner(secondAddress)
-      const verifyAddress = await contractInstance.verifyAddress()
-      expect(verifyAddress).equal(secondAddress)
+      const signerAddress = await signer.getAddress()
+      await contractInstance.removeVerifyAddress(signerAddress)
+      await contractInstance.addVerifyAddress(secondAddress)
+      const verifyAddress = await contractInstance.getVerifyAddresses()
+      expect(verifyAddress).contains(secondAddress)
     })
 
     it("Should update owner", async function () {
@@ -201,8 +203,9 @@ describe("uBridge", function () {
         "Pausable: paused"
       )
     })
+
     it('Should fail calling for second time initializer by "Initializable: contract is already initialized"', async function () {
-      await expect(contractInstance.init(secondAddress, 1)).revertedWith(
+      await expect(contractInstance.init([secondAddress], 1)).revertedWith(
         "Initializable: contract is already initialized"
       )
     })
@@ -228,7 +231,7 @@ describe("uBridge", function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
-          "uint256",
+          "uint8",
           "address",
           "address",
           "address",
@@ -264,7 +267,7 @@ describe("uBridge", function () {
         1,
         1,
         999999999999999,
-        signature
+        [signature]
       )
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
     })
@@ -273,7 +276,7 @@ describe("uBridge", function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
-          "uint256",
+          "uint8",
           "address",
           "address",
           "address",
@@ -309,7 +312,7 @@ describe("uBridge", function () {
           1,
           1,
           999999999999999,
-          signature
+          [signature]
         )
       ).revertedWith("ERC20: transfer amount exceeds balance")
     })
@@ -317,7 +320,7 @@ describe("uBridge", function () {
     it("Should fail to withdraw token amount when paused", async function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
-        ["uint256", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+        ["uint8", "address", "address", "uint256", "uint256", "uint256", "uint256"],
         [1, secondAddress, tokenInstance.address, 10, 1, 0, 999999999999999]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
@@ -336,7 +339,7 @@ describe("uBridge", function () {
           1,
           1,
           999999999999999,
-          signature
+          [signature]
         )
       ).revertedWith("Pausable: paused")
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
@@ -346,7 +349,7 @@ describe("uBridge", function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
-          "uint256",
+          "uint8",
           "address",
           "address",
           "address",
@@ -371,7 +374,7 @@ describe("uBridge", function () {
         1,
         1,
         9999999999,
-        signature
+        [signature]
       )
       await expect(
         secondInstance.withdraw(
@@ -383,7 +386,7 @@ describe("uBridge", function () {
           1,
           1,
           9999999999,
-          signature
+          [signature]
         )
       ).revertedWith("ALREADY_FILLED")
     })
@@ -408,7 +411,7 @@ describe("uBridge", function () {
           1,
           1,
           9999999999,
-          signature
+          [signature]
         )
       ).revertedWith("WRONG_SIGNER")
     })
@@ -447,7 +450,7 @@ describe("uBridge", function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
-          "uint256",
+          "uint8",
           "address",
           "address",
           "address",
@@ -470,7 +473,7 @@ describe("uBridge", function () {
         ]
       )
       const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
-      expect(
+      await expect(
         secondInstance.withdraw(
           sender,
           tokenInstance.address,
@@ -480,10 +483,10 @@ describe("uBridge", function () {
           targetChainId,
           count,
           expirationDate,
-          signature
+          [signature]
         )
       ).revertedWith("EXPIRED_DEPOSIT")
-      expect(
+      await expect(
         secondInstance.withdrawExpiredDeposit(
           sender,
           tokenInstance.address,
@@ -493,10 +496,11 @@ describe("uBridge", function () {
           targetChainId,
           count,
           expirationDate,
-          signature
+          [signature]
         )
-      )
+      ).to.not.reverted
     })
+
     it("Should allow a user to withdraw an expired deposit when the target address is different", async function () {
       const amount = 10
       await contractInstance.addChainId([3])
@@ -531,7 +535,7 @@ describe("uBridge", function () {
       const [owner] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
-          "uint256",
+          "uint8",
           "address",
           "address",
           "address",
@@ -564,10 +568,10 @@ describe("uBridge", function () {
           targetChainId,
           count,
           expirationDate,
-          signature
+          [signature]
         )
       ).revertedWith("EXPIRED_DEPOSIT")
-      expect(
+      await expect(
         secondInstance.withdrawExpiredDeposit(
           sender,
           tokenInstance.address,
@@ -577,9 +581,9 @@ describe("uBridge", function () {
           targetChainId,
           count,
           expirationDate,
-          signature
+          [signature]
         )
-      )
+      ).to.not.reverted
     })
   })
 })
@@ -587,6 +591,6 @@ describe("uBridge", function () {
 async function deployContract(verifyAddress: string, chainId: number) {
   const UBridgeFactory = await ethers.getContractFactory("UBridge")
   const contract = await UBridgeFactory.deploy()
-  await contract.init(verifyAddress, chainId)
+  await contract.init([verifyAddress], chainId)
   return contract
 }

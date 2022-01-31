@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { Signer } from "ethers"
 import { ethers } from "hardhat"
@@ -14,8 +13,6 @@ describe("Proxy", function () {
   let signerAddress: string
   let second: Signer
   let secondAddress: string
-  let evilThird: Signer
-  let evilThirdAddress: string
 
   beforeEach(async () => {
     const [_signer, _second] = await ethers.getSigners()
@@ -24,13 +21,13 @@ describe("Proxy", function () {
     second = _second
     secondAddress = await second.getAddress()
     const UBridgeFactory = await ethers.getContractFactory("UBridge")
-    firstImplementationContract = await deployContract(signerAddress, 1)
+    firstImplementationContract = await deployContract([signerAddress], 1)
     const BrokenUBridgeFactory = await ethers.getContractFactory("UBridgeBroken")
     brokenImplentationContract = await BrokenUBridgeFactory.deploy()
     const ProxyFactory = await ethers.getContractFactory("ProxyBridge")
     const initCallData = UBridgeFactory.interface.encodeFunctionData(
       UBridgeFactory.interface.getFunction("init"),
-      [secondAddress, 1]
+      [[secondAddress], 1]
     )
     proxyInterfacedContract = await ProxyFactory.deploy(
       firstImplementationContract.address,
@@ -40,7 +37,7 @@ describe("Proxy", function () {
   })
 
   it("Should instantiate proxy successfully", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.getVerifyAddresses()).contains(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
     expect(await proxyInterfacedContract.getImplementationAddress()).eq(
       firstImplementationContract.address
@@ -48,7 +45,7 @@ describe("Proxy", function () {
   })
 
   it("Should fail second initializer by 'Initializable: contract is already initialized'.", async function () {
-    await expect(proxyContract.init(secondAddress, 1)).revertedWith(
+    await expect(proxyContract.init([secondAddress], 1)).revertedWith(
       "Initializable: contract is already initialized"
     )
   })
@@ -61,13 +58,14 @@ describe("Proxy", function () {
   })
 
   it("Should change of implementation successfully", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.getVerifyAddresses()).contains(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
     await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
     const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
     const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
-    await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
-    expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
+    await expect(proxyUBridgeBrokenInstance.removeVerifyAddress(secondAddress)).not.reverted
+    await expect(proxyUBridgeBrokenInstance.addVerifyAddress(signerAddress)).not.reverted
+    expect(await proxyUBridgeBrokenInstance.getVerifyAddresses()).to.be.deep.eq([signerAddress])
   })
 
   // it("Should not allow change of implementation by outside address", async function () {
@@ -84,12 +82,12 @@ describe("Proxy", function () {
   // })
 
   it("Should not allow change of verify signer to a non-address", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress) // Verifies the proxy contract equals the second address.
-    expect(await proxyContract.chainId()).eq(1) //Verifies the first proxy contract is on Chain 1
-    await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted //Upgrades Proxy Implentation
+    expect(await proxyContract.getVerifyAddresses()).contains(secondAddress) // Verifies the proxy contract equals the second address.
+    expect(await proxyContract.chainId()).eq(1) // Verifies the first proxy contract is on Chain 1
+    await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted // Upgrades Proxy Implentation
     const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
     const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
-    await expect(proxyUBridgeBrokenInstance.changeVerifySigner("Poopoopeepee")).to.reverted
+    await expect(proxyUBridgeBrokenInstance.addVerifyAddress("Poopoopeepee")).to.reverted
   })
 
   it("Should fail recalling init after changing implementation by 'Initializable: contract is already initialized'", async function () {
@@ -99,17 +97,17 @@ describe("Proxy", function () {
     const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(
       proxyInterfacedContract.address
     ).connect(signer)
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
-    await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
-    expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
-    await expect(proxyUBridgeBrokenInstance.init(signerAddress, 1)).revertedWith(
+    expect(await proxyUBridgeBrokenInstance.getVerifyAddresses()).contains(secondAddress)
+    await expect(proxyUBridgeBrokenInstance.addVerifyAddress(signerAddress)).not.reverted
+    expect(await proxyUBridgeBrokenInstance.getVerifyAddresses()).contains(signerAddress)
+    await expect(proxyUBridgeBrokenInstance.init([signerAddress], 1)).revertedWith(
       "Initializable: contract is already initialized"
     )
   })
 
   // Deployment is the Bridge + Proxy, this bridge is the implamentation that sets the proxy. Deposit +
   it("Should deploy the proxied bridge, make a deposit, change the impl and the deposited tokens should be still there", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.getVerifyAddresses()).contains(secondAddress)
     expect(await proxyContract.chainId()).eq(1)
 
     const amount = 10
@@ -138,7 +136,7 @@ describe("Proxy", function () {
     await addr2ProxiedBridge.deposit(sender, tokenInstance.address, amount, 2)
 
     // deploy again the same contract
-    const newContract = await deployContract(signerAddress, 1)
+    const newContract = await deployContract([signerAddress], 1)
     // Upgrade proxy to another SC
     await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
     expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
@@ -148,7 +146,7 @@ describe("Proxy", function () {
   })
 
   it("Should deploy the proxied bridge, make a deposit, withdraw, change the impl, and fail to withdraw again", async function () {
-    expect(await proxyContract.verifyAddress()).eq(secondAddress)
+    expect(await proxyContract.getVerifyAddresses()).to.be.deep.eq([secondAddress])
     expect(await proxyContract.chainId()).eq(1)
 
     const amount = 10
@@ -166,7 +164,7 @@ describe("Proxy", function () {
     await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [1])
     const encodedMsg = ethers.utils.solidityKeccak256(
       [
-        "uint256",
+        "uint8",
         "address",
         "address",
         "address",
@@ -188,10 +186,10 @@ describe("Proxy", function () {
       1,
       0,
       999999999999999,
-      signature
+      [signature]
     )
     // deploy again the same contract
-    const newContract = await deployContract(signerAddress, 1)
+    const newContract = await deployContract([signerAddress], 1)
     // Upgrade proxy to another SC
     await expect(proxyInterfacedContract.upgradeTo(newContract.address)).not.reverted
     expect(await proxyInterfacedContract.getImplementationAddress()).eq(newContract.address)
@@ -205,15 +203,15 @@ describe("Proxy", function () {
         1,
         0,
         999999999999999,
-        signature
+        [signature]
       )
     ).revertedWith("ALREADY_FILLED")
   })
 })
 
-async function deployContract(verifyAddress: string, chainId: number) {
+async function deployContract(verifyAddresses: string[], chainId: number) {
   const UBridgeFactory = await ethers.getContractFactory("UBridge")
   const contract = await UBridgeFactory.deploy()
-  await contract.init(verifyAddress, chainId)
+  await contract.init(verifyAddresses, chainId)
   return contract
 }
