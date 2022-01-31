@@ -12,7 +12,7 @@ The implemented solution isn’t trustless since it requires the VERIFIER_ADDRES
 
 A high-level diagram:
 
-![A hjgh-level diagram](https://raw.githubusercontent.com/unifiprotocol/ubridge/master/assets/uBridgeDepositFlowchart.png?token=GHSAT0AAAAAABQBWOOYUQNN2B2WOZG7UBEKYQA5PYQ)
+![A high-level diagram](https://raw.githubusercontent.com/unifiprotocol/ubridge/master/assets/uBridgeDepositFlowchart.png?token=GHSAT0AAAAAABQBWOOYUQNN2B2WOZG7UBEKYQA5PYQ)
 
 The process can be divided into three phases:
 
