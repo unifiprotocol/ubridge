@@ -170,6 +170,17 @@ describe("uBridge", function () {
       )
     })
 
+    it("Should create a successful deposit to another address besides origin address", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      expect(secondInstance.deposit(secondAddress, tokenInstance.address, amount, 3)).to.emit(
+        contractInstance,
+        "Deposit"
+      )
+    })
+
     it("Should fail to deposit with withdrawal address = addr(0)", async function () {
       const amount = 10
       await contractInstance.addChainId([3])
@@ -408,6 +419,90 @@ describe("uBridge", function () {
       await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
       await secondTokenInstance.approve(contractInstance.address, amount)
       const deposit = secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3)
+      await expect(deposit).to.emit(contractInstance, "Deposit")
+      const depositReceipt = await (await deposit).wait()
+
+      await time.increase(time.duration.days(2))
+
+      const depositLogs = depositReceipt.logs
+        .map((log) => {
+          try {
+            return secondInstance.interface.parseLog(log)
+          } catch (err) {
+            return undefined
+          }
+        })
+        .filter((x) => !!x) as LogDescription[]
+      const depositEvent = depositLogs.find((log) => /Deposit/.test(log.name))!
+      const {
+        expirationDate,
+        count,
+        originChainId,
+        targetChainId,
+        sender,
+        originTokenAddress,
+        destinationTokenAddress
+      } = depositEvent.args
+
+      const [owner] = await ethers.getSigners()
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        [
+          "uint256",
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256"
+        ],
+        [
+          0,
+          sender,
+          originTokenAddress,
+          destinationTokenAddress,
+          amount,
+          originChainId,
+          targetChainId,
+          count,
+          expirationDate
+        ]
+      )
+      const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      expect(
+        secondInstance.withdraw(
+          sender,
+          tokenInstance.address,
+          tokenInstance.address,
+          amount,
+          originChainId,
+          targetChainId,
+          count,
+          expirationDate,
+          signature
+        )
+      ).revertedWith("EXPIRED_DEPOSIT")
+      expect(
+        secondInstance.withdrawExpiredDeposit(
+          sender,
+          tokenInstance.address,
+          tokenInstance.address,
+          amount,
+          originChainId,
+          targetChainId,
+          count,
+          expirationDate,
+          signature
+        )
+      )
+    })
+    it("Should allow a user to withdraw an expired deposit when the target address is different", async function () {
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      const deposit = secondInstance.deposit(secondAddress, tokenInstance.address, amount, 3)
       await expect(deposit).to.emit(contractInstance, "Deposit")
       const depositReceipt = await (await deposit).wait()
 
