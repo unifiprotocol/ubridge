@@ -245,7 +245,7 @@ describe("uBridge", function () {
     })
 
     it("Should withdraw token amount", async function () {
-      const [owner] = await ethers.getSigners()
+      const [owner, addr2] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(
         [
           "uint8",
@@ -271,9 +271,11 @@ describe("uBridge", function () {
         ]
       )
       await secondTokenInstance.transfer(contractInstance.address, 10)
-      const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      const signature1 = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      const signature2 = await addr2.signMessage(ethers.utils.arrayify(encodedMsg))
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      await contractInstance.addVerifyAddress(addr2.address)
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
       await secondInstance.withdraw(
         secondAddress,
@@ -284,7 +286,7 @@ describe("uBridge", function () {
         1,
         1,
         999999999999999,
-        [signature]
+        [signature1, signature2]
       )
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
     })
