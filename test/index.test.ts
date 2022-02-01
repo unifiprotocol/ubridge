@@ -1,13 +1,9 @@
-/* eslint-disable prettier/prettier */
-// eslint-disable-next-line node/no-extraneous-import
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { constants, Signer } from "ethers"
 import { LogDescription } from "ethers/lib/utils"
 import { ethers } from "hardhat"
-// eslint-disable-next-line node/no-missing-import
 import { UBridge, BridgeToken } from "../typechain"
-// eslint-disable-next-line node/no-missing-import
 import * as time from "./helpers/time"
 
 describe("uBridge", function () {

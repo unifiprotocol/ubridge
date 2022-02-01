@@ -21,4 +21,7 @@ module.exports = {
       { ignores: ["modules"] },
     ],
   },
+  node: {
+    "resolvePaths": ["node_modules/@types"],
+  }
 };
