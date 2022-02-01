@@ -204,6 +204,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   ) external nonReentrant whenNotPaused {
     require(block.timestamp < expirationDate, "EXPIRED_DEPOSIT");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
+    require(signatures.length == verifyAddresses.length(), "WRONG_SIGNATURES");
 
     for (uint256 i; i < signatures.length; i++) {
       bytes memory signature = signatures[i];
@@ -253,6 +254,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   ) external nonReentrant whenNotPaused {
     require(block.timestamp >= expirationDate, "DEPOSIT_NOT_EXPIRED");
     require(originChainId == chainId, "WRONG_CHAIN_ID");
+    require(signatures.length == verifyAddresses.length(), "WRONG_SIGNATURES");
 
     for (uint256 i; i < signatures.length; i++) {
       bytes memory signature = signatures[i];

@@ -315,23 +315,24 @@ describe("uBridge", function () {
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
-      // await contractInstance.removeVerifyAddress(signerAddress)
+      await contractInstance.removeVerifyAddress(signerAddress)
       await contractInstance.addVerifyAddress(secondAddress)
       const verifyAddress = await contractInstance.getVerifyAddresses()
       expect(verifyAddress).contains(secondAddress)
-      console.log("Success on changing signer")
-      await secondInstance.withdraw(
-        secondAddress,
-        tokenInstance.address,
-        tokenInstance.address,
-        10,
-        1,
-        1,
-        1,
-        999999999999999,
-        [signature]
-      )
-      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
+      await expect(
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          1,
+          999999999999999,
+          [signature]
+        )
+      ).revertedWith("WRONG_SIGNER")
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
     })
 
     it("Should fail withdrawing a token because not enough SC balance", async function () {
