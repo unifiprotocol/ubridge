@@ -1,10 +1,13 @@
 /* eslint-disable prettier/prettier */
+// eslint-disable-next-line node/no-extraneous-import
 import { Provider } from "@ethersproject/abstract-provider"
 import { expect } from "chai"
 import { constants, Signer } from "ethers"
 import { LogDescription } from "ethers/lib/utils"
 import { ethers } from "hardhat"
+// eslint-disable-next-line node/no-missing-import
 import { UBridge, BridgeToken } from "../typechain"
+// eslint-disable-next-line node/no-missing-import
 import * as time from "./helpers/time"
 
 describe("uBridge", function () {
@@ -37,6 +40,15 @@ describe("uBridge", function () {
       await contractInstance.addVerifyAddress(secondAddress)
       const verifyAddress = await contractInstance.getVerifyAddresses()
       expect(verifyAddress).contains(secondAddress)
+    })
+
+    it("Should fail to add a null address", async function () {
+      const [signer] = await ethers.getSigners()
+      const signerAddress = await signer.getAddress()
+      const nullAddress = "0x0000000000000000000000000000000000000000"
+      await expect(contractInstance.addVerifyAddress(nullAddress)).to.be.revertedWith("ADDRESS_0")
+      const verifyAddress = await contractInstance.getVerifyAddresses()
+      expect(verifyAddress).deep.eq([signerAddress])
     })
 
     it("Should update owner", async function () {
@@ -258,6 +270,56 @@ describe("uBridge", function () {
       await contractInstance.addChainId([1])
       await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
+      await secondInstance.withdraw(
+        secondAddress,
+        tokenInstance.address,
+        tokenInstance.address,
+        10,
+        1,
+        1,
+        1,
+        999999999999999,
+        [signature]
+      )
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
+    })
+
+    it("Should withdraw token amount after signer change", async function () {
+      const [owner] = await ethers.getSigners()
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        [
+          "uint8",
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256"
+        ],
+        [
+          1,
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          1,
+          999999999999999
+        ]
+      )
+      await secondTokenInstance.transfer(contractInstance.address, 10)
+      const signature = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
+      // await contractInstance.removeVerifyAddress(signerAddress)
+      await contractInstance.addVerifyAddress(secondAddress)
+      const verifyAddress = await contractInstance.getVerifyAddresses()
+      expect(verifyAddress).contains(secondAddress)
+      console.log("Success on changing signer")
       await secondInstance.withdraw(
         secondAddress,
         tokenInstance.address,
