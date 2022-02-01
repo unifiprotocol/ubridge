@@ -47,6 +47,15 @@ describe("uBridge", function () {
       expect(verifyAddress).deep.eq([signerAddress])
     })
 
+    it("Should add several verifyAddresses", async function () {
+      const [addr1, addr2, addr3] = await ethers.getSigners()
+      await contractInstance.addVerifyAddress(addr1.address)
+      await contractInstance.addVerifyAddress(addr2.address)
+      await contractInstance.addVerifyAddress(addr3.address)
+      const verifyAddress = await contractInstance.getVerifyAddresses()
+      expect(verifyAddress).deep.eq([addr1.address, addr2.address, addr3.address])
+    })
+
     it("Should update owner", async function () {
       const [, second] = await ethers.getSigners()
       const secondAddress = await second.getAddress()
