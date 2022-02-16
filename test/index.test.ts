@@ -3,7 +3,7 @@ import { expect } from "chai"
 import { constants, Signer } from "ethers"
 import { LogDescription } from "ethers/lib/utils"
 import { ethers } from "hardhat"
-import { UBridge, BridgeToken } from "../typechain"
+import { UBridge, BridgeToken, UBridge__factory } from "../typechain"
 import * as time from "./helpers/time"
 
 describe("uBridge", function () {
@@ -156,6 +156,24 @@ describe("uBridge", function () {
       expect(Number(c3)).eq(0)
       expect(Number(c4)).eq(0)
     })
+
+    it("Should be the default fees equal to zero", async function () {
+      expect(await contractInstance.chainIdFees(0), "default value should be zero").eq(0)
+      expect(await contractInstance.chainIdFees(1), "default value should be zero").eq(0)
+      expect(await contractInstance.chainIdFees(2), "default value should be zero").eq(0)
+    })
+
+    it("Should change the fees change", async function () {
+      const chainIds = [0, 1]
+      const fees = [1, 2]
+      await contractInstance.setChainIdFee(chainIds, fees)
+
+      const readFees = await Promise.all(
+        chainIds.map((chainId) => contractInstance.chainIdFees(chainId).then((e) => e.toNumber()))
+      )
+
+      expect(readFees).deep.eq(fees)
+    })
   })
 
   describe("Deposits and Withdraws", () => {
@@ -187,6 +205,23 @@ describe("uBridge", function () {
         contractInstance,
         "Deposit"
       )
+    })
+
+    it("Should create a successful deposit with fees and then owner claim those fees", async function () {
+      const provider = ethers.provider
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await contractInstance.setChainIdFee([3], [1])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(
+        secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3, { value: 1 })
+      ).to.emit(contractInstance, "Deposit")
+      const balanceBeforeClaim = await provider.getBalance(contractInstance.address)
+      expect(balanceBeforeClaim, "Balance should be 1")
+      await contractInstance.claimFees()
+      const balanceAfterClaim = await provider.getBalance(contractInstance.address)
+      expect(balanceAfterClaim.eq(0), "Balance should be 0")
     })
 
     it("Should create a successful deposit to another address besides origin address", async function () {
@@ -288,6 +323,160 @@ describe("uBridge", function () {
         999999999999999,
         [signature1, signature2]
       )
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
+    })
+
+    it("Should fail withdrawBatch due to duplicated withdrawal", async function () {
+      const [owner, addr2] = await ethers.getSigners()
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        [
+          "uint8",
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256"
+        ],
+        [
+          1,
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          1,
+          999999999999999
+        ]
+      )
+
+      await secondTokenInstance.transfer(contractInstance.address, 10)
+
+      const signature1 = await owner.signMessage(ethers.utils.arrayify(encodedMsg))
+      const signature2 = await addr2.signMessage(ethers.utils.arrayify(encodedMsg))
+
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      await contractInstance.addVerifyAddress(addr2.address)
+
+      const withdrawal = {
+        withdrawalAddress: secondAddress,
+        originTokenAddress: tokenInstance.address,
+        destinationTokenAddress: tokenInstance.address,
+        amount: 10,
+        originChainId: 1,
+        targetChainId: 1,
+        _count: 1,
+        expirationDate: 999999999999999,
+        signatures: [signature1, signature2]
+      }
+
+      await expect(secondInstance.withdrawBatch([withdrawal, withdrawal])).be.revertedWith(
+        "ALREADY_FILLED"
+      )
+    })
+
+    it("Should withdraw a batch with two withdrawals", async function () {
+      const [owner, addr2] = await ethers.getSigners()
+
+      const firstEncodedMsg = ethers.utils.solidityKeccak256(
+        [
+          "uint8",
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256"
+        ],
+        [
+          1,
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          1,
+          999999999999999
+        ]
+      )
+
+      const secondEncodedMsg = ethers.utils.solidityKeccak256(
+        [
+          "uint8",
+          "address",
+          "address",
+          "address",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256",
+          "uint256"
+        ],
+        [
+          1,
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          2,
+          999999999999999
+        ]
+      )
+
+      await secondTokenInstance.transfer(contractInstance.address, 20)
+
+      const firstWithdrawalSignature1 = await owner.signMessage(
+        ethers.utils.arrayify(firstEncodedMsg)
+      )
+      const firstWithdrawalSignature2 = await addr2.signMessage(
+        ethers.utils.arrayify(firstEncodedMsg)
+      )
+      const secondWithdrawalSignature1 = await owner.signMessage(
+        ethers.utils.arrayify(secondEncodedMsg)
+      )
+      const secondWithdrawalSignature2 = await addr2.signMessage(
+        ethers.utils.arrayify(secondEncodedMsg)
+      )
+
+      const firstWithdrawal = {
+        withdrawalAddress: secondAddress,
+        originTokenAddress: tokenInstance.address,
+        destinationTokenAddress: tokenInstance.address,
+        amount: 10,
+        originChainId: 1,
+        targetChainId: 1,
+        _count: 1,
+        expirationDate: 999999999999999,
+        signatures: [firstWithdrawalSignature1, firstWithdrawalSignature2]
+      }
+
+      const secondWithdrawal = {
+        withdrawalAddress: secondAddress,
+        originTokenAddress: tokenInstance.address,
+        destinationTokenAddress: tokenInstance.address,
+        amount: 10,
+        originChainId: 1,
+        targetChainId: 1,
+        _count: 2,
+        expirationDate: 999999999999999,
+        signatures: [secondWithdrawalSignature1, secondWithdrawalSignature2]
+      }
+
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      await contractInstance.addVerifyAddress(addr2.address)
+
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 20)
+      await contractInstance.withdrawBatch([firstWithdrawal, secondWithdrawal])
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
     })
 
@@ -654,6 +843,10 @@ describe("uBridge", function () {
           [signature]
         )
       ).to.not.reverted
+    })
+
+    it("Should withdraw correctly the contract balance", async function () {
+      await expect(contractInstance.claimFees()).not.be.reverted
     })
   })
 })
