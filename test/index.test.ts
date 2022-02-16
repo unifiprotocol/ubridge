@@ -224,6 +224,18 @@ describe("uBridge", function () {
       expect(balanceAfterClaim.eq(0), "Balance should be 0")
     })
 
+    it("Should fail when fees doesn't match value param", async function () {
+      const provider = ethers.provider
+      const amount = 10
+      await contractInstance.addChainId([3])
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [3])
+      await contractInstance.setChainIdFee([3], [1])
+      await secondTokenInstance.approve(contractInstance.address, amount)
+      await expect(
+        secondInstance.deposit(signerAddress, tokenInstance.address, amount, 3, { value: 0 })
+      ).to.revertedWith("WRONG_FEE")
+    })
+
     it("Should create a successful deposit to another address besides origin address", async function () {
       const amount = 10
       await contractInstance.addChainId([3])
