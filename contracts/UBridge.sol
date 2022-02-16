@@ -34,6 +34,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   mapping(uint256 => bool) public chainIdSupported;
   mapping(address => mapping(uint256 => address)) public tokensSupported; // originERC20Addr[chainIdTarget] = targetERC20Addr
   mapping(address => uint256) public chainsSupportedForTokenAddress;
+  mapping(uint256 => uint256) public chainIdFees;
 
   event Deposit(
     address sender,
@@ -114,6 +115,15 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     }
   }
 
+  function setChainIdFee(uint256[] memory _chainIds, uint256[] memory fees) public onlyOwner {
+    require(_chainIds.length == fees.length, "INVALID_PARAMS");
+    for (uint256 i = 0; i < _chainIds.length; ++i) {
+      uint256 _chainId = _chainIds[i];
+      uint256 _chainIdFee = fees[i];
+      chainIdFees[_chainId] = _chainIdFee;
+    }
+  }
+
   function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
     for (uint256 j = 0; j < chainIdsTarget.length; j++) {
       tokensSupported[tokenAddress][chainIdsTarget[j]] = address(0);
@@ -170,7 +180,8 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     address originTokenAddress,
     uint256 amount,
     uint256 targetChainId
-  ) public nonReentrant whenNotDepositsPaused whenNotPaused {
+  ) public payable nonReentrant whenNotDepositsPaused whenNotPaused {
+    require(msg.value == chainIdFees[targetChainId], "WRONG_FEE");
     require(withdrawalAddress != address(0), "WRONG_ADDRESS");
     require(chainIdSupported[targetChainId], "CHAIN_ID_NOT_SUPPORTED");
     address destinationTokenAddress = tokensSupported[originTokenAddress][targetChainId];
