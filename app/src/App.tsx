@@ -1,4 +1,4 @@
-import { UnifiThemeProvider, Themes, ModalProvider } from '@unifiprotocol/uikit'
+import { UnifiThemeProvider, Themes } from '@unifiprotocol/uikit'
 import { TokenLogoResolvers } from '@unifiprotocol/utils'
 import { Body } from './Template/Body'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -11,19 +11,17 @@ function App() {
       theme={Themes.Dark}
       options={{ tokenLogoResolver: TokenLogoResolvers.Binance }}
     >
-      <ModalProvider>
-        <RecoilRoot>
-          <Router>
-            <Body>
-              <Switch>
-                <Route path="/">
-                  <Bridge />
-                </Route>
-              </Switch>
-            </Body>
-          </Router>
-        </RecoilRoot>
-      </ModalProvider>
+      <RecoilRoot>
+        <Router>
+          <Body>
+            <Switch>
+              <Route path="/">
+                <Bridge />
+              </Route>
+            </Switch>
+          </Body>
+        </Router>
+      </RecoilRoot>
     </UnifiThemeProvider>
   )
 }

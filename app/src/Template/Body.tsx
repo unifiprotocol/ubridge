@@ -25,12 +25,5 @@ export const Body: React.FC = ({ children }) => {
 
   const offset = Math.min(25, scrollTop)
 
-  return (
-    <BodyWrapper offset={offset}>
-      <TopbarWrapper ref={topbarRef} offset={offset}>
-        <Topbar />
-      </TopbarWrapper>
-      {children}
-    </BodyWrapper>
-  )
+  return <BodyWrapper offset={offset}>{children}</BodyWrapper>
 }

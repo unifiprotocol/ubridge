@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Shell } from '@unifiprotocol/shell'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Shell Wrapped={App} />
   </React.StrictMode>,
   document.getElementById('root')
 )
