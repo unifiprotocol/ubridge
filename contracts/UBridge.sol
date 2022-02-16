@@ -29,6 +29,18 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   uint256[] public chainIds = new uint256[](0);
   address[] public originAddresses = new address[](0);
 
+  struct WithdrawalParams {
+    address withdrawalAddress;
+    address originTokenAddress;
+    address destinationTokenAddress;
+    uint256 amount;
+    uint256 originChainId;
+    uint256 targetChainId;
+    uint256 _count;
+    uint256 expirationDate;
+    bytes[] signatures;
+  }
+
   mapping(bytes => bool) public filledSwaps;
   mapping(bytes => bool) public expiredSwaps;
   mapping(uint256 => bool) public chainIdSupported;
@@ -202,6 +214,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     );
   }
 
+  function claimFees() public nonReentrant {
+    uint256 balance = address(this).balance;
+    (bool sent, ) = address(owner()).call{value: balance}("");
+    require(sent, "Failed to send Ether");
+  }
+
   function withdraw(
     address withdrawalAddress,
     address originTokenAddress,
@@ -212,7 +230,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 _count,
     uint256 expirationDate,
     bytes[] memory signatures
-  ) external nonReentrant whenNotPaused {
+  ) public nonReentrant whenNotPaused {
     require(block.timestamp < expirationDate, "EXPIRED_DEPOSIT");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(signatures.length == verifyAddresses.length(), "WRONG_SIGNATURES");
@@ -250,6 +268,24 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
       _count,
       expirationDate
     );
+  }
+
+  function withdrawBatch(WithdrawalParams[] memory withdrawals) public {
+    WithdrawalParams memory withdrawal;
+    for (uint256 i = 0; i < withdrawals.length; i++) {
+      withdrawal = withdrawals[i];
+      withdraw(
+        withdrawal.withdrawalAddress,
+        withdrawal.originTokenAddress,
+        withdrawal.destinationTokenAddress,
+        withdrawal.amount,
+        withdrawal.originChainId,
+        withdrawal.targetChainId,
+        withdrawal._count,
+        withdrawal.expirationDate,
+        withdrawal.signatures
+      );
+    }
   }
 
   function withdrawExpiredDeposit(
