@@ -163,18 +163,8 @@ describe("Proxy", function () {
     await ownerProxiedBridge.addChainId([1])
     await ownerProxiedBridge.addToken(tokenInstance.address, [tokenInstance.address], [1])
     const encodedMsg = ethers.utils.solidityKeccak256(
-      [
-        "uint8",
-        "address",
-        "address",
-        "address",
-        "uint256",
-        "uint256",
-        "uint256",
-        "uint256",
-        "uint256"
-      ],
-      [1, signerAddress, tokenInstance.address, tokenInstance.address, 10, 1, 1, 0, 999999999999999]
+      ["address", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+      [signerAddress, tokenInstance.address, tokenInstance.address, 10, 1, 1, 0]
     )
     const signature = await second.signMessage(ethers.utils.arrayify(encodedMsg))
     await proxyContract.withdraw(
@@ -185,7 +175,6 @@ describe("Proxy", function () {
       1,
       1,
       0,
-      999999999999999,
       [signature]
     )
     // deploy again the same contract
@@ -202,7 +191,6 @@ describe("Proxy", function () {
         1,
         1,
         0,
-        999999999999999,
         [signature]
       )
     ).revertedWith("ALREADY_FILLED")
