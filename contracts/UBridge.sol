@@ -19,8 +19,8 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   bool public pausedDeposits;
   EnumerableSet.AddressSet private verifyAddresses;
 
-  uint256[] public chainIds = new uint256[](0);
-  address[] public originAddresses = new address[](0);
+  uint256[] private chainIds = new uint256[](0);
+  address[] private originAddresses = new address[](0);
 
   struct WithdrawalParams {
     address withdrawalAddress;
