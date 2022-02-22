@@ -57,6 +57,14 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 targetChainId,
     uint256 indexed count
   );
+  event ChainIdAdded(uint256 newChainId);
+  event ChainIdRemoved(uint256 newChainId);
+  event ChainIdFeeUpdated(uint256 newChainId, uint256 fees);
+  event TokenAdded(address tokenAddress, uint256 chainIdsTarget);
+  event TokenRemove(address tokenAddress, uint256 chainIdsTarget);
+  event DepositStatusUpdated(bool isPaused);
+  event VerifyAddressAdded(address newVerifier);
+  event VerifyAddressRemoved(address oldVerifier);
 
   modifier whenNotDepositsPaused() {
     require(!pausedDeposits, "Deposits have been suspended");
@@ -73,10 +81,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   function addVerifyAddress(address newVerifier) public onlyOwner {
     require(newVerifier != address(0), "ADDRESS_0");
     verifyAddresses.add(newVerifier);
+    emit VerifyAddressAdded(newVerifier);
   }
 
   function removeVerifyAddress(address oldVerifier) public onlyOwner {
     verifyAddresses.remove(oldVerifier);
+    emit VerifyAddressRemoved(oldVerifier);
   }
 
   function getVerifyAddresses() public view returns (address[] memory) {
@@ -96,6 +106,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
       require(chainIdSupported[chainIdsTarget[i]], "CHAIN_ID_NOT_SUPPORTED");
       tokensSupported[originTokenAddress][chainIdsTarget[i]] = destinationTokenAddresses[i];
+      emit TokenAdded(originTokenAddress, chainIdsTarget[i]);
     }
   }
 
@@ -103,6 +114,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     for (uint256 i = 0; i < newChainId.length; i++) {
       if (!chainIdSupported[newChainId[i]]) chainIds.push(newChainId[i]);
       chainIdSupported[newChainId[i]] = true;
+      emit ChainIdAdded(newChainId[i]);
     }
   }
 
@@ -112,12 +124,14 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
       uint256 _chainId = _chainIds[i];
       uint256 _chainIdFee = fees[i];
       chainIdFees[_chainId] = _chainIdFee;
+      emit ChainIdFeeUpdated(_chainId, _chainIdFee);
     }
   }
 
   function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
     for (uint256 j = 0; j < chainIdsTarget.length; j++) {
       tokensSupported[tokenAddress][chainIdsTarget[j]] = address(0);
+      emit TokenRemove(tokenAddress, chainIdsTarget[j]);
     }
     chainsSupportedForTokenAddress[tokenAddress]--;
     if (chainsSupportedForTokenAddress[tokenAddress] > 0) return;
@@ -142,6 +156,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     }
     chainIds.pop();
     chainIdSupported[_chainId] = false;
+    emit ChainIdRemoved(_chainId);
   }
 
   // Array getters
@@ -163,6 +178,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function changeDepositsState(bool isPaused) public onlyOwner {
+    emit DepositStatusUpdated(isPaused);
     pausedDeposits = isPaused;
   }
 
