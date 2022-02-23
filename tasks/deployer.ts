@@ -9,7 +9,7 @@ export async function deployBridge(_: any, { ethers, hardhatArguments }: any) {
   const initFunction = UBridgeFactory.interface.getFunction("init")
   const TRANSFERRED_ADDRESS = "0x7e3944CBC535766671bf962c3e796540f6007F1e"
   const initCallData = UBridgeFactory.interface.encodeFunctionData(initFunction, [
-    VERIFIER_ADDRESS,
+    [VERIFIER_ADDRESS],
     (await ethers.provider.getNetwork()).chainId
   ])
   console.log(initCallData)
@@ -21,12 +21,12 @@ export async function deployBridge(_: any, { ethers, hardhatArguments }: any) {
   )
   console.log(`Logic contract successfully deployed: ${bridgeInstance.address}`)
   console.log(`Contract successfully deployed: ${bridgeProxyInstance.address}`)
-  await UBridgeFactory.attach(bridgeProxyInstance.address).transferOwnership(TRANSFERRED_ADDRESS)
+  // await UBridgeFactory.attach(bridgeProxyInstance.address).transferOwnership(TRANSFERRED_ADDRESS)
 
   console.log(
-    `verify uBridge: yarn hardhat verify --network ${hardhatArguments.network} ${bridgeInstance.address}`
+    `verify uBridge: yarn hardhat --contract contracts/UBridge.sol:UBridge verify --network ${hardhatArguments.network} ${bridgeInstance.address}`
   )
   console.log(
-    `verify Proxy: yarn hardhat verify --network ${hardhatArguments.network} ${bridgeProxyInstance.address} ${bridgeInstance.address} ${initCallData}`
+    `verify Proxy: yarn hardhat --contract contracts/UBridge.sol:UBridge verify --network ${hardhatArguments.network} ${bridgeProxyInstance.address} ${bridgeInstance.address} ${initCallData}`
   )
 }

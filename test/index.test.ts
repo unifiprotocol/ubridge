@@ -317,6 +317,31 @@ describe("uBridge", function () {
       expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9)
     })
 
+    it("Should fail withdrawal due to NO_VERIFIERS", async function () {
+      const [owner, addr2] = await ethers.getSigners()
+      const encodedMsg = ethers.utils.solidityKeccak256(
+        ["address", "address", "address", "uint256", "uint256", "uint256", "uint256"],
+        [secondAddress, tokenInstance.address, tokenInstance.address, 10, 1, 1, 1]
+      )
+      await secondTokenInstance.transfer(contractInstance.address, 10)
+      await contractInstance.addChainId([1])
+      await contractInstance.addToken(contractInstance.address, [tokenInstance.address], [1])
+      await contractInstance.removeVerifyAddress(owner.address)
+      expect((await secondTokenInstance.balanceOf(secondAddress)).toNumber()).eq(10 ** 9 - 10)
+      await expect(
+        secondInstance.withdraw(
+          secondAddress,
+          tokenInstance.address,
+          tokenInstance.address,
+          10,
+          1,
+          1,
+          1,
+          []
+        )
+      ).revertedWith("NO_VERIFIERS")
+    })
+
     it("Should fail withdrawBatch due to duplicated withdrawal", async function () {
       const [owner, addr2] = await ethers.getSigners()
       const encodedMsg = ethers.utils.solidityKeccak256(

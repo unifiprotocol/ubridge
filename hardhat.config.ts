@@ -29,11 +29,11 @@ const config: HardhatUserConfig = {
   networks: {
     bsctestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      accounts: ["d2cd0edfb354b0591cca90c89bb42947e258244c5caad803f7bce7bad393d1b7"]
     },
     ropsten: {
       url: "https://ropsten.infura.io/v3/b0deef0f9a7845f8a62259bc03272f8d",
-      accounts: ["fe1330e83ff0d4a9399e7c5fe3d4688cad8f5bda4d7a8c48826b49297d987051"]
+      accounts: ["d2cd0edfb354b0591cca90c89bb42947e258244c5caad803f7bce7bad393d1b7"]
     }
   },
   gasReporter: {

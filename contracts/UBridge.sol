@@ -223,6 +223,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 _count,
     bytes[] memory signatures
   ) public nonReentrant whenNotPaused {
+    require(verifyAddresses.length() > 0, "NO_VERIFIERS");
     require(targetChainId == chainId, "WRONG_CHAIN_ID");
     require(signatures.length == verifyAddresses.length(), "WRONG_SIGNATURES");
 
