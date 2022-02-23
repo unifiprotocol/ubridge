@@ -68,19 +68,6 @@ describe("Proxy", function () {
     expect(await proxyUBridgeBrokenInstance.getVerifyAddresses()).to.be.deep.eq([signerAddress])
   })
 
-  // it("Should not allow change of implementation by outside address", async function () {
-  //   expect(await proxyContract.verifyAddress()).eq(secondAddress)
-  //   expect(await proxyContract.chainId()).eq(1)
-  //   const [, , _evilThird] = await ethers.getSigners()
-  //   let evilThird = _evilThird
-  //   evilThirdAddress = await evilThird.getAddress()
-  //   await expect(proxyInterfacedContract.upgradeTo(brokenImplentationContract.address)).not.reverted
-  //   const UBridgeBrokenFactory = await ethers.getContractFactory("UBridgeBroken")
-  //   const proxyUBridgeBrokenInstance = UBridgeBrokenFactory.attach(proxyInterfacedContract.address)
-  //   await expect(proxyUBridgeBrokenInstance.changeVerifySigner(signerAddress)).not.reverted
-  //   expect(await proxyUBridgeBrokenInstance.verifyAddress()).equal(signerAddress)
-  // })
-
   it("Should not allow change of verify signer to a non-address", async function () {
     expect(await proxyContract.getVerifyAddresses()).contains(secondAddress) // Verifies the proxy contract equals the second address.
     expect(await proxyContract.chainId()).eq(1) // Verifies the first proxy contract is on Chain 1

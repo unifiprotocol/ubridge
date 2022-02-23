@@ -18,7 +18,6 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   uint256 public count;
   bool public pausedDeposits;
   EnumerableSet.AddressSet private verifyAddresses;
-
   uint256[] private chainIds = new uint256[](0);
   address[] private originAddresses = new address[](0);
 
@@ -158,8 +157,6 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     chainIdSupported[_chainId] = false;
     emit ChainIdRemoved(_chainId);
   }
-
-  // Array getters
 
   function getChainIds() public view returns (uint256[] memory) {
     return chainIds;
