@@ -40,7 +40,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   mapping(uint256 => uint256) public chainIdFees;
 
   event Deposit(
-    address sender,
+    address withdrawalAddress,
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
@@ -49,7 +49,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     uint256 indexed count
   );
   event Withdraw(
-    address sender,
+    address withdrawalAddress,
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
@@ -277,7 +277,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
   }
 
   function verify(
-    address sender,
+    address withdrawalAddress,
     address originTokenAddress,
     address destinationTokenAddress,
     uint256 amount,
@@ -289,7 +289,7 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     bytes32 message = ECDSA.toEthSignedMessageHash(
       keccak256(
         abi.encodePacked(
-          sender,
+          withdrawalAddress,
           originTokenAddress,
           destinationTokenAddress,
           amount,
