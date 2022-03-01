@@ -8,22 +8,22 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint  src/**/*.ts*",
-    "lint:fix": "yarn lint --fix",
-    "uikit:link": "ln -s $(pwd)/../unifi-sdk/packages/uikit/dist $(pwd)/node_modules/@unifiprotocol/uikit",
-    "uikit:unlink": "rm -fr node_modules/@unifiprotocol/uikit"
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
-    "@unifiprotocol/shell": "^0.1.7",
-    "@unifiprotocol/uikit": "^1.13.0",
-    "@unifiprotocol/utils": "^1.2.1",
+    "@unifiprotocol/core-sdk": "^6.0.6",
+    "@unifiprotocol/shell": "^0.2.7",
+    "@unifiprotocol/uikit": "^1.13.1",
+    "@unifiprotocol/utils": "^2.2.8",
     "ethereum-blockies-png": "^0.1.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-i18next": "^11.15.5",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "recoil": "^0.4.1",
-    "styled-components": "^5.3.1",
+    "recoil": "^0.6.1",
+    "styled-components": "^5.3.3",
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {

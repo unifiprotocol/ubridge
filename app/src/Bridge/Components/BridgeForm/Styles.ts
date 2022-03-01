@@ -9,7 +9,7 @@ export const Account = styled.div`
   align-items: center;
 `
 export const BridgeDirection = styled.div`
-  padding: 0.3rem;
+  padding: 0.75rem;
   line-height: 0;
   text-align: center;
   display: flex;
@@ -17,6 +17,7 @@ export const BridgeDirection = styled.div`
   justify-content: center;
   font-size: 90%;
   color: ${(p) => p.theme.txt200};
+
   svg {
     vertical-align: middle;
     margin-right: 0.3rem;
@@ -30,4 +31,30 @@ export const TransactionDetailsWrapper = styled.div`
 export const TransferOverviewButton = styled(PrimaryButton)`
   font-weight: bold;
   font-size: 110%;
+`
+
+export const DestinationAddressWrapper = styled.div`
+  cursor: pointer;
+  margin-top: 0.5rem;
+
+  :focus-within,
+  :hover {
+    color: ${(props) => props.theme.primary};
+  }
+
+  input {
+    font-size: 0.95rem;
+  }
+`
+
+export const DestinationLabel = styled.div`
+  text-align: center;
+  font-size: 0.85rem;
+`
+
+export const BlockchainFlow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.25rem;
+  margin-bottom: 0.5rem;
 `

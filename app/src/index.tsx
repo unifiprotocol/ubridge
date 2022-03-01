@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom'
 import { Shell } from '@unifiprotocol/shell'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { RecoilRoot } from 'recoil'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Shell Wrapped={App} />
+    <RecoilRoot>
+      <Shell Wrapped={App} />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')
 )

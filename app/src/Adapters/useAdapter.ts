@@ -17,7 +17,7 @@ export const useAdapter = () => {
   const connect = useCallback(() => {
     const address = '0x52856Ca4ddb55A1420950857C7882cFC8E02281C'
     setState((s) => ({ ...s, address }))
-  }, [])
+  }, [setState])
   return {
     connect,
     address

@@ -1,28 +1,40 @@
 import { UnifiThemeProvider, Themes } from '@unifiprotocol/uikit'
-import { TokenLogoResolvers } from '@unifiprotocol/utils'
+import { Blockchains, TokenLogoResolvers } from '@unifiprotocol/utils'
+import { ShellWrappedComp } from '@unifiprotocol/shell'
 import { Body } from './Template/Body'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Bridge } from './Bridge/View'
-import { RecoilRoot } from 'recoil'
+import { I18nextProvider } from 'react-i18next'
+import { useMemo } from 'react'
+import { AdapterContext } from './Adapter'
 
-function App() {
+const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
+  const blockchain = useMemo(
+    () => connection.adapter?.adapter.blockchainConfig.blockchain ?? Blockchains.Binance,
+    [connection]
+  )
+
   return (
-    <UnifiThemeProvider
-      theme={Themes.Dark}
-      options={{ tokenLogoResolver: TokenLogoResolvers.Binance }}
-    >
-      <RecoilRoot>
-        <Router>
-          <Body>
-            <Switch>
-              <Route path="/">
-                <Bridge />
-              </Route>
-            </Switch>
-          </Body>
-        </Router>
-      </RecoilRoot>
-    </UnifiThemeProvider>
+    <AdapterContext.Provider value={{ connection, balances, eventBus }}>
+      <I18nextProvider i18n={i18n}>
+        <UnifiThemeProvider
+          theme={Themes.Dark}
+          options={{
+            tokenLogoResolver: TokenLogoResolvers[blockchain]
+          }}
+        >
+          <Router>
+            <Body>
+              <Switch>
+                <Route path="/">
+                  <Bridge />
+                </Route>
+              </Switch>
+            </Body>
+          </Router>
+        </UnifiThemeProvider>
+      </I18nextProvider>
+    </AdapterContext.Provider>
   )
 }
 

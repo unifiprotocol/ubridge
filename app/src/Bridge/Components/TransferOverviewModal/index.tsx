@@ -9,10 +9,9 @@ import {
   PrimaryButton,
   TokenAmount
 } from '@unifiprotocol/uikit'
-import { shortAddress } from '@unifiprotocol/utils'
+import { Currency, shortAddress } from '@unifiprotocol/utils'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Config } from '../../../Config'
 import { TransactionDetails } from '../BridgeForm/TransactionDetails'
 
 const Swap = styled.div`
@@ -71,7 +70,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
               From <b>Binance</b>
             </span>
             <Address>{shortAddress('0x52856Ca4ddb55A1420950857C7882cFC8E02281C')}</Address>
-            <TokenAmount token={Config.unfiToken} amount={'100'} />
+            <TokenAmount token={new Currency('UNFI', 18, 'UNFI', 'UNFI')} amount={'100'} />
           </Send>
 
           <Receive>
@@ -80,7 +79,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             </span>
 
             <Address>{shortAddress('0x49506Ca4ddb55A1420950857C7882cFC8E02123A')}</Address>
-            <TokenAmount token={Config.unfiToken} amount={'99'} />
+            <TokenAmount token={new Currency('UNFI', 18, 'UNFI', 'UNFI')} amount={'99'} />
           </Receive>
         </Swap>
         <TransactionDetails />
@@ -90,7 +89,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             onChange={setConfirmed}
             label={
               <>
-                I read and accept the <a>terms and conditions</a>
+                I read and accept the <a href="#xd">terms and conditions</a>
               </>
             }
           />
