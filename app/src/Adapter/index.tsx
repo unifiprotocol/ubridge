@@ -4,8 +4,8 @@ import { Currency } from '@unifiprotocol/utils'
 
 type TAdapter = {
   connection: ShellWrappedProps['connection'] | undefined
-  balances: ShellWrappedProps['balances']
   eventBus: ShellWrappedProps['eventBus'] | undefined
+  balances: ShellWrappedProps['balances']
 }
 
 export const AdapterContext = React.createContext<TAdapter>({

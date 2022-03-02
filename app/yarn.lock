@@ -4549,10 +4549,10 @@
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.2.tgz#4d6eee84896cd33512cddecb0e58155dda4b3086"
-  integrity sha512-rxPRUQApFcbptw2HxtAJrUSGVjyW9epjIS6xUB8srSWukDFZfBPdGf0Owr811B6gs1DuX2eBOcdh05ZrfHhJaQ==
+"@unifiprotocol/core-sdk@^6.0.14":
+  version "6.0.14"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.14.tgz#de8a960f01cd28fef00fcedd8b75af9a4fbd46e0"
+  integrity sha512-XxnUX2F2G9Li5ysnq4wcToijg/09dMuFJTTiq5tW1P5SwZwgqZ5+uPGnBz3uTOSX51YBfzujwCHqLgGwq6UzJg==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
@@ -4591,10 +4591,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.8.tgz#2eda8d890fdc9a3c08bdb46478d5d080f9192251"
-  integrity sha512-KMFGs1Oe61NyWyyaQLA1e3vGjw8apcYDpnuYgz/OhQSYz7RbvczXJrdw1a46wlVnjtcWCKewgOqVkYbto6mteQ==
+"@unifiprotocol/shell@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.10.tgz#607099b17a4f8a1113c37d43a0e81ec4b7ed7ad4"
+  integrity sha512-d1YMVeo/9y7LWmvxZLzyb8l6ZsAENpuTtXy+6WWLD8Vh0GZExBHnKk8ejg6iY3c7zJjB1fWIsEoe9TsJ25xO5Q==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -4606,7 +4606,7 @@
     "@types/node" "^16.7.13"
     "@types/react" "^17.0.20"
     "@types/react-dom" "^17.0.9"
-    "@unifiprotocol/core-sdk" "^6.0.2"
+    "@unifiprotocol/core-sdk" "^6.0.14"
     "@unifiprotocol/uikit" "^1.13.0"
     "@unifiprotocol/utils" "^2.2.13"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"

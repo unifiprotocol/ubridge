@@ -1,5 +1,13 @@
-import { Card, CardBody, Input, PrimaryButton, TokenInput, useModal } from '@unifiprotocol/uikit'
-import React, { useEffect, useMemo, useState } from 'react'
+import {
+  Card,
+  CardBody,
+  Input,
+  PrimaryButton,
+  TokenInput,
+  TokenInputWithSelector,
+  useModal
+} from '@unifiprotocol/uikit'
+import React, { useEffect, useMemo } from 'react'
 import {
   BlockchainFlow,
   BridgeDirection,
@@ -13,11 +21,23 @@ import {
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { Blockchains, Currency } from '@unifiprotocol/utils'
+import { Blockchains } from '@unifiprotocol/utils'
 import { useAdapter } from '../../Adapter'
+import { useSwap } from './useSwap'
+import { useConfig } from '../../Config'
 
 export const BridgeForm: React.FC = () => {
-  const { adapter, balances, addToken } = useAdapter()
+  const { blockchainConfig } = useConfig()
+  const { adapter, balances, connection } = useAdapter()
+  const {
+    amount,
+    token0,
+    token1,
+    destinationAddress,
+    setDestinationAddress,
+    setAmount,
+    setToken0
+  } = useSwap()
 
   const overviewTransactionProps = useMemo(() => ({}), [])
   const [overviewTransaction] = useModal<TransferOverviewModalProps>({
@@ -25,20 +45,24 @@ export const BridgeForm: React.FC = () => {
     props: overviewTransactionProps,
     options: { disableBackdropClick: true }
   })
-  const [amount, setAmount] = useState('0')
+
+  const tokenList = useMemo(() => {
+    return blockchainConfig
+      ? Object.values(blockchainConfig.tokens).map((currency) => ({ currency }))
+      : []
+  }, [blockchainConfig])
 
   useEffect(() => {
-    addToken(new Currency('0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B', 18, 'UNFI', 'UNFI'))
-  }, [addToken])
+    if (!token0 && tokenList.length > 0) {
+      setToken0(tokenList[0].currency)
+    }
+  }, [setToken0, token0, tokenList, tokenList.length])
 
-  const unfiBalance = useMemo(() => {
-    const unfi = balances.find(
-      (c) =>
-        c.currency.address.toLowerCase() ===
-        '0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B'.toLowerCase()
-    )
-    return unfi ? unfi.currency.toFactorized(unfi?.balance) : '0'
-  }, [balances])
+  const token0Balance = useMemo(() => {
+    if (!token0) return '0'
+    const tokenBalances = balances.find((b) => b.currency.equals(token0))
+    return token0.toFactorized(tokenBalances?.balance ?? '0')
+  }, [token0, balances])
 
   return (
     <>
@@ -47,16 +71,17 @@ export const BridgeForm: React.FC = () => {
           <From>
             <BlockchainFlow>
               <span>From</span>
-              <PrimaryButton variant="outline">{Blockchains.Binance}</PrimaryButton>
+              <PrimaryButton variant="outline">{connection?.config.blockchain}</PrimaryButton>
             </BlockchainFlow>
-            <TokenInput
+            <TokenInputWithSelector
               label="Send"
               balanceLabel="Balance"
               amount={amount}
-              token={new Currency('0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B', 18, 'UNFI', 'UNFI')}
-              disableTokenChange={true}
-              balance={unfiBalance}
+              token={token0}
+              balance={token0Balance}
               onAmountChange={setAmount}
+              onTokenChange={setToken0}
+              tokenList={tokenList}
             />
           </From>
           <BridgeDirection>
@@ -71,7 +96,7 @@ export const BridgeForm: React.FC = () => {
               label="Receive"
               balanceLabel="Balance"
               amount={amount}
-              token={new Currency('0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B', 18, 'UNFI', 'UNFI')}
+              token={token1}
               disableTokenChange={true}
               disableMaxAction={true}
               disableAmountChange={true}
@@ -81,7 +106,8 @@ export const BridgeForm: React.FC = () => {
             {adapter && (
               <DestinationAddressWrapper>
                 <Input
-                  value={adapter.getAddress()}
+                  value={destinationAddress}
+                  onChange={(e) => setDestinationAddress(e.currentTarget.value)}
                   prefixAddon={<DestinationLabel>Destination Address</DestinationLabel>}
                 />
               </DestinationAddressWrapper>
