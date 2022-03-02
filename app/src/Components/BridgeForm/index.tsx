@@ -14,7 +14,7 @@ import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
 import { Blockchains, Currency } from '@unifiprotocol/utils'
-import { useAdapter } from '../../../Adapter'
+import { useAdapter } from '../../Adapter'
 
 export const BridgeForm: React.FC = () => {
   const { adapter, balances, addToken } = useAdapter()

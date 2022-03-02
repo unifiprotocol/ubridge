@@ -1,7 +1,7 @@
 import React from 'react'
-import { CollapsibleCard, ShinyHeader, ShinyWrapper } from '@unifiprotocol/uikit'
+import { CollapsibleCard, ShinyHeader } from '@unifiprotocol/uikit'
 import { BridgePanel, Hero, LiquidityCardContent } from './Styles'
-import { Blockchains } from '@unifiprotocol/utils'
+import { VernacularBlockchains } from '@unifiprotocol/utils'
 
 export const Liquidity = () => {
   return (
@@ -18,7 +18,7 @@ export const Liquidity = () => {
         </p>
       </Hero>
       <BridgePanel>
-        {Object.keys(Blockchains).map((blockchain, idx) => (
+        {Object.values(VernacularBlockchains).map((blockchain, idx) => (
           <LiquidityCard {...{ blockchain }} key={idx} />
         ))}
       </BridgePanel>

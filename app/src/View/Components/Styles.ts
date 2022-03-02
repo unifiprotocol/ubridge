@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import doodle from '../../../Assets/doodle.png'
+import doodle from '../../Assets/doodle.png'
 
 export const BridgePanel = styled.div`
   padding-top: 2rem;
