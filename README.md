@@ -27,3 +27,7 @@ For further information:
 - [Smart contract code](https://github.com/unifiprotocol/ubridge/blob/master/contracts/UBridge.sol)
 
 - [Backend service](https://github.com/unifiprotocol/ubridge-service)
+
+## Audit report
+
+- [SlowMist Audit - 3/3/2022](https://github.com/unifiprotocol/ubridge/blob/master/SlowMist%20Audit%20Report%20-%20Bridge.pdf)
