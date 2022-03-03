@@ -174,6 +174,15 @@ describe("uBridge", function () {
 
       expect(readFees).deep.eq(fees)
     })
+
+    it("Should emit Paused event", async function () {
+      await expect(contractInstance.pause()).to.emit(contractInstance, "Paused")
+    })
+
+    it("Should emit Unpaused event", async function () {
+      await contractInstance.pause()
+      await expect(contractInstance.unpause()).to.emit(contractInstance, "Unpaused")
+    })
   })
 
   describe("Deposits and Withdraws", () => {
