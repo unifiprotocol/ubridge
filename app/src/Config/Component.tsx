@@ -3,7 +3,6 @@ import { RefreshBalances } from '@unifiprotocol/shell'
 import { useConfig } from '.'
 import { useAdapter } from '../Adapter'
 import { fetchConfig } from '../Services/API'
-import { useLiquidity } from '../Liquidity'
 
 export const Config = () => {
   const [init, setInit] = useState(false)

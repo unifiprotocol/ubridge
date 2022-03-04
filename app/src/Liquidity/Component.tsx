@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLiquidity } from '.'
 import { useConfig } from '../Config'
+import Clocks from '../Services/Clocks'
 
 export const Liquidty = () => {
   const [init, setInit] = useState(false)
@@ -13,6 +14,14 @@ export const Liquidty = () => {
       setInit(true)
     }
   }, [config, init, updateLiquidity])
+
+  useEffect(() => {
+    const fn = () => updateLiquidity()
+    Clocks.on('SIXTY_SECONDS', fn)
+    return () => {
+      Clocks.off('SIXTY_SECONDS', fn)
+    }
+  }, [updateLiquidity])
 
   return <></>
 }
