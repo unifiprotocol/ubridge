@@ -5,7 +5,7 @@ export const BridgePanel = styled.div`
   padding-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;a
+  justify-content: center;
 `
 
 export const Hero = styled.div`
@@ -18,6 +18,7 @@ export const Hero = styled.div`
 
   padding: 0.75rem 1.5rem;
   border-radius: 1rem;
+  text-align: justify;
 
   @media (max-width: 576px) {
     padding: 0;

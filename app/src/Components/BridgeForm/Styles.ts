@@ -55,6 +55,7 @@ export const DestinationLabel = styled.div`
 export const BlockchainFlow = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0 0.25rem;
+  align-items: center;
+  padding: 0 0.3rem;
   margin-bottom: 0.5rem;
 `

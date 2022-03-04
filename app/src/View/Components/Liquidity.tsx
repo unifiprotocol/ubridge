@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { CollapsibleCard, ShinyHeader } from '@unifiprotocol/uikit'
 import { BridgePanel, Hero, LiquidityCardContent } from './Styles'
-import { VernacularBlockchains } from '@unifiprotocol/utils'
+import { BN, VernacularBlockchains } from '@unifiprotocol/utils'
+import { Blockchains } from '@unifiprotocol/core-sdk'
+import { useConfig } from '../../Config'
+import { useLiquidity } from '../../Liquidity'
 
 export const Liquidity = () => {
+  const { config } = useConfig()
+
   return (
     <>
       <Hero>
@@ -18,35 +23,36 @@ export const Liquidity = () => {
         </p>
       </Hero>
       <BridgePanel>
-        {Object.values(VernacularBlockchains).map((blockchain, idx) => (
-          <LiquidityCard {...{ blockchain }} key={idx} />
-        ))}
+        {Object.keys(config).map((b, idx) => {
+          const blockchain = b as Blockchains
+          return <LiquidityCard {...{ blockchain }} key={idx} />
+        })}
       </BridgePanel>
     </>
   )
 }
 
-export const LiquidityCard: React.FC<{ blockchain: string }> = ({ blockchain }) => {
+export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchain }) => {
+  const { liquidity } = useLiquidity()
+
+  const blockchainLiquidity = useMemo(() => {
+    return liquidity[blockchain]
+  }, [blockchain, liquidity])
+
   return (
     <CollapsibleCard>
       <LiquidityCardContent>
-        <h1>{blockchain}</h1>
+        <h1>{VernacularBlockchains[blockchain]}</h1>
         <div className="title">TVL</div>
         <div>${(5_000_000).toLocaleString()}</div>
         <div className="title">Assets</div>
-        <div className="asset">
-          <img src="https://assets.unifiprotocol.com/UNFI.png" alt="UNFI" />
-          <span>{(14_000).toLocaleString()}</span>
-          <span>UNFI</span>
-        </div>
-        <div className="asset">
-          <img
-            src="https://icon-service.unifi.report/icon_bsc?token=0xb4E8D978bFf48c2D8FA241C0F323F71C1457CA81&autoResolve=false"
-            alt="UNFI"
-          />
-          <span>{(14_000).toLocaleString()}</span>
-          <span>UP</span>
-        </div>
+        {blockchainLiquidity.map((liq, idx) => (
+          <div className="asset" key={idx}>
+            <img src="https://assets.unifiprotocol.com/UNFI.png" alt="UNFI" />
+            <span>{BN(liq.balance).toNumber().toLocaleString()}</span>
+            <span>{liq.currency.symbol}</span>
+          </div>
+        ))}
       </LiquidityCardContent>
     </CollapsibleCard>
   )

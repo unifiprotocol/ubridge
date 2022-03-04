@@ -4570,10 +4570,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/core-sdk@^6.0.6":
-  version "6.0.6"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.6.tgz#da303fec418905c36ce204699a224499f5d6c84e"
-  integrity sha512-XZiyMVYNXCGOHASNCOrR9SFdFO/sxf9bPGBS29BM8lieHh1eDBgm70O/2Ov3v42rnwIJ466xt+hzd5WGDdBrUg==
+"@unifiprotocol/core-sdk@^6.0.15":
+  version "6.0.15"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.15.tgz#a5a2c29de513c5cb6d065d47e762568fcc876b83"
+  integrity sha512-x8vaMnuvkgZGDIhnrF0puATsXMuLq3DL/MCDO+wVxrUYdUK8wlwT1R/8vVrtzTheXFPIW8MCA7+m9T0D5Cf1rA==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
@@ -4671,15 +4671,6 @@
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.2.4.tgz#00ab9306f8d257ba1fd9504af137464d683adab4"
   integrity sha512-HKYRP++OE2dLhEC/6AgLei8LD0g9opWexFxX4f5A7+d3xOabOpP6DT3Zngx8SezJ8hO0EbB8X26o6qg+KE8Cig==
-  dependencies:
-    bignumber.js "^9.0.1"
-    keccak "^3.0.2"
-    tslib "^2.1.0"
-
-"@unifiprotocol/utils@^2.2.12":
-  version "2.2.12"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.2.12.tgz#3a218ef2c99318f89b3b5f615bb8905bf6946024"
-  integrity sha512-cHGcGyeAZKLdtosI12W5Xr7aI2KDyMXznZiZZUXut9eA6C0XWbGSp9sLuWYJWgosufghEVZKYZ5KeDR7qSldPw==
   dependencies:
     bignumber.js "^9.0.1"
     keccak "^3.0.2"

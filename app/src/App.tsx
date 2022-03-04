@@ -8,6 +8,7 @@ import { I18nextProvider } from 'react-i18next'
 import { useMemo } from 'react'
 import { AdapterContext } from './Adapter'
 import { Config } from './Config/Component'
+import { Liquidty } from './Liquidity/Component'
 
 const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
   const blockchain = useMemo(
@@ -25,6 +26,7 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
           }}
         >
           <Config />
+          <Liquidty />
           <Router>
             <Body>
               <Switch>

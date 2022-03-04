@@ -1,7 +1,9 @@
+import { ShinyHeader } from '@unifiprotocol/uikit'
 import React from 'react'
 import styled from 'styled-components'
 import { useAdapter } from '../Adapter'
 import { useConfig } from '../Config'
+import { Hero } from '../View/Components/Styles'
 
 const BodyWrapper = styled.div`
   margin-top: 1rem;
@@ -18,5 +20,22 @@ export const Body: React.FC = ({ children }) => {
     return <BodyWrapper>{children}</BodyWrapper>
   }
 
-  return <h1>Blockchain not supported</h1>
+  return (
+    <BodyWrapper>
+      <div style={{ maxWidth: '992px', width: '100%' }}>
+        <Hero>
+          <ShinyHeader>Blockchain not supported</ShinyHeader>
+          <p>Working in progress to give you the availability of UNFI crosschain.</p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+            mollit anim id est laborum.
+          </p>
+        </Hero>
+      </div>
+    </BodyWrapper>
+  )
 }
