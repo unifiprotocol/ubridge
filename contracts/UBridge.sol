@@ -131,6 +131,10 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     for (uint256 j = 0; j < chainIdsTarget.length; j++) {
       uint256 _chainId = chainIdsTarget[j];
       require(chainIdSupported[_chainId], "CHAIN_ID_NOT_SUPPORTED");
+      require(
+        tokensSupported[tokenAddress][chainIdsTarget[j]] != address(0),
+        "TOKEN_CHAIN_ID_NOT_SUPPORTED"
+      );
       tokensSupported[tokenAddress][chainIdsTarget[j]] = address(0);
       chainsSupportedForTokenAddress[tokenAddress]--;
       emit TokenRemove(tokenAddress, chainIdsTarget[j]);
