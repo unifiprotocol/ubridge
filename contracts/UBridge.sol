@@ -101,9 +101,9 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
     require(destinationTokenAddresses.length == chainIdsTarget.length, "ARRAYS_LENGTH_DIFFER");
     if (chainsSupportedForTokenAddress[originTokenAddress] == 0)
       originAddresses.push(originTokenAddress);
-    chainsSupportedForTokenAddress[originTokenAddress]++;
     for (uint256 i = 0; i < chainIdsTarget.length; i++) {
       require(chainIdSupported[chainIdsTarget[i]], "CHAIN_ID_NOT_SUPPORTED");
+      chainsSupportedForTokenAddress[originTokenAddress]++;
       tokensSupported[originTokenAddress][chainIdsTarget[i]] = destinationTokenAddresses[i];
       emit TokenAdded(originTokenAddress, chainIdsTarget[i]);
     }
@@ -129,10 +129,12 @@ contract UBridge is Ownable, Pausable, ReentrancyGuard, Initializable {
 
   function removeToken(address tokenAddress, uint256[] memory chainIdsTarget) public onlyOwner {
     for (uint256 j = 0; j < chainIdsTarget.length; j++) {
+      uint256 _chainId = chainIdsTarget[j];
+      require(chainIdSupported[_chainId], "CHAIN_ID_NOT_SUPPORTED");
       tokensSupported[tokenAddress][chainIdsTarget[j]] = address(0);
+      chainsSupportedForTokenAddress[tokenAddress]--;
       emit TokenRemove(tokenAddress, chainIdsTarget[j]);
     }
-    chainsSupportedForTokenAddress[tokenAddress]--;
     if (chainsSupportedForTokenAddress[tokenAddress] > 0) return;
     uint256 i;
     for (i = 0; i < originAddresses.length; i++) {
