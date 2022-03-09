@@ -79,6 +79,38 @@ describe("uBridge", function () {
       expect(chain3.toNumber()).equal(3)
     })
 
+    it("Should add chainId=2,3, add tokens to them, and chainsSupportedForTokenAddress should be equal to 2", async function () {
+      const chainIdsToAdd = [2, 3]
+      await contractInstance.addChainId(chainIdsToAdd)
+      await contractInstance.addToken(
+        tokenInstance.address,
+        [tokenInstance.address, tokenInstance.address],
+        [2, 3]
+      )
+      expect(await contractInstance.chainsSupportedForTokenAddress(tokenInstance.address)).equal(2)
+    })
+
+    it("Should add chainId=2,3, add tokens to them, remove the token in one of them, and chainsSupportedForTokenAddress should be equal to 1", async function () {
+      const chainIdsToAdd = [2, 3]
+      await contractInstance.addChainId(chainIdsToAdd)
+      await contractInstance.addToken(
+        tokenInstance.address,
+        [tokenInstance.address, tokenInstance.address],
+        [2, 3]
+      )
+      await contractInstance.removeToken(tokenInstance.address, [2])
+      expect(await contractInstance.chainsSupportedForTokenAddress(tokenInstance.address)).equal(1)
+    })
+
+    it("Should add chainId=2,3, add a token to chainId=2, remove the token in token chainId=3, and should fail", async function () {
+      const chainIdsToAdd = [2, 3]
+      await contractInstance.addChainId(chainIdsToAdd)
+      await contractInstance.addToken(tokenInstance.address, [tokenInstance.address], [2])
+      await expect(contractInstance.removeToken(tokenInstance.address, [3])).revertedWith(
+        "TOKEN_CHAIN_ID_NOT_SUPPORTED"
+      )
+    })
+
     it("Should add chainId=2,3 to supportedChainIds and after remove chainId 3", async function () {
       const chainIdsToAdd = [2, 3]
       await contractInstance.addChainId(chainIdsToAdd)
