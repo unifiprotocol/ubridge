@@ -4570,10 +4570,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/core-sdk@^6.0.15":
-  version "6.0.15"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.15.tgz#a5a2c29de513c5cb6d065d47e762568fcc876b83"
-  integrity sha512-x8vaMnuvkgZGDIhnrF0puATsXMuLq3DL/MCDO+wVxrUYdUK8wlwT1R/8vVrtzTheXFPIW8MCA7+m9T0D5Cf1rA==
+"@unifiprotocol/core-sdk@^6.0.17":
+  version "6.0.17"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.17.tgz#8a95580d397349a01e4a6a58e3ed3adbcb97f7e9"
+  integrity sha512-JechVw9/bpKr6tOg7hcYqUr7Xu53TmsoxnSUgGR6mZJB/f9bxmbZeoGu+NHD7SBRuB8LHb9rMlzSwOIZJT3Lgw==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
@@ -4584,7 +4584,6 @@
     ethereum-multicall "^2.4.0"
     ethers "^5.2.0"
     eventemitter3 "^4.0.7"
-    inversify "^5.1.1"
     promise-parallel-throttle "^3.3.0"
     reflect-metadata "^0.1.13"
     tron-format-address "^0.1.8"

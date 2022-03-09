@@ -4,6 +4,12 @@ A ERC20 bridge between blockchains with one point deposit verification.
 
 ## Contracts
 
+## Deploy
+
+```sh
+npx hardhat run ./scripts/deploy.ts --network NETWORK
+```
+
 ## Description
 
 The objective of uBridge is to transfer pegged tokens from one blockchain to another. The first use case will enable users to transfer UNFI tokens between our available networks, and liquidity will be supplied by UNIFI at first.

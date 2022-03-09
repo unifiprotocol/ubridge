@@ -18,7 +18,7 @@ async function main() {
     chainId
   ])
 
-  const bridgeAddress = "0x5AD456F18559D8E82f527e0c28fA631105304c87"
+  const bridgeAddress = "0x31e7A2987723a78e5dC63aedd2297861097FE645"
 
   const proxyInstance = await ProxyFactory.deploy(
     bridgeAddress,

@@ -25,6 +25,7 @@
     "ethers": "^5.5.2",
     "hardhat": "^2.8.2",
     "hardhat-gas-reporter": "^1.0.6",
+    "hardhat-iotex-verify": "^0.0.3",
     "prettier": "^2.5.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.6",

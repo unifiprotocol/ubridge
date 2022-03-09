@@ -21,10 +21,10 @@ import {
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { Blockchains } from '@unifiprotocol/utils'
+import { Blockchains, getVernacularBlockchain } from '@unifiprotocol/utils'
 import { useAdapter } from '../../Adapter'
-import { useSwap } from './useSwap'
 import { useConfig } from '../../Config'
+import { useSwap } from '../../Swap'
 
 export const BridgeForm: React.FC = () => {
   const { blockchainConfig } = useConfig()
@@ -33,6 +33,7 @@ export const BridgeForm: React.FC = () => {
     amount,
     token0,
     token1,
+    targetChain,
     destinationAddress,
     setDestinationAddress,
     setAmount,
@@ -64,6 +65,16 @@ export const BridgeForm: React.FC = () => {
     return token0.toFactorized(tokenBalances?.balance ?? '0')
   }, [token0, balances])
 
+  const vernacularOrigin = useMemo(() => {
+    return connection?.config.blockchain
+      ? getVernacularBlockchain(connection?.config.blockchain)
+      : ''
+  }, [connection?.config.blockchain])
+
+  const vernacularTarget = useMemo(() => {
+    return targetChain ? getVernacularBlockchain(targetChain) : ''
+  }, [targetChain])
+
   return (
     <>
       <Card>
@@ -71,7 +82,7 @@ export const BridgeForm: React.FC = () => {
           <From>
             <BlockchainFlow>
               <span>From</span>
-              <PrimaryButton variant="outline">{connection?.config.blockchain}</PrimaryButton>
+              <PrimaryButton variant="outline">{vernacularOrigin}</PrimaryButton>
             </BlockchainFlow>
             <TokenInputWithSelector
               label="Send"
@@ -82,6 +93,7 @@ export const BridgeForm: React.FC = () => {
               onAmountChange={setAmount}
               onTokenChange={setToken0}
               tokenList={tokenList}
+              maxPercentage={'0.9999999999'}
             />
           </From>
           <BridgeDirection>
@@ -99,8 +111,7 @@ export const BridgeForm: React.FC = () => {
               token={token1}
               disableTokenChange={true}
               disableMaxAction={true}
-              disableAmountChange={true}
-              onAmountChange={() => {}}
+              onAmountChange={setAmount}
             />
 
             {adapter && (

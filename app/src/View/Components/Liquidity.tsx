@@ -43,8 +43,6 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
     <CollapsibleCard>
       <LiquidityCardContent>
         <h1>{VernacularBlockchains[blockchain]}</h1>
-        <div className="title">TVL</div>
-        <div>${(5_000_000).toLocaleString()}</div>
         <div className="title">Assets</div>
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>

@@ -42,7 +42,7 @@ export const useLiquidity = () => {
       const results = await adapter.multicall.execute(balanceOfCalls)
       newState[blockchain] = results.map((r, idx) => ({
         currency: tokens[idx],
-        balance: r.value ?? '0'
+        balance: tokens[idx].toFactorized(r.value) ?? '0'
       }))
     }
     setLiquidity(newState)
