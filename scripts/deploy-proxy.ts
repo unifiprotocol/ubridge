@@ -8,7 +8,6 @@ async function main() {
   }
 
   const UBridgeFactory = await ethers.getContractFactory("UBridge")
-  const bridgeInstance = await UBridgeFactory.deploy()
 
   const ProxyFactory = await ethers.getContractFactory("ProxyBridge")
   const initFunction = UBridgeFactory.interface.getFunction("init")
@@ -19,22 +18,24 @@ async function main() {
     chainId
   ])
 
+  const bridgeAddress = "0x5AD456F18559D8E82f527e0c28fA631105304c87"
+
   const proxyInstance = await ProxyFactory.deploy(
-    bridgeInstance.address,
+    bridgeAddress,
     initCallData
     //     , {
     //     gasLimit: 4712388,
     //     gasPrice: 100000000000
     //   }
   )
-  console.log(`Bridge contract successfully deployed: ${bridgeInstance.address}`)
+  console.log(`Bridge contract successfully deployed: ${bridgeAddress}`)
   console.log(`Proxy successfully deployed: ${proxyInstance.address}`)
 
   console.log(
-    `verify uBridge: yarn hardhat verify --contract contracts/UBridge.sol:UBridge --network ${hardhatArguments.network} ${bridgeInstance.address}`
+    `verify uBridge: yarn hardhat verify --contract contracts/UBridge.sol:UBridge --network ${hardhatArguments.network} ${bridgeAddress}`
   )
   console.log(
-    `verify Proxy: yarn hardhat verify --contract contracts/ProxyBridge.sol:ProxyBridge --network ${hardhatArguments.network} ${proxyInstance.address} ${bridgeInstance.address} ${initCallData}`
+    `verify Proxy: yarn hardhat verify --contract contracts/ProxyBridge.sol:ProxyBridge --network ${hardhatArguments.network} ${proxyInstance.address} ${bridgeAddress} ${initCallData}`
   )
 }
 

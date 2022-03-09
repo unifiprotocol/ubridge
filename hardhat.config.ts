@@ -1,39 +1,71 @@
 import * as dotenv from "dotenv"
 
-import { HardhatUserConfig, task } from "hardhat/config"
+import "hardhat-iotex-verify"
+import { HardhatUserConfig } from "hardhat/config"
 import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-waffle"
 import "@typechain/hardhat"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
-import { deployBridge } from "./tasks/deployer"
 
 dotenv.config()
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners()
-
-  for (const account of accounts) {
-    console.log(account.address)
-  }
-})
-
-task("deploy", deployBridge)
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
-
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
-    bsctestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: ["d2cd0edfb354b0591cca90c89bb42947e258244c5caad803f7bce7bad393d1b7"]
+    Binance: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Binance"
     },
-    ropsten: {
-      url: "https://ropsten.infura.io/v3/b0deef0f9a7845f8a62259bc03272f8d",
-      accounts: ["d2cd0edfb354b0591cca90c89bb42947e258244c5caad803f7bce7bad393d1b7"]
+    Ethereum: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Ethereum"
+    },
+    EthereumRopsten: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Ropsten"
+    },
+    EthereumRinkeby: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Rinkeby"
+    },
+    BinanceTestnet: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/BinanceTesnet"
+    },
+    Iotex: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Iotex"
+    },
+    Tron: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Tron"
+    },
+    Harmony: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Harmony"
+    },
+    Polygon: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Polygon"
+    },
+    Avalanche: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Avalanche"
+    },
+    BTTC: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/BTTC"
+    },
+    FTM: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/FTM"
+    },
+    OntologyTestnet: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/OntologyTestnet"
     }
   },
   gasReporter: {
@@ -43,7 +75,11 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       ropsten: "6329MS2FHP9NCKF6DKPDMR5RIE3HYCYGW1",
-      bscTestnet: "BC9318STPGVMNCWWBSKTUTZ5CTVK8DDD1B"
+      bscTestnet: "BC9318STPGVMNCWWBSKTUTZ5CTVK8DDD1B",
+      bsc: "2N8MMDJJRIE9661UDSJXICDHEN5N4I4ZD1",
+      polygon: "C8YFTAEB68WSSEQVKZQENPY98DH7VKCGYV",
+      avalanche: "Q7HS4I9BHTUU761CVGUFK79SY5NBYVNCTN",
+      opera: "71ZCRD5TYV9SPK8XTSPYAMI7XTUQWIC1V2"
     }
   }
 }
