@@ -4,6 +4,7 @@ import { useLiquidity } from '../../Liquidity'
 import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import { Blockchains } from '@unifiprotocol/core-sdk'
 import { SelectionList, SelectionListItem } from './Styles'
+import { useConfig } from '../../Config'
 
 export interface BlockchainSelectorProps extends ModalProps {
   onBlockchainSelected: (blockchain: Blockchains) => void
@@ -14,6 +15,7 @@ export const BlockchainSelectorModal: React.FC<BlockchainSelectorProps> = ({
   onBlockchainSelected
 }) => {
   const { liquidity } = useLiquidity()
+  const { config, blockchainConfig } = useConfig()
 
   const onBlockchainClick = useCallback(
     (blockchain: Blockchains) => {
@@ -23,14 +25,14 @@ export const BlockchainSelectorModal: React.FC<BlockchainSelectorProps> = ({
     [close, onBlockchainSelected]
   )
 
-  const blockchainsWithLiquidity = useMemo(
-    () =>
-      Object.keys(liquidity).filter((b) => {
-        const blockchain = b as Blockchains
-        return liquidity[blockchain].length > 0
-      }),
-    [liquidity]
-  )
+  const blockchainsWithLiquidity = useMemo(() => {
+    if (!blockchainConfig) return []
+    return Object.keys(liquidity).filter((b) => {
+      const blockchain = b as Blockchains
+      const chainConfig = config[blockchain]!
+      return liquidity[blockchain].length > 0 && chainConfig.type === blockchainConfig.type
+    })
+  }, [blockchainConfig, config, liquidity])
 
   return (
     <Modal>
