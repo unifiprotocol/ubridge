@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useSwap } from '../../Swap'
 
 const TransactionDetailsWrapper = styled.ul`
   padding: 0;
@@ -20,24 +21,32 @@ const Title = styled.div`
 const Value = styled.div``
 
 export const TransactionDetails: React.FC = () => {
-  return (
+  const { maxSwapSize, targetCurrency } = useSwap()
+
+  return targetCurrency ? (
     <TransactionDetailsWrapper>
       <Line>
         <Title>Max swap size</Title>
-        <Value>{(14_000).toLocaleString()} UNFI</Value>
+        <Value>
+          {maxSwapSize} {targetCurrency.symbol}
+        </Value>
       </Line>
       <Line>
         <Title>Swap fee</Title>
-        <Value>0% ~ 0 UNFI</Value>
+        <Value>
+          {maxSwapSize} {targetCurrency.symbol}
+        </Value>
       </Line>
       <Line>
         <Title>Transaction cost</Title>
-        <Value>~0.00001123 BNB</Value>
+        <Value>
+          {maxSwapSize} {targetCurrency.symbol}
+        </Value>
       </Line>
       <Line>
         <Title>Estimated time</Title>
         <Value>~2min</Value>
       </Line>
     </TransactionDetailsWrapper>
-  )
+  ) : null
 }

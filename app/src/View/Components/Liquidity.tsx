@@ -47,7 +47,7 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>
             <img src="https://assets.unifiprotocol.com/UNFI.png" alt="UNFI" />
-            <span>{BN(liq.balance).toNumber().toLocaleString()}</span>
+            <span>{liq.currency.toFactorized(liq.balance, 4)}</span>
             <span>{liq.currency.symbol}</span>
           </div>
         ))}

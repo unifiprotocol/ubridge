@@ -3,6 +3,7 @@ import { RefreshBalances } from '@unifiprotocol/shell'
 import { useConfig } from '.'
 import { useAdapter } from '../Adapter'
 import { fetchConfig } from '../Services/API'
+import SwapService from '../Swap/SwapService'
 
 export const Config = () => {
   const [init, setInit] = useState(false)
@@ -32,6 +33,7 @@ export const Config = () => {
   useEffect(() => {
     fetchConfig().then((cfg) => {
       setConfig(cfg.result)
+      SwapService.setConfig(cfg.result)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

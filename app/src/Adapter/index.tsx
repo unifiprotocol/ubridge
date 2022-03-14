@@ -31,6 +31,7 @@ export const useAdapter = () => {
     addToken,
     connection: state.connection,
     adapter: state.connection?.adapter?.adapter,
+    blockchainConfig: state.connection?.adapter?.adapter.blockchainConfig,
     balances: state.balances,
     eventBus: state.eventBus
   }

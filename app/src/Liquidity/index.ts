@@ -3,7 +3,7 @@ import { Blockchains } from '@unifiprotocol/core-sdk'
 import { Currency } from '@unifiprotocol/utils'
 import { atom, useRecoilState } from 'recoil'
 import { useConfig } from '../Config'
-import { offlineConnectors } from '../Services/OfflineConnectors'
+import { offlineConnectors } from '../Services/Connectors'
 import { BalanceOf } from '../Contracts/ERC20/balanceOf'
 
 export type TLiquidity = {
@@ -42,7 +42,7 @@ export const useLiquidity = () => {
       const results = await adapter.multicall.execute(balanceOfCalls)
       newState[blockchain] = results.map((r, idx) => ({
         currency: tokens[idx],
-        balance: tokens[idx].toFactorized(r.value) ?? '0'
+        balance: r.value ?? '0'
       }))
     }
     setLiquidity(newState)

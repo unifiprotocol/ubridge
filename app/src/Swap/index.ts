@@ -3,6 +3,7 @@ import { Currency } from '@unifiprotocol/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { atom, useRecoilState } from 'recoil'
 import { useAdapter } from '../Adapter'
+import { useConfig } from '../Config'
 import { useLiquidity } from '../Liquidity'
 
 export type TSwap = {
@@ -23,8 +24,24 @@ const SwapState = atom<TSwap>({
 export const useSwap = () => {
   const [{ targetChain, targetCurrency, destinationAddress }, setSwap] = useRecoilState(SwapState)
   const { liquidity } = useLiquidity()
-  const { adapter } = useAdapter()
+  const { adapter, blockchainConfig } = useAdapter()
   const [amount, setAmount] = useState('0')
+  const { config } = useConfig()
+
+  // Auto select target chain
+  useEffect(() => {
+    if (!targetChain) {
+      const tChain = Object.keys(config).find((b) => {
+        const blockchain = b as Blockchains
+        const curr = config[blockchain]
+        return curr?.type !== 'testnet' && blockchain !== blockchainConfig?.blockchain
+      })
+      if (tChain) {
+        const targetChain = tChain as Blockchains
+        setSwap((st) => ({ ...st, targetChain }))
+      }
+    }
+  }, [blockchainConfig?.blockchain, config, setSwap, targetChain])
 
   const setDestinationAddress = useCallback(
     (destinationAddress: string) => {
@@ -42,8 +59,8 @@ export const useSwap = () => {
   const maxSwapSize = useMemo(() => {
     if (!targetChain || !targetCurrency) return '0'
     const targetChainLiquidity = liquidity[targetChain]
-    const targetCurrencyBalance = targetChainLiquidity.find((t) =>
-      t.currency.equals(targetCurrency)
+    const targetCurrencyBalance = targetChainLiquidity.find(
+      (t) => t.currency.symbol === targetCurrency.symbol
     )
     if (!targetCurrencyBalance) return '0'
     return targetCurrencyBalance.currency.toFactorized(targetCurrencyBalance.balance)

@@ -21,10 +21,11 @@ import {
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { Blockchains, getVernacularBlockchain } from '@unifiprotocol/utils'
+import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import { useAdapter } from '../../Adapter'
 import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
+import { BlockchainSelectorModal, BlockchainSelectorProps } from '../BlockchainSelector'
 
 export const BridgeForm: React.FC = () => {
   const { blockchainConfig } = useConfig()
@@ -35,7 +36,9 @@ export const BridgeForm: React.FC = () => {
     token1,
     targetChain,
     destinationAddress,
+    maxSwapSize,
     setDestinationAddress,
+    setTargetChain,
     setAmount,
     setToken0
   } = useSwap()
@@ -45,6 +48,16 @@ export const BridgeForm: React.FC = () => {
     component: TransferOverviewModal,
     props: overviewTransactionProps,
     options: { disableBackdropClick: true }
+  })
+
+  const [selectTargetBlockchain] = useModal<BlockchainSelectorProps>({
+    component: BlockchainSelectorModal,
+    props: {
+      onBlockchainSelected: setTargetChain
+    },
+    options: {
+      disableBackdropClick: true
+    }
   })
 
   const tokenList = useMemo(() => {
@@ -102,7 +115,9 @@ export const BridgeForm: React.FC = () => {
           <To>
             <BlockchainFlow>
               <span>To</span>
-              <PrimaryButton variant="outline">{Blockchains.Ethereum}</PrimaryButton>
+              <PrimaryButton variant="outline" onClick={selectTargetBlockchain}>
+                {vernacularTarget}
+              </PrimaryButton>
             </BlockchainFlow>
             <TokenInput
               label="Receive"

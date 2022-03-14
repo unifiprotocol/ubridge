@@ -9,6 +9,7 @@ export type TConfig = {
     tokens: {
       [T: string]: Currency
     }
+    type: 'mainnet' | 'testnet'
   }
 }
 
