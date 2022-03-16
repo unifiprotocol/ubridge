@@ -7,7 +7,7 @@ import {
   TokenInputWithSelector,
   useModal
 } from '@unifiprotocol/uikit'
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import {
   BlockchainFlow,
   BridgeDirection,
@@ -37,6 +37,7 @@ export const BridgeForm: React.FC = () => {
     targetChain,
     destinationAddress,
     maxSwapSize,
+    deposit,
     setDestinationAddress,
     setTargetChain,
     setAmount,
@@ -87,6 +88,10 @@ export const BridgeForm: React.FC = () => {
   const vernacularTarget = useMemo(() => {
     return targetChain ? getVernacularBlockchain(targetChain) : ''
   }, [targetChain])
+
+  const onSubmit = useCallback(() => {
+    deposit()
+  }, [deposit])
 
   return (
     <>
@@ -142,7 +147,8 @@ export const BridgeForm: React.FC = () => {
           <TransactionDetailsWrapper>
             <TransactionDetails />
           </TransactionDetailsWrapper>
-          <TransferOverviewButton block={true} size="xl" onClick={overviewTransaction}>
+          {/* <TransferOverviewButton block={true} size="xl" onClick={overviewTransaction}> */}
+          <TransferOverviewButton block={true} size="xl" onClick={onSubmit}>
             <CgArrowsExchangeV size={30} /> Transfer overview
           </TransferOverviewButton>
         </CardBody>

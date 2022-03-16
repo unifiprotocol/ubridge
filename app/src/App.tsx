@@ -9,6 +9,7 @@ import { useEffect, useMemo } from 'react'
 import { AdapterContext } from './Adapter'
 import { Config } from './Config/Component'
 import { Liquidty } from './Liquidity/Component'
+import { Swap } from './Swap/Component'
 import Clocks from './Services/Clocks'
 
 const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
@@ -32,6 +33,7 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
         >
           <Config />
           <Liquidty />
+          <Swap />
           <Router>
             <Body>
               <Switch>

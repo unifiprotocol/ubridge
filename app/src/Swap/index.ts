@@ -5,11 +5,14 @@ import { atom, useRecoilState } from 'recoil'
 import { useAdapter } from '../Adapter'
 import { useConfig } from '../Config'
 import { useLiquidity } from '../Liquidity'
+import BridgeService from './BridgeService'
 
 export type TSwap = {
   targetChain: Blockchains | undefined
   targetCurrency: Currency | undefined
   destinationAddress: string
+  amount: string
+  fees: { [B in Blockchains]?: string }
 }
 
 const SwapState = atom<TSwap>({
@@ -17,15 +20,17 @@ const SwapState = atom<TSwap>({
   default: {
     targetChain: undefined,
     targetCurrency: undefined,
-    destinationAddress: ''
+    destinationAddress: '',
+    amount: '0',
+    fees: {}
   }
 })
 
 export const useSwap = () => {
-  const [{ targetChain, targetCurrency, destinationAddress }, setSwap] = useRecoilState(SwapState)
+  const [{ fees, targetChain, targetCurrency, destinationAddress, amount }, setSwap] =
+    useRecoilState(SwapState)
   const { liquidity } = useLiquidity()
   const { adapter, blockchainConfig } = useAdapter()
-  const [amount, setAmount] = useState('0')
   const { config } = useConfig()
 
   // Auto select target chain
@@ -81,12 +86,34 @@ export const useSwap = () => {
     return targetBlockchainConfig.chainId ?? 0
   }, [targetChain, targetBlockchainConfig])
 
+  const setAmount = (amount: string) => setSwap((st) => ({ ...st, amount }))
+
+  const deposit = useCallback(() => {
+    if (!adapter || !targetCurrency || !targetChain) return
+    const fee = fees[targetChain]!
+    return BridgeService.deposit(
+      destinationAddress,
+      targetCurrency.address,
+      targetCurrency.toPrecision(amount),
+      targetChainId,
+      fee,
+      adapter as any
+    ).then(console.log)
+  }, [adapter, amount, destinationAddress, fees, targetChain, targetChainId, targetCurrency])
+
+  const setFees = (fees: { [B in Blockchains]?: string }) => {
+    setSwap((st) => ({ ...st, fees }))
+  }
+
   return {
     setTargetChain,
     setTargetCurrency,
     setDestinationAddress,
     setAmount,
     setToken0: setTargetCurrency,
+    setFees,
+    deposit,
+    fees,
     targetCurrency,
     targetChain,
     targetChainId,

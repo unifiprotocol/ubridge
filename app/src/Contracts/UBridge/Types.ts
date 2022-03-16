@@ -1,6 +1,7 @@
 export enum UBridgeContractMethods {
   chainIdFees = 'chainIdFees',
-  getChainIds = 'getChainIds'
+  getChainIds = 'getChainIds',
+  deposit = 'deposit'
 }
 
 export type TUBridgeParams<T = any> = {

@@ -26,3 +26,7 @@ export const BlockchainChainId = (() => {
     return obj
   }, {})
 })() as { [B in Blockchains]: number }
+
+export const ChainIdBlockchain = Object.fromEntries(
+  Object.entries(BlockchainChainId).map((a) => a.reverse())
+) as { [K: number]: Blockchains }
