@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { CollapsibleCard, ShinyHeader } from '@unifiprotocol/uikit'
 import { BridgePanel, Hero, LiquidityCardContent } from './Styles'
-import { BN, VernacularBlockchains } from '@unifiprotocol/utils'
+import { VernacularBlockchains } from '@unifiprotocol/utils'
 import { Blockchains } from '@unifiprotocol/core-sdk'
 import { useConfig } from '../../Config'
 import { useLiquidity } from '../../Liquidity'

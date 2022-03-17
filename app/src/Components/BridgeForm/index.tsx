@@ -36,7 +36,6 @@ export const BridgeForm: React.FC = () => {
     token1,
     targetChain,
     destinationAddress,
-    deposit,
     setDestinationAddress,
     setTargetChain,
     setAmount,

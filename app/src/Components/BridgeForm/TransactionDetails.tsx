@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useAdapter } from '../../Adapter'
-import { offlineConnectors } from '../../Services/Connectors'
 import { useSwap } from '../../Swap'
 
 const TransactionDetailsWrapper = styled.ul`
