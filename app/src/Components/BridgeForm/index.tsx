@@ -36,6 +36,7 @@ export const BridgeForm: React.FC = () => {
     token1,
     targetChain,
     destinationAddress,
+    swapStatus,
     setDestinationAddress,
     setTargetChain,
     setAmount,
@@ -50,8 +51,10 @@ export const BridgeForm: React.FC = () => {
   })
 
   const onSubmit = useCallback(() => {
-    if (!BN(amount).isNaN() && BN(amount).gt(0)) overviewTransaction()
-  }, [amount, overviewTransaction])
+    if (swapStatus === 'OK') {
+      overviewTransaction()
+    }
+  }, [overviewTransaction, swapStatus])
 
   const [selectTargetBlockchain] = useModal<BlockchainSelectorProps>({
     component: BlockchainSelectorModal,

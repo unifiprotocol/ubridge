@@ -28,7 +28,13 @@ const SwapState = atom<TSwap>({
   }
 })
 
-export type SwapStatus = 'OK' | 'OVERSIZED' | 'OUT_OF_BALANCE' | 'DISCONNECTED' | 'SELECT_CURRENCY'
+export type SwapStatus =
+  | 'OK'
+  | 'OVERSIZED'
+  | 'OUT_OF_BALANCE'
+  | 'DISCONNECTED'
+  | 'SELECT_CURRENCY'
+  | 'INVALID_AMOUNT'
 
 export const useSwap = () => {
   const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
@@ -130,6 +136,7 @@ export const useSwap = () => {
   const swapStatus: SwapStatus = useMemo(() => {
     if (!adapter) return 'DISCONNECTED'
     if (BN(amount).gt(maxSwapSize)) return 'OVERSIZED'
+    if (BN(amount).isNaN() || BN(amount).lte(0)) return 'INVALID_AMOUNT'
     if (!targetCurrency) return 'SELECT_CURRENCY'
     const { balance } = getBalanceByCurrency(targetCurrency)
     if (BN(balance).lt(amount)) return 'OUT_OF_BALANCE'
