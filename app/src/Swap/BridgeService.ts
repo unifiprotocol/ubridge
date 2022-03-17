@@ -5,6 +5,8 @@ import { BlockchainChainId, offlineConnectors } from '../Services/Connectors'
 import { GetChainIds } from '../Contracts/UBridge/getChainIds'
 import { GetChainIdFee } from '../Contracts/UBridge/chainIdFees'
 import { Deposit } from '../Contracts/UBridge/deposit'
+import { Approve, ApproveParams } from '../Contracts/ERC20/approve'
+import { Allowance, AllowanceParams } from '../Contracts/ERC20/allowance'
 
 class BridgeService {
   connector: IConnector | undefined
@@ -46,6 +48,34 @@ class BridgeService {
       chainId
     })
     return useCase.execute(this.getAdapter())
+  }
+
+  getTokenAllowance(
+    tokenAddress: AllowanceParams['tokenAddress'],
+    owner: AllowanceParams['owner']
+  ) {
+    const adapter = this.getAdapter()
+    adapter.initializeToken(tokenAddress)
+    const useCase = new Allowance({
+      tokenAddress,
+      owner,
+      spender: this.blockchainConfig!.bridgeContract
+    })
+    return useCase.execute(adapter)
+  }
+
+  approve(
+    tokenAddress: ApproveParams['tokenAddress'],
+    amount: ApproveParams['amount'],
+    adapter: IAdapter
+  ) {
+    adapter.initializeToken(tokenAddress)
+    const useCase = new Approve({
+      tokenAddress,
+      spender: this.blockchainConfig!.bridgeContract,
+      amount
+    })
+    return useCase.execute(adapter)
   }
 
   deposit(

@@ -21,7 +21,7 @@ import {
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { getVernacularBlockchain } from '@unifiprotocol/utils'
+import { BN, getVernacularBlockchain } from '@unifiprotocol/utils'
 import { useAdapter } from '../../Adapter'
 import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
@@ -36,7 +36,6 @@ export const BridgeForm: React.FC = () => {
     token1,
     targetChain,
     destinationAddress,
-    maxSwapSize,
     deposit,
     setDestinationAddress,
     setTargetChain,
@@ -50,6 +49,10 @@ export const BridgeForm: React.FC = () => {
     props: overviewTransactionProps,
     options: { disableBackdropClick: true }
   })
+
+  const onSubmit = useCallback(() => {
+    if (!BN(amount).isNaN() && BN(amount).gt(0)) overviewTransaction()
+  }, [amount, overviewTransaction])
 
   const [selectTargetBlockchain] = useModal<BlockchainSelectorProps>({
     component: BlockchainSelectorModal,
@@ -88,10 +91,6 @@ export const BridgeForm: React.FC = () => {
   const vernacularTarget = useMemo(() => {
     return targetChain ? getVernacularBlockchain(targetChain) : ''
   }, [targetChain])
-
-  const onSubmit = useCallback(() => {
-    deposit()
-  }, [deposit])
 
   return (
     <>
@@ -147,7 +146,6 @@ export const BridgeForm: React.FC = () => {
           <TransactionDetailsWrapper>
             <TransactionDetails />
           </TransactionDetailsWrapper>
-          {/* <TransferOverviewButton block={true} size="xl" onClick={overviewTransaction}> */}
           <TransferOverviewButton block={true} size="xl" onClick={onSubmit}>
             <CgArrowsExchangeV size={30} /> Transfer overview
           </TransferOverviewButton>

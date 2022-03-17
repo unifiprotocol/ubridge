@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
+import { useAdapter } from '../../Adapter'
 import { useSwap } from '../../Swap'
 
 const TransactionDetailsWrapper = styled.ul`
@@ -21,7 +22,14 @@ const Title = styled.div`
 const Value = styled.div``
 
 export const TransactionDetails: React.FC = () => {
-  const { maxSwapSize, targetCurrency } = useSwap()
+  const { maxSwapSize, targetCurrency, fees, targetChain } = useSwap()
+  const { blockchainConfig } = useAdapter()
+
+  const targetFee = useMemo(() => {
+    if (!targetChain || !blockchainConfig || !fees[targetChain]) return undefined
+    const fee = blockchainConfig.nativeToken.toFactorized(fees[targetChain] || '0')
+    return `${fee} ${blockchainConfig.nativeToken.symbol}`
+  }, [blockchainConfig, fees, targetChain])
 
   return targetCurrency ? (
     <TransactionDetailsWrapper>
@@ -33,9 +41,7 @@ export const TransactionDetails: React.FC = () => {
       </Line>
       <Line>
         <Title>Swap fee</Title>
-        <Value>
-          {maxSwapSize} {targetCurrency.symbol}
-        </Value>
+        <Value>{targetFee}</Value>
       </Line>
       <Line>
         <Title>Transaction cost</Title>

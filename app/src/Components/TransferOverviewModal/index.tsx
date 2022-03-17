@@ -5,13 +5,14 @@ import {
   ModalClose,
   ModalHeader,
   ModalProps,
-  ModalTitle,
   PrimaryButton,
   TokenAmount
 } from '@unifiprotocol/uikit'
 import { Currency, shortAddress } from '@unifiprotocol/utils'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useAdapter } from '../../Adapter'
+import { useSwap } from '../../Swap'
 import { TransactionDetails } from '../BridgeForm/TransactionDetails'
 
 const Swap = styled.div`
@@ -56,10 +57,13 @@ export interface TransferOverviewModalProps extends ModalProps {}
 
 export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ close }) => {
   const [confirmed, setConfirmed] = useState(false)
+  const { targetChain, targetCurrency, destinationAddress, amount } = useSwap()
+  const { blockchainConfig, adapter } = useAdapter()
+
   return (
     <TransferOverviewModalWrapper>
       <ModalHeader>
-        <ModalTitle>Transfer overview</ModalTitle>
+        <span>Transfer overview</span>
         <ModalClose onClick={close} />
       </ModalHeader>
       <ModalBody>
@@ -67,19 +71,19 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
         <Swap>
           <Send>
             <span>
-              From <b>Binance</b>
+              From <b>{blockchainConfig?.blockchain}</b>
             </span>
-            <Address>{shortAddress('0x52856Ca4ddb55A1420950857C7882cFC8E02281C')}</Address>
-            <TokenAmount token={new Currency('UNFI', 18, 'UNFI', 'UNFI')} amount={'100'} />
+            <Address>{shortAddress(adapter?.getAddress() ?? '')}</Address>
+            {targetCurrency && <TokenAmount token={targetCurrency} amount={amount} />}
           </Send>
 
           <Receive>
             <span>
-              To <b>Ethereum</b>
+              To <b>{targetChain}</b>
             </span>
 
-            <Address>{shortAddress('0x49506Ca4ddb55A1420950857C7882cFC8E02123A')}</Address>
-            <TokenAmount token={new Currency('UNFI', 18, 'UNFI', 'UNFI')} amount={'99'} />
+            <Address>{shortAddress(destinationAddress)}</Address>
+            {targetCurrency && <TokenAmount token={targetCurrency} amount={amount} />}
           </Receive>
         </Swap>
         <TransactionDetails />
