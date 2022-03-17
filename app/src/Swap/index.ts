@@ -1,5 +1,6 @@
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { BN, Currency } from '@unifiprotocol/utils'
+import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo } from 'react'
 import { atom, useRecoilState } from 'recoil'
 import { useAdapter } from '../Adapter'
@@ -35,6 +36,7 @@ export type SwapStatus =
   | 'DISCONNECTED'
   | 'SELECT_CURRENCY'
   | 'INVALID_AMOUNT'
+  | 'INVALID_ADDRESS'
 
 export const useSwap = () => {
   const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
@@ -140,8 +142,9 @@ export const useSwap = () => {
     if (!targetCurrency) return 'SELECT_CURRENCY'
     const { balance } = getBalanceByCurrency(targetCurrency)
     if (BN(balance).lt(amount)) return 'OUT_OF_BALANCE'
+    if (!ethers.utils.isAddress(destinationAddress)) return 'INVALID_ADDRESS'
     return 'OK'
-  }, [adapter, amount, getBalanceByCurrency, maxSwapSize, targetCurrency])
+  }, [adapter, amount, destinationAddress, getBalanceByCurrency, maxSwapSize, targetCurrency])
 
   return {
     setTargetChain,
