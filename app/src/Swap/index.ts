@@ -28,11 +28,13 @@ const SwapState = atom<TSwap>({
   }
 })
 
+export type SwapStatus = 'OK' | 'OVERSIZED' | 'OUT_OF_BALANCE' | 'DISCONNECTED' | 'SELECT_CURRENCY'
+
 export const useSwap = () => {
   const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
     useRecoilState(SwapState)
   const { liquidity } = useLiquidity()
-  const { adapter, blockchainConfig } = useAdapter()
+  const { adapter, blockchainConfig, getBalanceByCurrency } = useAdapter()
   const { config } = useConfig()
 
   // Auto select target chain
@@ -125,6 +127,15 @@ export const useSwap = () => {
     setSwap((st) => ({ ...st, allowances }))
   }
 
+  const swapStatus: SwapStatus = useMemo(() => {
+    if (!adapter) return 'DISCONNECTED'
+    if (BN(amount).gt(maxSwapSize)) return 'OVERSIZED'
+    if (!targetCurrency) return 'SELECT_CURRENCY'
+    const { balance } = getBalanceByCurrency(targetCurrency)
+    if (BN(balance).lt(amount)) return 'OUT_OF_BALANCE'
+    return 'OK'
+  }, [adapter, amount, getBalanceByCurrency, maxSwapSize, targetCurrency])
+
   return {
     setTargetChain,
     setTargetCurrency,
@@ -136,6 +147,7 @@ export const useSwap = () => {
     deposit,
     allowance,
     approve,
+    swapStatus,
     allowances,
     fees,
     targetCurrency,

@@ -27,8 +27,17 @@ export const useAdapter = () => {
     [state]
   )
 
+  const getBalanceByCurrency = useCallback(
+    (currency: Currency) => {
+      const balance = state.balances.find((c) => c.currency.equals(currency))
+      return balance ?? { currency, balance: '0' }
+    },
+    [state.balances]
+  )
+
   return {
     addToken,
+    getBalanceByCurrency,
     connection: state.connection,
     adapter: state.connection?.adapter?.adapter,
     blockchainConfig: state.connection?.adapter?.adapter.blockchainConfig,
