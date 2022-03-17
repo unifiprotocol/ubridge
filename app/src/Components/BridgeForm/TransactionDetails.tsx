@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useAdapter } from '../../Adapter'
+import { offlineConnectors } from '../../Services/Connectors'
 import { useSwap } from '../../Swap'
 
 const TransactionDetailsWrapper = styled.ul`
@@ -42,12 +43,6 @@ export const TransactionDetails: React.FC = () => {
       <Line>
         <Title>Swap fee</Title>
         <Value>{targetFee}</Value>
-      </Line>
-      <Line>
-        <Title>Transaction cost</Title>
-        <Value>
-          {maxSwapSize} {targetCurrency.symbol}
-        </Value>
       </Line>
       <Line>
         <Title>Estimated time</Title>
