@@ -21,15 +21,16 @@ import {
 import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
-import { BN, getVernacularBlockchain } from '@unifiprotocol/utils'
+import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import { useAdapter } from '../../Adapter'
 import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
 import { BlockchainSelectorModal, BlockchainSelectorProps } from '../BlockchainSelector'
+import { ShowNotification } from '@unifiprotocol/shell'
 
 export const BridgeForm: React.FC = () => {
   const { blockchainConfig } = useConfig()
-  const { adapter, balances, connection } = useAdapter()
+  const { adapter, balances, connection, eventBus } = useAdapter()
   const {
     amount,
     token0,
@@ -52,9 +53,10 @@ export const BridgeForm: React.FC = () => {
 
   const onSubmit = useCallback(() => {
     if (swapStatus === 'OK') {
-      overviewTransaction()
+      return overviewTransaction()
     }
-  }, [overviewTransaction, swapStatus])
+    eventBus?.emit(new ShowNotification({ content: swapStatus, appearance: 'error' }))
+  }, [eventBus, overviewTransaction, swapStatus])
 
   const [selectTargetBlockchain] = useModal<BlockchainSelectorProps>({
     component: BlockchainSelectorModal,
