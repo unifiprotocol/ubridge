@@ -1,6 +1,5 @@
 import {
   Checkbox,
-  Modal,
   ModalBody,
   ModalClose,
   ModalHeader,
@@ -8,57 +7,41 @@ import {
   PrimaryButton,
   TokenAmount
 } from '@unifiprotocol/uikit'
-import { Currency, shortAddress } from '@unifiprotocol/utils'
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import { BN, shortAddress } from '@unifiprotocol/utils'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useAdapter } from '../../Adapter'
 import { useSwap } from '../../Swap'
 import { TransactionDetails } from '../BridgeForm/TransactionDetails'
-
-const Swap = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-`
-
-const SwapPart = styled.div`
-  width: 50%;
-  b {
-    color: ${(p) => p.theme.primary};
-  }
-  span {
-    display: block;
-
-    margin-bottom: 0.5rem;
-  }
-  padding: 0.5rem;
-  border: 3px solid ${(p) => p.theme.bgAlt2};
-  border-radius: ${(p) => p.theme.borderRadius};
-`
-
-const Send = styled(SwapPart)``
-const Receive = styled(SwapPart)``
-const Address = styled.div`
-  margin-bottom: 0.5rem;
-`
-const Confirm = styled.div`
-  margin: 2rem 0 1rem 0;
-`
-
-const TransferOverviewModalWrapper = styled(Modal)`
-  max-width: 28rem;
-`
-const Desc = styled.div`
-  margin-bottom: 2rem;
-`
+import {
+  TransferOverviewModalWrapper,
+  Desc,
+  Swap,
+  Send,
+  Address,
+  Receive,
+  Confirm,
+  TransferActions
+} from './Styles'
 
 export interface TransferOverviewModalProps extends ModalProps {}
 
 export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ close }) => {
   const [confirmed, setConfirmed] = useState(false)
-  const { targetChain, targetCurrency, destinationAddress, amount } = useSwap()
+  const { targetChain, targetCurrency, destinationAddress, amount, allowances, approve, deposit } =
+    useSwap()
   const { blockchainConfig, adapter } = useAdapter()
+
+  const isApproved = useMemo(() => {
+    if (!targetCurrency) return false
+    const precisedAmount = targetCurrency.toPrecision(amount)
+    return BN(allowances[targetCurrency.address]).gte(precisedAmount)
+  }, [allowances, amount, targetCurrency])
+
+  const onSubmit = useCallback(() => {
+    deposit()?.then(() => {
+      close()
+    })
+  }, [close, deposit])
 
   return (
     <TransferOverviewModalWrapper>
@@ -98,9 +81,24 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             }
           />
         </Confirm>
-        <PrimaryButton disabled={!confirmed} block={true} size="xl">
-          Perform swap
-        </PrimaryButton>
+        <TransferActions>
+          <PrimaryButton
+            disabled={!confirmed || isApproved}
+            block={true}
+            size="xl"
+            onClick={approve}
+          >
+            Approve
+          </PrimaryButton>
+          <PrimaryButton
+            disabled={!confirmed || !isApproved}
+            block={true}
+            size="xl"
+            onClick={onSubmit}
+          >
+            Perform swap
+          </PrimaryButton>
+        </TransferActions>
       </ModalBody>
     </TransferOverviewModalWrapper>
   )

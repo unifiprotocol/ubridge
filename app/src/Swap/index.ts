@@ -13,7 +13,7 @@ export type TSwap = {
   destinationAddress: string
   amount: string
   fees: { [B in Blockchains]?: string }
-  allowance: { [ContractAddress: string]: string }
+  allowances: { [ContractAddress: string]: string }
 }
 
 const SwapState = atom<TSwap>({
@@ -23,13 +23,13 @@ const SwapState = atom<TSwap>({
     targetCurrency: undefined,
     destinationAddress: '',
     amount: '0',
-    allowance: {},
+    allowances: {},
     fees: {}
   }
 })
 
 export const useSwap = () => {
-  const [{ fees, targetChain, targetCurrency, destinationAddress, amount }, setSwap] =
+  const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
     useRecoilState(SwapState)
   const { liquidity } = useLiquidity()
   const { adapter, blockchainConfig } = useAdapter()
@@ -110,15 +110,19 @@ export const useSwap = () => {
 
   const approve = useCallback(() => {
     if (!adapter || !targetCurrency || !targetChain) return
-    return BridgeService.approve(targetCurrency.address, BN(2).pow(256).toFixed(), adapter as any)
+    return BridgeService.approve(
+      targetCurrency.address,
+      BN(2).pow(256).minus(1).toFixed(),
+      adapter as any
+    )
   }, [adapter, targetChain, targetCurrency])
 
   const setFees = (fees: { [B in Blockchains]?: string }) => {
     setSwap((st) => ({ ...st, fees }))
   }
 
-  const setAllowance = (allowance: { [ContractAddress: string]: string }) => {
-    setSwap((st) => ({ ...st, allowance }))
+  const setAllowance = (allowances: { [ContractAddress: string]: string }) => {
+    setSwap((st) => ({ ...st, allowances }))
   }
 
   return {
@@ -132,6 +136,7 @@ export const useSwap = () => {
     deposit,
     allowance,
     approve,
+    allowances,
     fees,
     targetCurrency,
     targetChain,

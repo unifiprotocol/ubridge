@@ -38,7 +38,7 @@ export const Swap = () => {
         }))
       )
     )
-    const allowance = allowances.reduce((t: TSwap['allowance'], curr) => {
+    const allowance = allowances.reduce((t: TSwap['allowances'], curr) => {
       t[curr.token] = curr.value
       return t
     }, {})
