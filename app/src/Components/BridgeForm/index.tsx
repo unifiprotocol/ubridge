@@ -30,7 +30,7 @@ import { ShowNotification } from '@unifiprotocol/shell'
 
 export const BridgeForm: React.FC = () => {
   const { blockchainConfig } = useConfig()
-  const { adapter, balances, connection, eventBus } = useAdapter()
+  const { adapter, balances, connection, eventBus, getBalanceByCurrency } = useAdapter()
   const {
     amount,
     token0,
@@ -69,10 +69,12 @@ export const BridgeForm: React.FC = () => {
   })
 
   const tokenList = useMemo(() => {
-    return blockchainConfig
-      ? Object.values(blockchainConfig.tokens).map((currency) => ({ currency }))
-      : []
-  }, [blockchainConfig])
+    if (!blockchainConfig) return []
+    return Object.values(blockchainConfig.tokens).map((currency) => {
+      const { balance } = getBalanceByCurrency(currency)
+      return { currency, balance: currency.toFactorized(balance) }
+    })
+  }, [blockchainConfig, getBalanceByCurrency])
 
   useEffect(() => {
     if (!token0 && tokenList.length > 0) {
