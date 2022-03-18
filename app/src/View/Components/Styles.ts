@@ -63,3 +63,13 @@ export const LiquidityCardContent = styled.div`
     }
   }
 `
+
+export const BlockchainTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  svg {
+    cursor: pointer;
+  }
+`

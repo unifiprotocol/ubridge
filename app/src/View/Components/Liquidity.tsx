@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
-import { CollapsibleCard, ShinyHeader } from '@unifiprotocol/uikit'
-import { BridgePanel, Hero, LiquidityCardContent } from './Styles'
+import { CollapsibleCard, FiExternalLink, ShinyHeader } from '@unifiprotocol/uikit'
+import { BlockchainTitleWrapper, BridgePanel, Hero, LiquidityCardContent } from './Styles'
 import { VernacularBlockchains } from '@unifiprotocol/utils'
-import { Blockchains } from '@unifiprotocol/core-sdk'
+import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { useConfig } from '../../Config'
 import { useLiquidity } from '../../Liquidity'
 
@@ -34,6 +34,10 @@ export const Liquidity = () => {
 
 export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchain }) => {
   const { liquidity } = useLiquidity()
+  const { config } = useConfig()
+
+  const bConfig = useMemo(() => getBlockchainConfig(blockchain), [blockchain])
+  const bridgeBlockchainConfig = useMemo(() => config[blockchain], [blockchain, config])
 
   const blockchainLiquidity = useMemo(() => {
     return liquidity[blockchain]
@@ -42,7 +46,14 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
   return (
     <CollapsibleCard>
       <LiquidityCardContent>
-        <h1>{VernacularBlockchains[blockchain]}</h1>
+        <BlockchainTitleWrapper>
+          <span>{VernacularBlockchains[blockchain]}</span>
+          <FiExternalLink
+            onClick={() =>
+              window.open(bConfig.explorer.address(bridgeBlockchainConfig?.bridgeContract ?? '#'))
+            }
+          />
+        </BlockchainTitleWrapper>
         <div className="title">Assets</div>
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>
