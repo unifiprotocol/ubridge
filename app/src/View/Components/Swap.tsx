@@ -2,12 +2,15 @@ import React from 'react'
 import { ShinyHeader } from '@unifiprotocol/uikit'
 import { BridgeForm } from '../../Components/BridgeForm'
 import { Hero, BridgePanel } from './Styles'
+import { useTranslation } from 'react-i18next'
 
 export const Swap = () => {
+  const { t } = useTranslation()
+
   return (
     <>
       <Hero>
-        <ShinyHeader>Bridge</ShinyHeader>
+        <ShinyHeader>{t('bridge.swap.tab.swap')}</ShinyHeader>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation

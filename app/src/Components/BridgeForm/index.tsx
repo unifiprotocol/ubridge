@@ -27,8 +27,10 @@ import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
 import { BlockchainSelectorModal, BlockchainSelectorProps } from '../BlockchainSelector'
 import { ShowNotification } from '@unifiprotocol/shell'
+import { useTranslation } from 'react-i18next'
 
 export const BridgeForm: React.FC = () => {
+  const { t } = useTranslation()
   const { blockchainConfig } = useConfig()
   const { adapter, balances, connection, eventBus, getBalanceByCurrency } = useAdapter()
   const {
@@ -104,12 +106,12 @@ export const BridgeForm: React.FC = () => {
         <CardBody>
           <From>
             <BlockchainFlow>
-              <span>From</span>
+              <span>{t('bridge.common.from')}</span>
               <PrimaryButton variant="outline">{vernacularOrigin}</PrimaryButton>
             </BlockchainFlow>
             <TokenInputWithSelector
-              label="Send"
-              balanceLabel="Balance"
+              label={t('bridge.swap.send')}
+              balanceLabel={t('bridge.common.balance')}
               amount={amount}
               token={token0}
               balance={token0Balance}
@@ -120,18 +122,18 @@ export const BridgeForm: React.FC = () => {
             />
           </From>
           <BridgeDirection>
-            <CgArrowsExchangeV size={30} /> <span>You will receive</span>
+            <CgArrowsExchangeV size={30} /> <span>{t('bridge.swap.you_will_receive')}</span>
           </BridgeDirection>
           <To>
             <BlockchainFlow>
-              <span>To</span>
+              <span>{t('bridge.common.to')}</span>
               <PrimaryButton variant="outline" onClick={selectTargetBlockchain}>
                 {vernacularTarget}
               </PrimaryButton>
             </BlockchainFlow>
             <TokenInput
-              label="Receive"
-              balanceLabel="Balance"
+              label={t('bridge.swap.receive')}
+              balanceLabel={t('bridge.common.balance')}
               amount={amount}
               token={token1}
               disableTokenChange={true}
@@ -144,7 +146,9 @@ export const BridgeForm: React.FC = () => {
                 <Input
                   value={destinationAddress}
                   onChange={(e) => setDestinationAddress(e.currentTarget.value)}
-                  prefixAddon={<DestinationLabel>Destination Address</DestinationLabel>}
+                  prefixAddon={
+                    <DestinationLabel>{t('bridge.swap.destination_address')}</DestinationLabel>
+                  }
                 />
               </DestinationAddressWrapper>
             )}
@@ -153,7 +157,7 @@ export const BridgeForm: React.FC = () => {
             <TransactionDetails />
           </TransactionDetailsWrapper>
           <TransferOverviewButton block={true} size="xl" onClick={onSubmit}>
-            <CgArrowsExchangeV size={30} /> Transfer overview
+            <CgArrowsExchangeV size={30} /> {t('bridge.swap.transfer_overview')}
           </TransferOverviewButton>
         </CardBody>
       </Card>

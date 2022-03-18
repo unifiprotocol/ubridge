@@ -4209,6 +4209,13 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
+"@types/reflect-metadata@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@types/reflect-metadata/-/reflect-metadata-0.1.0.tgz#592805bdf6d63dd7229773218afeba37ac2eab16"
+  integrity sha512-bXltFLY3qhzCnVYP5iUpeSICagQ8rc9K2liS+8M0lBcz54BHs3O6W5UvqespVSuebo1BXLi+/y9ioELAW9SC2A==
+  dependencies:
+    reflect-metadata "*"
+
 "@types/resolve@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-0.0.8.tgz#f26074d238e02659e323ce1a13d041eee280e194"
@@ -4549,37 +4556,17 @@
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.0.14":
-  version "6.0.14"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.14.tgz#de8a960f01cd28fef00fcedd8b75af9a4fbd46e0"
-  integrity sha512-XxnUX2F2G9Li5ysnq4wcToijg/09dMuFJTTiq5tW1P5SwZwgqZ5+uPGnBz3uTOSX51YBfzujwCHqLgGwq6UzJg==
+"@unifiprotocol/core-sdk@^6.0.21":
+  version "6.0.21"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.21.tgz#cff18eaf2c4ec8e041656816ef93a640780035b8"
+  integrity sha512-EQdinhd9pzXkWGhGwFjUnwEOYxhSinwEs0yBmT3nREOSk+FKiej1sgqz+/1ahOvpqFQBRTxgApZgEVfNop6QRA==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
     "@harmony-js/utils" "^0.1.56"
     "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
-    "@unifiprotocol/utils" "^2.2.5"
-    bignumber.js "^9.0.1"
-    ethereum-multicall "^2.4.0"
-    ethers "^5.2.0"
-    eventemitter3 "^4.0.7"
-    inversify "^5.1.1"
-    promise-parallel-throttle "^3.3.0"
-    reflect-metadata "^0.1.13"
-    tron-format-address "^0.1.8"
-    tronweb "^4.1.0"
-    tslib "^2.1.0"
-
-"@unifiprotocol/core-sdk@^6.0.17":
-  version "6.0.17"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.17.tgz#8a95580d397349a01e4a6a58e3ed3adbcb97f7e9"
-  integrity sha512-JechVw9/bpKr6tOg7hcYqUr7Xu53TmsoxnSUgGR6mZJB/f9bxmbZeoGu+NHD7SBRuB8LHb9rMlzSwOIZJT3Lgw==
-  dependencies:
-    "@harmony-js/account" "^0.1.57"
-    "@harmony-js/core" "^0.1.57"
-    "@harmony-js/utils" "^0.1.56"
-    "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
-    "@unifiprotocol/utils" "^2.2.5"
+    "@types/reflect-metadata" "^0.1.0"
+    "@unifiprotocol/utils" "^2.2.13"
     bignumber.js "^9.0.1"
     ethereum-multicall "^2.4.0"
     ethers "^5.2.0"
@@ -4590,10 +4577,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.11.tgz#0f6e4fec9272868de47dc7b42ef9075e1afaa255"
-  integrity sha512-fleCkCu+JbRuLFv1TOb9gAW/21VIcKKzdD8MW9TA1PN9HV0HXS/KZQKJ/Iugm2bdAakx2w8XtpjU34zudfwDVg==
+"@unifiprotocol/shell@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.13.tgz#19fa678d02bb83adc8bd3bac117d4b64d2d6b4f3"
+  integrity sha512-5Z0xnlArXw0jNHrmFl0Huinxk0T6m0z7G05HfUiw/0hmERKMOhjyxl9CFoQVtIxwwCrgKU2H3jJ4wXrokyUXIg==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -4605,7 +4592,7 @@
     "@types/node" "^16.7.13"
     "@types/react" "^17.0.20"
     "@types/react-dom" "^17.0.9"
-    "@unifiprotocol/core-sdk" "^6.0.14"
+    "@unifiprotocol/core-sdk" "^6.0.21"
     "@unifiprotocol/uikit" "^1.13.0"
     "@unifiprotocol/utils" "^2.2.13"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"
@@ -4684,18 +4671,9 @@
     keccak "^3.0.2"
     tslib "^2.1.0"
 
-"@unifiprotocol/utils@^2.2.5":
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.2.8.tgz#7c5f706e5690441d9457eceab7e48db94e5a1ade"
-  integrity sha512-kluYK37iNXbQwzcPQppTMOd4x6s6d2B0enaf2IbFoatg7qpi8k5T1sbX1AO2N3FWHV1+NCbHgQ+009+0YW9gUg==
-  dependencies:
-    bignumber.js "^9.0.1"
-    keccak "^3.0.2"
-    tslib "^2.1.0"
-
 "@unifiprotocol/utrade-v2-localization@git+https://github.com/unifiprotocol/utrade-v2-localization.git":
   version "1.0.0"
-  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#271273fbe04c0e3cd4f36e400853117bc84a1c7b"
+  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#6ee52861ee667cd9064005fe74155c1a7205642f"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -10909,11 +10887,6 @@ interpret@^1.0.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
 
-inversify@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
-  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
-
 invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
@@ -16506,7 +16479,7 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-reflect-metadata@^0.1.13:
+reflect-metadata@*, reflect-metadata@^0.1.13:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
   integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==

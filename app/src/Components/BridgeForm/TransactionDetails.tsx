@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useAdapter } from '../../Adapter'
 import { useSwap } from '../../Swap'
@@ -22,6 +23,7 @@ const Title = styled.div`
 const Value = styled.div``
 
 export const TransactionDetails: React.FC = () => {
+  const { t } = useTranslation()
   const { maxSwapSize, targetCurrency, fees, targetChain } = useSwap()
   const { blockchainConfig } = useAdapter()
 
@@ -34,17 +36,17 @@ export const TransactionDetails: React.FC = () => {
   return targetCurrency ? (
     <TransactionDetailsWrapper>
       <Line>
-        <Title>Max swap size</Title>
+        <Title>{t('bridge.common.max_swap_size')}</Title>
         <Value>
           {maxSwapSize} {targetCurrency.symbol}
         </Value>
       </Line>
       <Line>
-        <Title>Swap fee</Title>
+        <Title>{t('bridge.common.swap_fee')}</Title>
         <Value>{targetFee}</Value>
       </Line>
       <Line>
-        <Title>Estimated time</Title>
+        <Title>{t('bridge.common.estimated_time')}</Title>
         <Value>~2min</Value>
       </Line>
     </TransactionDetailsWrapper>

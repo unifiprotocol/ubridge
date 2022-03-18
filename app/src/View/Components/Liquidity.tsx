@@ -5,14 +5,16 @@ import { VernacularBlockchains } from '@unifiprotocol/utils'
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { useConfig } from '../../Config'
 import { useLiquidity } from '../../Liquidity'
+import { useTranslation } from 'react-i18next'
 
 export const Liquidity = () => {
+  const { t } = useTranslation()
   const { config } = useConfig()
 
   return (
     <>
       <Hero>
-        <ShinyHeader>Liquidity</ShinyHeader>
+        <ShinyHeader>{t('bridge.swap.tab.liquidity')}</ShinyHeader>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -33,6 +35,7 @@ export const Liquidity = () => {
 }
 
 export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchain }) => {
+  const { t } = useTranslation()
   const { liquidity } = useLiquidity()
   const { config } = useConfig()
 
@@ -54,7 +57,7 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
             }
           />
         </BlockchainTitleWrapper>
-        <div className="title">Assets</div>
+        <div className="title">{t('bridge.common.assets')}</div>
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>
             <img src="https://assets.unifiprotocol.com/UNFI.png" alt="UNFI" />

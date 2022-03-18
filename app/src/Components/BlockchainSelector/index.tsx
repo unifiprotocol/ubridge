@@ -6,6 +6,7 @@ import { Blockchains } from '@unifiprotocol/core-sdk'
 import { SelectionList, SelectionListItem } from './Styles'
 import { useConfig } from '../../Config'
 import { useAdapter } from '../../Adapter'
+import { useTranslation } from 'react-i18next'
 
 export interface BlockchainSelectorProps extends ModalProps {
   onBlockchainSelected: (blockchain: Blockchains) => void
@@ -16,6 +17,7 @@ export const BlockchainSelectorModal: React.FC<BlockchainSelectorProps> = ({
   onBlockchainSelected
 }) => {
   const { liquidity } = useLiquidity()
+  const { t } = useTranslation()
   const { blockchainConfig } = useAdapter()
   const { config, blockchainConfig: appConfig } = useConfig()
 
@@ -43,7 +45,7 @@ export const BlockchainSelectorModal: React.FC<BlockchainSelectorProps> = ({
   return (
     <Modal>
       <ModalHeader>
-        <span>Choose the blockchain target</span>
+        <span>{t('bridge.swap.choose_blockchain')}</span>
         <ModalClose onClick={close} />
       </ModalHeader>
       <ModalBody>

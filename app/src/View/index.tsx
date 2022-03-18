@@ -7,7 +7,7 @@ import { Liquidity } from './Components/Liquidity'
 
 export const Bridge: React.FC = () => {
   const [section, setSection] = useState('swap')
-  const { i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const Section = useMemo(() => () => section === 'swap' ? <Swap /> : <Liquidity />, [section])
 
@@ -16,8 +16,8 @@ export const Bridge: React.FC = () => {
       <SwitchWrapper>
         <Switch
           choices={[
-            { value: 'swap', label: 'Swap' },
-            { value: 'liquidity', label: 'Liquidity' }
+            { value: 'swap', label: t('bridge.swap.tab.swap') },
+            { value: 'liquidity', label: t('bridge.swap.tab.liquidity') }
           ]}
           onChange={setSection}
           selected={section}

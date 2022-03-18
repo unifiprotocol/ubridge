@@ -9,6 +9,7 @@ import {
 } from '@unifiprotocol/uikit'
 import { BN, shortAddress } from '@unifiprotocol/utils'
 import React, { useCallback, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAdapter } from '../../Adapter'
 import { useSwap } from '../../Swap'
 import { TransactionDetails } from '../BridgeForm/TransactionDetails'
@@ -26,6 +27,7 @@ import {
 export interface TransferOverviewModalProps extends ModalProps {}
 
 export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ close }) => {
+  const { t } = useTranslation()
   const [confirmed, setConfirmed] = useState(false)
   const { targetChain, targetCurrency, destinationAddress, amount, allowances, approve, deposit } =
     useSwap()
@@ -46,11 +48,11 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
   return (
     <TransferOverviewModalWrapper>
       <ModalHeader>
-        <span>Transfer overview</span>
+        <span>{t('bridge.overview.title')}</span>
         <ModalClose onClick={close} />
       </ModalHeader>
       <ModalBody>
-        <Desc>You are about to confirm the crosschain transaction below: </Desc>
+        <Desc>{t('bridge.overview.confirmation_text')}</Desc>
         <Swap>
           <Send>
             <span>
@@ -75,9 +77,9 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             checked={confirmed}
             onChange={setConfirmed}
             label={
-              <>
+              <Trans key={'bridge.swap.overview.terms_conditions'}>
                 I read and accept the <a href="#xd">terms and conditions</a>
-              </>
+              </Trans>
             }
           />
         </Confirm>
@@ -88,7 +90,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             size="xl"
             onClick={approve}
           >
-            Approve
+            {t('bridge.overview.approve')}
           </PrimaryButton>
           <PrimaryButton
             disabled={!confirmed || !isApproved}
@@ -96,7 +98,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             size="xl"
             onClick={onSubmit}
           >
-            Perform swap
+            {t('bridge.overview.perform_swap')}
           </PrimaryButton>
         </TransferActions>
       </ModalBody>
