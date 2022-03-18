@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@unifiprotocol/core-sdk": "^6.0.17",
-    "@unifiprotocol/shell": "^0.2.10",
+    "@unifiprotocol/shell": "^0.2.11",
     "@unifiprotocol/uikit": "^1.13.1",
     "@unifiprotocol/utils": "^2.2.13",
     "ethereum-blockies-png": "^0.1.3",
