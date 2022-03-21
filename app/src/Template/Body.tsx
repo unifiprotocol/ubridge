@@ -8,12 +8,15 @@ import { Hero } from '../View/Components/Styles'
 const BodyWrapper = styled.div`
   margin-top: 1rem;
   width: 100vw;
-  max-width: 992px;
   display: flex;
   justify-content: center;
 
   @media (max-width: 576px) {
     padding: 0 1.25rem;
+  }
+
+  > div {
+    max-width: 992px;
   }
 `
 
@@ -22,7 +25,11 @@ export const Body: React.FC = ({ children }) => {
   const { config } = useConfig()
 
   if (connection && config[connection.config.blockchain]) {
-    return <BodyWrapper>{children}</BodyWrapper>
+    return (
+      <BodyWrapper>
+        <div>{children}</div>
+      </BodyWrapper>
+    )
   }
 
   return (
