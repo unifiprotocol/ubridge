@@ -57,8 +57,10 @@ export const BridgeForm: React.FC = () => {
     if (swapStatus === 'OK') {
       return overviewTransaction()
     }
-    eventBus?.emit(new ShowNotification({ content: swapStatus, appearance: 'error' }))
-  }, [eventBus, overviewTransaction, swapStatus])
+    eventBus?.emit(
+      new ShowNotification({ content: t(`bridge.swap.${swapStatus}`), appearance: 'error' })
+    )
+  }, [eventBus, overviewTransaction, swapStatus, t])
 
   const [selectTargetBlockchain] = useModal<BlockchainSelectorProps>({
     component: BlockchainSelectorModal,
