@@ -8,8 +8,13 @@ import { Hero } from '../View/Components/Styles'
 const BodyWrapper = styled.div`
   margin-top: 1rem;
   width: 100vw;
+  max-width: 992px;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 576px) {
+    padding: 0 1.25rem;
+  }
 `
 
 export const Body: React.FC = ({ children }) => {
@@ -22,7 +27,7 @@ export const Body: React.FC = ({ children }) => {
 
   return (
     <BodyWrapper>
-      <div style={{ maxWidth: '992px', width: '100%' }}>
+      <div>
         <Hero>
           <ShinyHeader>Blockchain not supported</ShinyHeader>
           <p>Working in progress to give you the availability of UNFI crosschain.</p>
