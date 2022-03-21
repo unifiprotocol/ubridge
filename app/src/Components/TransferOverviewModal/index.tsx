@@ -48,11 +48,11 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
   return (
     <TransferOverviewModalWrapper>
       <ModalHeader>
-        <span>{t('bridge.overview.title')}</span>
+        <span>{t('bridge.swap.overview.title')}</span>
         <ModalClose onClick={close} />
       </ModalHeader>
       <ModalBody>
-        <Desc>{t('bridge.overview.confirmation_text')}</Desc>
+        <Desc>{t('bridge.swap.overview.confirmation_text')}</Desc>
         <Swap>
           <Send>
             <span>
@@ -90,7 +90,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             size="xl"
             onClick={approve}
           >
-            {t('bridge.overview.approve')}
+            {t('bridge.swap.overview.approve')}
           </PrimaryButton>
           <PrimaryButton
             disabled={!confirmed || !isApproved}
@@ -98,7 +98,7 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             size="xl"
             onClick={onSubmit}
           >
-            {t('bridge.overview.perform_swap')}
+            {t('bridge.swap.overview.perform_swap')}
           </PrimaryButton>
         </TransferActions>
       </ModalBody>

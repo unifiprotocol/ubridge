@@ -4577,10 +4577,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.2.13":
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.13.tgz#19fa678d02bb83adc8bd3bac117d4b64d2d6b4f3"
-  integrity sha512-5Z0xnlArXw0jNHrmFl0Huinxk0T6m0z7G05HfUiw/0hmERKMOhjyxl9CFoQVtIxwwCrgKU2H3jJ4wXrokyUXIg==
+"@unifiprotocol/shell@^0.2.14":
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.14.tgz#2a7c1c2105fa25597578f07ef1d4270733a30f88"
+  integrity sha512-vCALG/yyLwxq8OsIm0Ur59xK3Pzbi5KPV7q4MDhNCL81qT7pRey2h4LWepz4XXLidHtyKAOTWWPvzi8epzMrLQ==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -4673,7 +4673,7 @@
 
 "@unifiprotocol/utrade-v2-localization@git+https://github.com/unifiprotocol/utrade-v2-localization.git":
   version "1.0.0"
-  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#6ee52861ee667cd9064005fe74155c1a7205642f"
+  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#db9ef98b0b54f88bae16b245b4c63a62b753f83d"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
