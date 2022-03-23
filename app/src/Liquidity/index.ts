@@ -33,7 +33,9 @@ export const useLiquidity = () => {
       const cfg = config[blockchain]
       if (!cfg) break
       const tokens = Object.values(cfg.tokens)
-      const { adapter } = offlineConnectors[blockchain]
+      const connector = offlineConnectors[blockchain]
+      await connector.connect()
+      const { adapter } = connector
       if (!adapter) break
       const balanceOfCalls = tokens.map(
         (t) => new BalanceOf({ owner: cfg.bridgeContract, tokenAddress: t.address })
