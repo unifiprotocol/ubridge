@@ -49,6 +49,7 @@ export const useTransactions = () => {
           transactions[blockchain].push(item)
           return transactions
         }, {} as TTransactions['transactions'])
+        swaps.sort((a, b) => b.time.valueOf() - a.time.valueOf())
         return { swaps, transactions }
       })
       setTransactions({ swaps, transactions })
