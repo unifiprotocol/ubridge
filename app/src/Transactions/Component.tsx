@@ -17,9 +17,9 @@ export const Transactions = () => {
 
   useEffect(() => {
     const fn = () => adapter?.isConnected() && updateTransactions()
-    Clocks.on('TEN_SECONDS', fn)
+    Clocks.on('THIRTY_SECONDS', fn)
     return () => {
-      Clocks.off('TEN_SECONDS', fn)
+      Clocks.off('THIRTY_SECONDS', fn)
     }
   }, [adapter, updateTransactions])
 
