@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { CollapsibleCard, FiExternalLink, ShinyHeader } from '@unifiprotocol/uikit'
 import { BlockchainTitleWrapper, BridgePanel, Hero, LiquidityCardContent } from './Styles'
-import { VernacularBlockchains } from '@unifiprotocol/utils'
+import { getVernacularBlockchain, VernacularBlockchains } from '@unifiprotocol/utils'
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { useConfig } from '../../Config'
 import { useLiquidity } from '../../Liquidity'
@@ -50,7 +50,8 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
     <CollapsibleCard>
       <LiquidityCardContent>
         <BlockchainTitleWrapper>
-          <span>{VernacularBlockchains[blockchain]}</span>
+          <img src={bConfig.logoURI} title={bConfig.blockchain} alt={bConfig.blockchain} />
+          <span>{getVernacularBlockchain(blockchain)}</span>
           <FiExternalLink
             onClick={() =>
               window.open(bConfig.explorer.address(bridgeBlockchainConfig?.bridgeContract ?? '#'))

@@ -66,10 +66,20 @@ export const LiquidityCardContent = styled.div`
 
 export const BlockchainTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
-  svg {
+  > img {
+    width: 1.5rem;
+    height: auto;
+    margin-right: 0.3rem;
+    border-radius: 50%;
+  }
+
+  > span {
+    width: 100%;
+  }
+
+  > svg {
     cursor: pointer;
   }
 `
