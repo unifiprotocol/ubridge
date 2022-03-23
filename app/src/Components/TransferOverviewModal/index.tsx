@@ -34,9 +34,15 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
   const { blockchainConfig, adapter } = useAdapter()
 
   const isApproved = useMemo(() => {
-    if (!targetCurrency) return false
+    if (
+      !targetCurrency ||
+      !allowances[targetCurrency.address] ||
+      BN(allowances[targetCurrency.address]).isNaN()
+    ) {
+      return false
+    }
     const precisedAmount = targetCurrency.toPrecision(amount)
-    return BN(allowances[targetCurrency.address]).gte(precisedAmount)
+    return BN(allowances[targetCurrency.address] || '0').gte(precisedAmount)
   }, [allowances, amount, targetCurrency])
 
   const onSubmit = useCallback(() => {
@@ -44,6 +50,14 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
       close()
     })
   }, [close, deposit])
+
+  const disabledApprove = useMemo(() => {
+    return (targetCurrency && !allowances[targetCurrency.address]) || !confirmed || isApproved
+  }, [allowances, confirmed, isApproved, targetCurrency])
+
+  const disabledSubmit = useMemo(() => {
+    return (targetCurrency && !allowances[targetCurrency.address]) || !disabledApprove || !confirmed
+  }, [allowances, confirmed, disabledApprove, targetCurrency])
 
   return (
     <TransferOverviewModalWrapper>
@@ -84,20 +98,10 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
           />
         </Confirm>
         <TransferActions>
-          <PrimaryButton
-            disabled={!confirmed || isApproved}
-            block={true}
-            size="xl"
-            onClick={approve}
-          >
+          <PrimaryButton disabled={disabledApprove} block={true} size="xl" onClick={approve}>
             {t('bridge.swap.overview.approve')}
           </PrimaryButton>
-          <PrimaryButton
-            disabled={!confirmed || !isApproved}
-            block={true}
-            size="xl"
-            onClick={onSubmit}
-          >
+          <PrimaryButton disabled={disabledSubmit} block={true} size="xl" onClick={onSubmit}>
             {t('bridge.swap.overview.perform_swap')}
           </PrimaryButton>
         </TransferActions>

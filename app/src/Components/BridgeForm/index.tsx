@@ -83,6 +83,8 @@ export const BridgeForm: React.FC = () => {
   useEffect(() => {
     if (!token0 && tokenList.length > 0) {
       setToken0(tokenList[0].currency)
+    } else if (token0 && !tokenList.some((t) => t.currency.equals(token0))) {
+      setToken0(tokenList[0].currency)
     }
   }, [setToken0, token0, tokenList, tokenList.length])
 

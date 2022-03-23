@@ -1,3 +1,8 @@
+import {
+  AdapterConnectedEvent,
+  AddressChangedEvent,
+  NetworkChangedEvent
+} from '@unifiprotocol/shell'
 import { BN } from '@unifiprotocol/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { TSwap, useSwap } from '.'
@@ -10,7 +15,7 @@ import BridgeService from './BridgeService'
 export const Swap = () => {
   const [init, setInit] = useState(false)
   const { config, blockchainConfig: appConfig } = useConfig()
-  const { adapter, blockchainConfig } = useAdapter()
+  const { adapter, blockchainConfig, eventBus } = useAdapter()
   const { fees, setFees, setAllowance } = useSwap()
 
   const updateChainFees = useCallback(async () => {
@@ -64,6 +69,30 @@ export const Swap = () => {
       Clocks.off('THIRTY_SECONDS', fn)
     }
   }, [updateAllowance])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(NetworkChangedEvent, fn)
+    return () => {
+      eventBus?.off(NetworkChangedEvent, fn)
+    }
+  }, [eventBus])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(AddressChangedEvent, fn)
+    return () => {
+      eventBus?.off(AddressChangedEvent, fn)
+    }
+  }, [eventBus])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(AdapterConnectedEvent, fn)
+    return () => {
+      eventBus?.off(AdapterConnectedEvent, fn)
+    }
+  }, [eventBus])
 
   return <></>
 }

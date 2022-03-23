@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { RefreshBalances } from '@unifiprotocol/shell'
+import {
+  AdapterConnectedEvent,
+  AddressChangedEvent,
+  NetworkChangedEvent,
+  RefreshBalances
+} from '@unifiprotocol/shell'
 import { useConfig } from '.'
 import { useAdapter } from '../Adapter'
 import { fetchConfig } from '../Services/API'
@@ -35,6 +40,30 @@ export const Config = () => {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(NetworkChangedEvent, fn)
+    return () => {
+      eventBus?.off(NetworkChangedEvent, fn)
+    }
+  }, [eventBus])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(AddressChangedEvent, fn)
+    return () => {
+      eventBus?.off(AddressChangedEvent, fn)
+    }
+  }, [eventBus])
+
+  useEffect(() => {
+    const fn = () => setInit(false)
+    eventBus?.on(AdapterConnectedEvent, fn)
+    return () => {
+      eventBus?.off(AdapterConnectedEvent, fn)
+    }
+  }, [eventBus])
 
   return <></>
 }

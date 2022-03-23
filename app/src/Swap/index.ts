@@ -37,6 +37,7 @@ export type SwapStatus =
   | 'SELECT_CURRENCY'
   | 'INVALID_AMOUNT'
   | 'INVALID_ADDRESS'
+  | 'SAME_CHAIN'
 
 export const useSwap = () => {
   const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
@@ -47,7 +48,7 @@ export const useSwap = () => {
 
   // Auto select target chain
   useEffect(() => {
-    if (!targetChain) {
+    if (!targetChain || blockchainConfig?.blockchain === targetChain) {
       const tChain = Object.keys(config).find((b) => {
         const blockchain = b as Blockchains
         const curr = config[blockchain]
@@ -137,6 +138,7 @@ export const useSwap = () => {
 
   const swapStatus: SwapStatus = useMemo(() => {
     if (!adapter) return 'DISCONNECTED'
+    if (targetChain === blockchainConfig?.blockchain) return 'SAME_CHAIN'
     if (BN(amount).gt(maxSwapSize)) return 'OVERSIZED'
     if (BN(amount).isNaN() || BN(amount).lte(0)) return 'INVALID_AMOUNT'
     if (!targetCurrency) return 'SELECT_CURRENCY'
@@ -144,7 +146,16 @@ export const useSwap = () => {
     if (BN(balance).lt(amount)) return 'OUT_OF_BALANCE'
     if (!ethers.utils.isAddress(destinationAddress)) return 'INVALID_ADDRESS'
     return 'OK'
-  }, [adapter, amount, destinationAddress, getBalanceByCurrency, maxSwapSize, targetCurrency])
+  }, [
+    adapter,
+    amount,
+    blockchainConfig?.blockchain,
+    destinationAddress,
+    getBalanceByCurrency,
+    maxSwapSize,
+    targetChain,
+    targetCurrency
+  ])
 
   return {
     setTargetChain,

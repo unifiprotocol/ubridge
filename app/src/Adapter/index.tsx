@@ -40,7 +40,7 @@ export const useAdapter = () => {
     getBalanceByCurrency,
     connection: state.connection,
     adapter: state.connection?.adapter?.adapter,
-    blockchainConfig: state.connection?.adapter?.adapter.blockchainConfig,
+    blockchainConfig: state.connection?.config,
     balances: state.balances,
     eventBus: state.eventBus
   }
