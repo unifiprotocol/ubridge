@@ -4577,10 +4577,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.2.15":
-  version "0.2.15"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.15.tgz#c812478d5c92306a13d455a78f5f1da1cbe108a3"
-  integrity sha512-nNz3N7nkllWKqwoizpWocE31yPgHvFR0RSi/42XPxKcJRdAKsAD5NLblb8yqQoZogB3Q43mL7YVDb0MwFqhcfA==
+"@unifiprotocol/shell@^0.2.16":
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.16.tgz#a304f48e6b6ae91f23921209e49633fedd2bb9ba"
+  integrity sha512-whe1+krYq2k0UqoQ+jRI74O6L4I0Qnrykjxuo2LNX87rjaU+Hon/YLpjzf8PjTGSfSEcyOC84PBo7Unb4zxPhA==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
