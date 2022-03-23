@@ -39,7 +39,7 @@ class BridgeService {
 
   getChainIds() {
     const useCase = new GetChainIds({ contractAddress: this.blockchainConfig!.bridgeContract })
-    return useCase.execute(this.getAdapter())
+    return this.getAdapter().then((adapter) => useCase.execute(adapter))
   }
 
   getChainIdFee(chainId: BridgeService['chainID']) {
@@ -47,14 +47,14 @@ class BridgeService {
       contractAddress: this.blockchainConfig!.bridgeContract,
       chainId
     })
-    return useCase.execute(this.getAdapter())
+    return this.getAdapter().then((adapter) => useCase.execute(adapter))
   }
 
-  getTokenAllowance(
+  async getTokenAllowance(
     tokenAddress: AllowanceParams['tokenAddress'],
     owner: AllowanceParams['owner']
   ) {
-    const adapter = this.getAdapter()
+    const adapter = await this.getAdapter()
     adapter.initializeToken(tokenAddress)
     const useCase = new Allowance({
       tokenAddress,
@@ -98,9 +98,12 @@ class BridgeService {
     return useCase.execute(adapter)
   }
 
-  private getAdapter() {
+  private async getAdapter() {
     if (!this.blockchain) {
       throw Error('No blockchain set')
+    }
+    if (!this.connector?.adapter) {
+      await this.connector?.connect()
     }
     const adapter = this.connector!.adapter!.adapter
     adapter.initializeContract(this.blockchainConfig!.bridgeContract, UBridge.abi)

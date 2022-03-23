@@ -76,7 +76,7 @@ export const Swap = () => {
     return () => {
       eventBus?.off(NetworkChangedEvent, fn)
     }
-  }, [eventBus])
+  }, [adapter, eventBus])
 
   useEffect(() => {
     const fn = () => setInit(false)
@@ -84,7 +84,7 @@ export const Swap = () => {
     return () => {
       eventBus?.off(AddressChangedEvent, fn)
     }
-  }, [eventBus])
+  }, [adapter, eventBus])
 
   useEffect(() => {
     const fn = () => setInit(false)
@@ -92,7 +92,7 @@ export const Swap = () => {
     return () => {
       eventBus?.off(AdapterConnectedEvent, fn)
     }
-  }, [eventBus])
+  }, [adapter, eventBus])
 
   return <></>
 }
