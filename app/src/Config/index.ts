@@ -28,9 +28,30 @@ export const useConfig = () => {
       : undefined
   }, [config, connection])
 
+  const tokensSupported = useMemo(() => {
+    return Object.keys(config).reduce(
+      (
+        tokens: { [tokenAdress: string]: { currency: Currency; blockchain: Blockchains } },
+        chain
+      ) => {
+        const blockchain = chain as Blockchains
+        const cfg = config[blockchain]!
+        Object.entries(cfg.tokens).forEach(([, currency]) => {
+          tokens[currency.address] = {
+            currency,
+            blockchain
+          }
+        })
+        return tokens
+      },
+      {}
+    )
+  }, [config])
+
   return {
     config,
     blockchainConfig,
+    tokensSupported,
     setConfig
   }
 }

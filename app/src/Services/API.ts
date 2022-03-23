@@ -11,6 +11,31 @@ type APIResponse<T> = {
 
 export type BridgeConfigResponse = TConfig
 
+export interface ITransactionRow {
+  args: {
+    count: string
+    amount: string
+    originChainId: string
+    targetChainId: string
+    withdrawalAddress: string
+    originTokenAddress: string
+    destinationTokenAddress: string
+  }
+  name: 'Withdraw' | 'Deposit'
+  time: string
+  topic: string
+  address: string
+  tx_hash: string
+  signature: string
+  blockchain: Blockchains
+}
+
+export type TransactionsResponse = {
+  transactions: ITransactionRow[]
+  count: string
+  origin_chain_id: string
+}
+
 export async function fetchConfig(): Promise<APIResponse<BridgeConfigResponse>> {
   const response: APIResponse<BridgeConfigResponse> = await fetch(
     `${BASE_ENDPOINT}/v1/blockchains`
@@ -29,4 +54,15 @@ export async function fetchConfig(): Promise<APIResponse<BridgeConfigResponse>> 
     })
   })
   return { ...response }
+}
+
+export async function fetchTransactions(address: string): Promise<TransactionsResponse[]> {
+  return fetch(`${BASE_ENDPOINT}/v1/transactions/${address}`)
+    .then((res) => res.json())
+    .then((res: APIResponse<TransactionsResponse[]>) => {
+      if (res.status === 'OK') {
+        return res.result
+      }
+      return [] as TransactionsResponse[]
+    })
 }

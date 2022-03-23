@@ -73,3 +73,15 @@ export const BlockchainTitleWrapper = styled.div`
     cursor: pointer;
   }
 `
+
+export const TransactionsAmountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  > img {
+    margin-right: 0.3rem;
+    width: 1.5rem;
+    height: auto;
+  }
+`

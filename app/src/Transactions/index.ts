@@ -1,15 +1,15 @@
 import { Blockchains } from '@unifiprotocol/core-sdk'
-import { ethers } from 'ethers'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { atom, useRecoilState } from 'recoil'
-import { useConfig } from '../Config'
-import { useLiquidity } from '../Liquidity'
-import { offlineConnectors } from '../Services/Connectors'
-import UBridge from '../Contracts/ABI/UBridge.json'
+import { useAdapter } from '../Adapter'
+import { fetchTransactions, TransactionsResponse } from '../Services/API'
+import { ChainIdBlockchain } from '../Services/Connectors'
+
+export type SwapTransaction = { time: Date; blockchain: Blockchains } & TransactionsResponse
 
 export type TTransactions = {
-  deposits: { [B in Blockchains]: ethers.Transaction[] }
-  withdraws: { [B in Blockchains]: ethers.Transaction[] }
+  swaps: SwapTransaction[]
+  transactions: { [K in Blockchains]: SwapTransaction[] }
 }
 
 function getInitialState() {
@@ -17,12 +17,12 @@ function getInitialState() {
     const blockchain = curr as Blockchains
     t[blockchain] = []
     return t
-  }, {} as TTransactions['deposits'] | TTransactions['withdraws'])
+  }, {} as TTransactions['transactions'])
 }
 
 const initialState: TTransactions = {
-  deposits: getInitialState(),
-  withdraws: getInitialState()
+  transactions: getInitialState(),
+  swaps: []
 }
 
 const TransactionsState = atom<TTransactions>({
@@ -30,33 +30,30 @@ const TransactionsState = atom<TTransactions>({
   default: initialState
 })
 
-const BLOCK_RANGE_LIMIT = 1000
-
 export const useTransactions = () => {
-  const [{ deposits, withdraws }, setTransactions] = useRecoilState(TransactionsState)
-  const { liquidity } = useLiquidity()
-  const { config } = useConfig()
+  const [{ swaps, transactions }, setTransactions] = useRecoilState(TransactionsState)
+  const { adapter } = useAdapter()
 
-  const supportedBlockchains = useMemo(
-    () =>
-      Object.keys(liquidity).filter((b) => {
-        const blockchain = b as Blockchains
-        const cfg = config[blockchain]
-        return cfg?.type === 'mainnet' ?? false
-      }) as Blockchains[],
-    [config, liquidity]
-  )
-
-  const updateState = useCallback(() => {
-    const fn = async (blockchain: Blockchains) => {
-      const connector = offlineConnectors[blockchain]
-      const chainCfg = config[blockchain]!
-      const provider = connector.adapter?.adapter.getProvider() as ethers.providers.BaseProvider
-      const contract = new ethers.Contract(chainCfg.bridgeContract, UBridge.abi, provider)
-      const filter = contract.filters.Deposit()
-      const deposits = await contract.queryFilter(filter, 1 - BLOCK_RANGE_LIMIT)
+  const updateTransactions = useCallback(async () => {
+    if (adapter) {
+      const address = adapter.getAddress()
+      const { swaps, transactions } = await fetchTransactions(address).then((res) => {
+        const swaps: TTransactions['swaps'] = []
+        const transactions = res.reduce((transactions: TTransactions['transactions'], swap) => {
+          const { origin_chain_id } = swap
+          const { time } = swap.transactions[0]
+          const blockchain = ChainIdBlockchain[Number(origin_chain_id)]
+          if (!transactions[blockchain]) transactions[blockchain] = []
+          const item = { ...swap, time: new Date(time), blockchain }
+          swaps.push(item)
+          transactions[blockchain].push(item)
+          return transactions
+        }, {} as TTransactions['transactions'])
+        return { swaps, transactions }
+      })
+      setTransactions({ swaps, transactions })
     }
-  }, [config])
+  }, [adapter, setTransactions])
 
-  return { deposits, withdraws }
+  return { swaps, transactions, updateTransactions }
 }

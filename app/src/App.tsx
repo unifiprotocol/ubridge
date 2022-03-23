@@ -11,6 +11,7 @@ import { Config } from './Config/Component'
 import { Liquidty } from './Liquidity/Component'
 import { Swap } from './Swap/Component'
 import Clocks from './Services/Clocks'
+import { Transactions } from './Transactions/Component'
 
 const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
   const blockchain = useMemo(
@@ -34,6 +35,7 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
           <Config />
           <Liquidty />
           <Swap />
+          <Transactions />
           <Router>
             <Body>
               <Switch>
