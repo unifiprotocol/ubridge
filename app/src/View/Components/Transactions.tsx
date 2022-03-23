@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import {
   ColumnBody,
+  IoChevronForwardSharp,
   RowColumn,
   SecondaryButton,
   ShinyHeader,
@@ -10,10 +11,11 @@ import {
 } from '@unifiprotocol/uikit'
 import { useTranslation } from 'react-i18next'
 import { SwapTransaction, useTransactions } from '../../Transactions'
-import { Hero, TransactionsAmountWrapper } from './Styles'
+import { Hero, TransactionsAmountWrapper, TransactionsLogoWrapper } from './Styles'
 import { getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { ChainIdBlockchain } from '../../Services/Connectors'
 import { useConfig } from '../../Config'
+import { getVernacularBlockchain } from '@unifiprotocol/utils'
 
 const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
 
@@ -82,9 +84,21 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
     <TableRow>
       <RowColumn align="right">
         <ColumnBody align="left">
-          <div>
-            {depositBlockchainConfig.blockchain} - {withdrawBlockchainConfig?.blockchain}
-          </div>
+          <TransactionsLogoWrapper>
+            <img
+              src={depositBlockchainConfig.logoURI}
+              alt={depositBlockchainConfig.blockchain}
+              title={getVernacularBlockchain(depositBlockchainConfig.blockchain)}
+            />
+            <ShinyHeader>
+              <IoChevronForwardSharp />
+            </ShinyHeader>
+            <img
+              src={withdrawBlockchainConfig.logoURI}
+              alt={withdrawBlockchainConfig.blockchain}
+              title={getVernacularBlockchain(withdrawBlockchainConfig.blockchain)}
+            />
+          </TransactionsLogoWrapper>
         </ColumnBody>
       </RowColumn>
       <RowColumn title={t('bridge.transactions.row.status')} align="right">

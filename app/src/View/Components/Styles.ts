@@ -85,3 +85,22 @@ export const TransactionsAmountWrapper = styled.div`
     height: auto;
   }
 `
+
+export const TransactionsLogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  > img {
+    margin-right: 0.2rem;
+    width: 3rem;
+    height: auto;
+    border-radius: 50%;
+  }
+`
