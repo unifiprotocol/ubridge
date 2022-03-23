@@ -24,7 +24,7 @@ export const Transactions = () => {
   return (
     <>
       <Hero>
-        <ShinyHeader>{t('bridge.swap.tab.transaction')}</ShinyHeader>
+        <ShinyHeader>{t('bridge.swap.tab.transactions')}</ShinyHeader>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -46,9 +46,11 @@ export const Transactions = () => {
 }
 
 const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
+  const { tokensSupported } = useConfig()
+  const { t } = useTranslation()
+
   const deposit = useMemo(() => tx.transactions.find((t) => t.name === 'Deposit')!, [tx])
   const withdraw = useMemo(() => tx.transactions.find((t) => t.name === 'Withdraw'), [tx])
-  const { tokensSupported } = useConfig()
 
   const depositBlockchainConfig = useMemo(
     () => getBlockchainConfig(ChainIdBlockchain[Number(deposit.args.originChainId)]),
@@ -60,8 +62,10 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
   )
 
   const status = useMemo(() => {
-    return withdraw !== undefined ? 'COMPLETE' : 'PENDING'
-  }, [withdraw])
+    return withdraw !== undefined
+      ? t('bridge.transactions.row.status.complete')
+      : t('bridge.transactions.row.status.pending')
+  }, [t, withdraw])
 
   const timeDifference = useMemo(() => {
     return Math.round((tx.time.valueOf() - Date.now()) / (1000 * 3600))
@@ -83,12 +87,12 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
           </div>
         </ColumnBody>
       </RowColumn>
-      <RowColumn title={`STATUS`} align="right">
+      <RowColumn title={t('bridge.transactions.row.status')} align="right">
         <ColumnBody align="right">
           <div>{status}</div>
         </ColumnBody>
       </RowColumn>
-      <RowColumn title={`AMOUNT`} align="right">
+      <RowColumn title={t('bridge.transactions.row.amount')} align="right">
         <ColumnBody align="right">
           <TransactionsAmountWrapper>
             <TokenLogo token={{ address: token.currency.address, symbol: token.currency.symbol }} />
@@ -98,12 +102,11 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
           </TransactionsAmountWrapper>
         </ColumnBody>
       </RowColumn>
-      <RowColumn title={`DATE`} align="right">
+      <RowColumn title={t('bridge.transactions.row.date')} align="right">
         <ColumnBody align="right">
           <div>{rtf.format(timeDifference, 'hours')}</div>
         </ColumnBody>
       </RowColumn>
-
       <RowColumn align="right">
         <ColumnBody align="right">
           <div style={{ marginBottom: '0.25rem' }}>
@@ -111,7 +114,7 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
               block={true}
               onClick={() => window.open(depositBlockchainConfig.explorer.tx(deposit.tx_hash))}
             >
-              View Deposit
+              {t('bridge.transactions.row.view_deposit')}
             </SecondaryButton>
           </div>
           {withdraw && (
@@ -120,7 +123,7 @@ const SwapRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
                 block={true}
                 onClick={() => window.open(withdrawBlockchainConfig.explorer.tx(withdraw.tx_hash))}
               >
-                View Withdraw
+                {t('bridge.transactions.row.view_withdraw')}
               </SecondaryButton>
             </div>
           )}

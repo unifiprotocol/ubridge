@@ -151,10 +151,10 @@ export const useSwap = () => {
     amount,
     blockchainConfig?.blockchain,
     destinationAddress,
-    getBalanceByCurrency,
     maxSwapSize,
     targetChain,
-    targetCurrency
+    targetCurrency,
+    getBalanceByCurrency
   ])
 
   return {
