@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { CollapsibleCard, FiExternalLink, ShinyHeader } from '@unifiprotocol/uikit'
+import { CollapsibleCard, FiExternalLink, ShinyHeader, TokenLogo } from '@unifiprotocol/uikit'
 import { BlockchainTitleWrapper, BridgePanel, Hero, LiquidityCardContent } from './Styles'
 import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
@@ -61,7 +61,7 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
         <div className="title">{t('bridge.common.assets')}</div>
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>
-            <img src="https://assets.unifiprotocol.com/UNFI.png" alt="UNFI" />
+            <TokenLogo token={{ address: liq.currency.address, symbol: liq.currency.symbol }} />
             <span>{liq.currency.toFactorized(liq.balance, 4)}</span>
             <span>{liq.currency.symbol}</span>
           </div>
