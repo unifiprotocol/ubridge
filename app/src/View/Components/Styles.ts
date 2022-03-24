@@ -1,3 +1,4 @@
+import { mediaQueries } from '@unifiprotocol/uikit'
 import styled from 'styled-components'
 import doodle from '../../Assets/doodle.png'
 
@@ -45,7 +46,7 @@ export const LiquidityCardContent = styled.div`
     margin: 0.1rem 0;
     margin-top: 0.5rem;
     opacity: 0.8;
-    color: rgb(0, 230, 118);
+    color: ${(props) => props.theme.primary};
   }
 
   .asset {
@@ -81,36 +82,5 @@ export const BlockchainTitleWrapper = styled.div`
 
   > svg {
     cursor: pointer;
-  }
-`
-
-export const TransactionsAmountWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  > img {
-    margin-right: 0.3rem;
-    width: 1.5rem;
-    height: auto;
-  }
-`
-
-export const TransactionsLogoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  > h1 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  > img {
-    margin-right: 0.2rem;
-    width: 3rem;
-    height: auto;
-    border-radius: 50%;
   }
 `
