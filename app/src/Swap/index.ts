@@ -111,7 +111,7 @@ export const useSwap = () => {
       targetChainId,
       fee,
       adapter as any
-    ).then(console.log)
+    )
   }, [adapter, amount, destinationAddress, fees, targetChain, targetChainId, targetCurrency])
 
   const allowance = useCallback(() => {

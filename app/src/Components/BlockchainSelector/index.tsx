@@ -2,8 +2,8 @@ import React, { useCallback, useMemo } from 'react'
 import { Modal, ModalBody, ModalClose, ModalHeader, ModalProps } from '@unifiprotocol/uikit'
 import { useLiquidity } from '../../Liquidity'
 import { getVernacularBlockchain } from '@unifiprotocol/utils'
-import { Blockchains } from '@unifiprotocol/core-sdk'
-import { SelectionList, SelectionListItem } from './Styles'
+import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
+import { BlockchainLogo, SelectionList, SelectionListItem } from './Styles'
 import { useConfig } from '../../Config'
 import { useAdapter } from '../../Adapter'
 import { useTranslation } from 'react-i18next'
@@ -52,8 +52,10 @@ export const BlockchainSelectorModal: React.FC<BlockchainSelectorProps> = ({
         <SelectionList>
           {blockchainsWithLiquidity.map((b, idx) => {
             const blockchain = b as Blockchains
+            const cfg = getBlockchainConfig(blockchain)
             return (
               <SelectionListItem key={idx} onClick={() => onBlockchainClick(blockchain)}>
+                <BlockchainLogo src={cfg.logoURI} alt={getVernacularBlockchain(blockchain)} />
                 {getVernacularBlockchain(blockchain)}
               </SelectionListItem>
             )

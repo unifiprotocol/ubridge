@@ -24,3 +24,9 @@ export const SelectionListItem = styled.div`
     background: ${(p) => p.theme.bgAlt2};
   }
 `
+
+export const BlockchainLogo = styled.img`
+  width: 1.5rem;
+  height: auto;
+  margin-right: 0.75rem;
+`
