@@ -1,6 +1,7 @@
 import { getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { CollapsibleCard, ShinyHeader, TokenLogo, SecondaryButton } from '@unifiprotocol/uikit'
 import { getVernacularBlockchain } from '@unifiprotocol/utils'
+import { DateTime } from 'luxon'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IoChevronForwardSharp } from 'react-icons/io5'
@@ -8,8 +9,6 @@ import { useConfig } from '../../Config'
 import { ChainIdBlockchain } from '../../Services/Connectors'
 import { SwapTransaction } from '../../Transactions'
 import { TransactionRowTitle, TransactionsAmountWrapper, TransactionsLogoWrapper } from './Styles'
-
-const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
 
 export const TransactionMobileRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
   const { tokensSupported } = useConfig()
@@ -32,10 +31,6 @@ export const TransactionMobileRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) 
       ? t('bridge.transactions.row.status.complete')
       : t('bridge.transactions.row.status.pending')
   }, [t, withdraw])
-
-  const timeDifference = useMemo(() => {
-    return Math.round((tx.time.valueOf() - Date.now()) / (1000 * 3600))
-  }, [tx])
 
   const token = useMemo(
     () => tokensSupported[deposit.args.originTokenAddress],
@@ -81,7 +76,7 @@ export const TransactionMobileRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) 
 
       <div>
         <TransactionRowTitle>{t('bridge.transactions.row.date')}</TransactionRowTitle>
-        <div>{rtf.format(timeDifference, 'hours')}</div>
+        <div>{DateTime.fromJSDate(tx.time).toRelative()}</div>
       </div>
 
       <div>

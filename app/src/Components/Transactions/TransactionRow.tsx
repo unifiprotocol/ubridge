@@ -15,8 +15,7 @@ import { useConfig } from '../../Config'
 import { ChainIdBlockchain } from '../../Services/Connectors'
 import { SwapTransaction } from '../../Transactions'
 import { TransactionsLogoWrapper, TransactionsAmountWrapper } from './Styles'
-
-const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+import { DateTime } from 'luxon'
 
 export const TransactionRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
   const { tokensSupported } = useConfig()
@@ -39,10 +38,6 @@ export const TransactionRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
       ? t('bridge.transactions.row.status.complete')
       : t('bridge.transactions.row.status.pending')
   }, [t, withdraw])
-
-  const timeDifference = useMemo(() => {
-    return Math.round((tx.time.valueOf() - Date.now()) / (1000 * 3600))
-  }, [tx])
 
   const token = useMemo(
     () => tokensSupported[deposit.args.originTokenAddress],
@@ -89,7 +84,7 @@ export const TransactionRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
       </RowColumn>
       <RowColumn title={t('bridge.transactions.row.date')} align="right">
         <ColumnBody align="right">
-          <div>{rtf.format(timeDifference, 'hours')}</div>
+          <div>{DateTime.fromJSDate(tx.time).toRelative()}</div>
         </ColumnBody>
       </RowColumn>
       <RowColumn align="right">
