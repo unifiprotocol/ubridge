@@ -1,4 +1,3 @@
-import { mediaQueries } from '@unifiprotocol/uikit'
 import styled from 'styled-components'
 import doodle from '../../Assets/doodle.png'
 

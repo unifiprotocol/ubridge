@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ShinyHeader, Table } from '@unifiprotocol/uikit'
 import { useTranslation } from 'react-i18next'
 import { useTransactions } from '../../Transactions'
