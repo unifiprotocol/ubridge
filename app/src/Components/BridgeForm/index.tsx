@@ -26,7 +26,7 @@ import { useAdapter } from '../../Adapter'
 import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
 import { BlockchainSelectorModal, BlockchainSelectorProps } from '../BlockchainSelector'
-import { ShowNotification } from '@unifiprotocol/shell'
+import { OpenNetworkModal, ShowNotification } from '@unifiprotocol/shell'
 import { useTranslation } from 'react-i18next'
 
 export const BridgeForm: React.FC = () => {
@@ -104,6 +104,10 @@ export const BridgeForm: React.FC = () => {
     return targetChain ? getVernacularBlockchain(targetChain) : ''
   }, [targetChain])
 
+  const onFromClick = useCallback(() => {
+    eventBus?.emit(new OpenNetworkModal())
+  }, [eventBus])
+
   return (
     <>
       <Card>
@@ -111,7 +115,9 @@ export const BridgeForm: React.FC = () => {
           <From>
             <BlockchainFlow>
               <span>{t('bridge.common.from')}</span>
-              <PrimaryButton variant="outline">{vernacularOrigin}</PrimaryButton>
+              <PrimaryButton variant="outline" onClick={onFromClick}>
+                {vernacularOrigin}
+              </PrimaryButton>
             </BlockchainFlow>
             <TokenInputWithSelector
               label={t('bridge.swap.send')}

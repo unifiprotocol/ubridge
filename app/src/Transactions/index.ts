@@ -1,6 +1,7 @@
 import { Blockchains } from '@unifiprotocol/core-sdk'
 import { useCallback } from 'react'
 import { atom, useRecoilState } from 'recoil'
+import { DateTime } from 'luxon'
 import { useAdapter } from '../Adapter'
 import { fetchTransactions, TransactionsResponse } from '../Services/API'
 import { ChainIdBlockchain } from '../Services/Connectors'
@@ -44,7 +45,8 @@ export const useTransactions = () => {
           const { time } = swap.transactions[0]
           const blockchain = ChainIdBlockchain[Number(origin_chain_id)]
           if (!transactions[blockchain]) transactions[blockchain] = []
-          const item = { ...swap, time: new Date(time), blockchain }
+          const dt = DateTime.fromISO(time).setZone('UTC')
+          const item = { ...swap, time: dt.toJSDate(), blockchain }
           swaps.push(item)
           transactions[blockchain].push(item)
           return transactions
