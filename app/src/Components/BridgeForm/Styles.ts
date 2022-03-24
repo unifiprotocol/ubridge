@@ -59,6 +59,15 @@ export const BlockchainFlow = styled.div`
   margin-bottom: 0.5rem;
 
   > span {
-    margin-right: 0.5rem;
+    margin-right: 0.75rem;
+  }
+
+  > button {
+    > img {
+      width: 1.2rem;
+      height: auto;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
   }
 `

@@ -2,7 +2,7 @@ import {
   Card,
   CardBody,
   Input,
-  PrimaryButton,
+  SecondaryButton,
   TokenInput,
   TokenInputWithSelector,
   useModal
@@ -22,6 +22,7 @@ import { CgArrowsExchangeV } from 'react-icons/cg'
 import { TransactionDetails } from './TransactionDetails'
 import { TransferOverviewModal, TransferOverviewModalProps } from '../TransferOverviewModal'
 import { getVernacularBlockchain } from '@unifiprotocol/utils'
+import { getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { useAdapter } from '../../Adapter'
 import { useConfig } from '../../Config'
 import { useSwap } from '../../Swap'
@@ -31,8 +32,9 @@ import { useTranslation } from 'react-i18next'
 
 export const BridgeForm: React.FC = () => {
   const { t } = useTranslation()
-  const { blockchainConfig } = useConfig()
-  const { adapter, balances, connection, eventBus, getBalanceByCurrency } = useAdapter()
+  const { blockchainConfig: appConfig } = useConfig()
+  const { adapter, balances, connection, blockchainConfig, eventBus, getBalanceByCurrency } =
+    useAdapter()
   const {
     amount,
     token0,
@@ -73,12 +75,12 @@ export const BridgeForm: React.FC = () => {
   })
 
   const tokenList = useMemo(() => {
-    if (!blockchainConfig) return []
-    return Object.values(blockchainConfig.tokens).map((currency) => {
+    if (!appConfig) return []
+    return Object.values(appConfig.tokens).map((currency) => {
       const { balance } = getBalanceByCurrency(currency)
       return { currency, balance: currency.toFactorized(balance) }
     })
-  }, [blockchainConfig, getBalanceByCurrency])
+  }, [appConfig, getBalanceByCurrency])
 
   useEffect(() => {
     if (!token0 && tokenList.length > 0) {
@@ -108,6 +110,10 @@ export const BridgeForm: React.FC = () => {
     eventBus?.emit(new OpenNetworkModal())
   }, [eventBus])
 
+  const blockchainTargetConfig = useMemo(() => {
+    return targetChain ? getBlockchainConfig(targetChain) : undefined
+  }, [targetChain])
+
   return (
     <>
       <Card>
@@ -115,9 +121,16 @@ export const BridgeForm: React.FC = () => {
           <From>
             <BlockchainFlow>
               <span>{t('bridge.common.from')}</span>
-              <PrimaryButton variant="outline" onClick={onFromClick}>
+              <SecondaryButton onClick={onFromClick}>
+                {blockchainConfig && (
+                  <img
+                    src={blockchainConfig.logoURI}
+                    title={vernacularOrigin}
+                    alt={vernacularOrigin}
+                  />
+                )}
                 {vernacularOrigin}
-              </PrimaryButton>
+              </SecondaryButton>
             </BlockchainFlow>
             <TokenInputWithSelector
               label={t('bridge.swap.send')}
@@ -137,9 +150,16 @@ export const BridgeForm: React.FC = () => {
           <To>
             <BlockchainFlow>
               <span>{t('bridge.common.to')}</span>
-              <PrimaryButton variant="outline" onClick={selectTargetBlockchain}>
+              <SecondaryButton onClick={selectTargetBlockchain}>
+                {blockchainTargetConfig && (
+                  <img
+                    src={blockchainTargetConfig.logoURI}
+                    title={vernacularTarget}
+                    alt={vernacularTarget}
+                  />
+                )}
                 {vernacularTarget}
-              </PrimaryButton>
+              </SecondaryButton>
             </BlockchainFlow>
             <TokenInput
               label={t('bridge.swap.receive')}
