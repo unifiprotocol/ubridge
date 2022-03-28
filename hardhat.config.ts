@@ -66,6 +66,10 @@ const config: HardhatUserConfig = {
     OntologyTestnet: {
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       url: "https://proxy.unifiprotocol.com/rpc/OntologyTestnet"
+    },
+    Ontology: {
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://proxy.unifiprotocol.com/rpc/Ontology"
     }
   },
   gasReporter: {
