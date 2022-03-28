@@ -61,7 +61,10 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
         <div className="title">{t('bridge.common.assets')}</div>
         {blockchainLiquidity.map((liq, idx) => (
           <div className="asset" key={idx}>
-            <TokenLogo token={{ address: liq.currency.address, symbol: liq.currency.symbol }} />
+            <TokenLogo
+              token={{ address: liq.currency.address, symbol: liq.currency.symbol }}
+              blockchain={blockchain}
+            />
             <span>{liq.currency.toFactorized(liq.balance, 4)}</span>
             <span>{liq.currency.symbol}</span>
           </div>

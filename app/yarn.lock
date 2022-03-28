@@ -4663,10 +4663,10 @@
     react-select "^4.3.1"
     styled-components "^5.2.0"
 
-"@unifiprotocol/uikit@^1.13.1":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.1.tgz#50d9d2fc446e58e472e8b5f937e24ddf5ad140e6"
-  integrity sha512-Y6VbU5yymIh/XQGJsNNYyS3BFNwQPs6dE1k6bd9i07rCuY3PNDRMzEcdzkrQxKVBAGNToyPfnxZoWeHJdOJtjA==
+"@unifiprotocol/uikit@^1.13.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.3.tgz#ad46e6aae469404b75048963046c69a65c97b7db"
+  integrity sha512-guX7nHS+nfuCKS9G53BXiv9zi0huOa/d3g+4zOy+WIw7vQ52dObpStX8hIgfskDP6M2sD6PTBZ0tX2gzo0PFEA==
   dependencies:
     "@unifiprotocol/utils" "^2.2.1"
     animated-number-react "^0.1.2"
