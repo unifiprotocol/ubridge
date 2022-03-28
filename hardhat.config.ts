@@ -74,6 +74,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
+      mainnet: "RX5F9AXT5BSG696ZUYC4IVENDAGGPSQ9I1",
       ropsten: "6329MS2FHP9NCKF6DKPDMR5RIE3HYCYGW1",
       bscTestnet: "BC9318STPGVMNCWWBSKTUTZ5CTVK8DDD1B",
       bsc: "2N8MMDJJRIE9661UDSJXICDHEN5N4I4ZD1",

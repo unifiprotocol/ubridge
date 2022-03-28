@@ -1,9 +1,16 @@
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
+import { RefreshBalances } from '@unifiprotocol/shell'
 import { BN, Currency } from '@unifiprotocol/utils'
 import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { atom, useRecoilState } from 'recoil'
 import { useAdapter } from '../Adapter'
+import {
+  FailNotification,
+  InfoNotification,
+  SuccessNotification
+} from '../Components/Notifications'
 import { useConfig } from '../Config'
 import { useLiquidity } from '../Liquidity'
 import BridgeService from './BridgeService'
@@ -43,8 +50,9 @@ export const useSwap = () => {
   const [{ fees, targetChain, targetCurrency, destinationAddress, amount, allowances }, setSwap] =
     useRecoilState(SwapState)
   const { liquidity } = useLiquidity()
-  const { adapter, blockchainConfig, getBalanceByCurrency } = useAdapter()
+  const { adapter, blockchainConfig, eventBus, getBalanceByCurrency } = useAdapter()
   const { config } = useConfig()
+  const { t } = useTranslation()
 
   // Auto select target chain
   useEffect(() => {
@@ -111,8 +119,50 @@ export const useSwap = () => {
       targetChainId,
       fee,
       adapter as any
-    )
-  }, [adapter, amount, destinationAddress, fees, targetChain, targetChainId, targetCurrency])
+    ).then((response) => {
+      if (!eventBus) return response
+      if (response.success) {
+        adapter.waitForTransaction(response.hash).then((v) => {
+          if (v === 'FAILED') {
+            eventBus.emit(
+              FailNotification(
+                t('bridge.swap.notification.swap_failed', { token: targetCurrency.symbol })
+              )
+            )
+          } else {
+            eventBus.emit(
+              SuccessNotification(
+                t('transactions.desc_approval_confirmed', { token: targetCurrency.symbol })
+              )
+            )
+          }
+          eventBus.emit(new RefreshBalances())
+        })
+        eventBus.emit(
+          InfoNotification(
+            t('bridge.swap.notification.swap_sent', { token: targetCurrency.symbol })
+          )
+        )
+      } else {
+        eventBus.emit(
+          FailNotification(
+            t('bridge.swap.notification.swap_failed', { token: targetCurrency.symbol })
+          )
+        )
+      }
+      return response
+    })
+  }, [
+    adapter,
+    amount,
+    destinationAddress,
+    eventBus,
+    fees,
+    t,
+    targetChain,
+    targetChainId,
+    targetCurrency
+  ])
 
   const allowance = useCallback(() => {
     if (!adapter || !targetCurrency || !targetChain) return
@@ -125,8 +175,35 @@ export const useSwap = () => {
       targetCurrency.address,
       BN(2).pow(256).minus(1).toFixed(),
       adapter as any
-    )
-  }, [adapter, targetChain, targetCurrency])
+    ).then((response) => {
+      if (!eventBus) return response
+      if (response.success) {
+        adapter.waitForTransaction(response.hash).then((v) => {
+          if (v === 'FAILED') {
+            eventBus.emit(
+              FailNotification(
+                t('transactions.desc_approval_failed', { token: targetCurrency.symbol })
+              )
+            )
+          } else {
+            eventBus.emit(
+              SuccessNotification(
+                t('transactions.desc_approval_confirmed', { token: targetCurrency.symbol })
+              )
+            )
+          }
+        })
+        eventBus.emit(
+          InfoNotification(t('transactions.desc_approval_sent', { token: targetCurrency.symbol }))
+        )
+      } else {
+        eventBus.emit(
+          FailNotification(t('transactions.desc_approval_failed', { token: targetCurrency.symbol }))
+        )
+      }
+      return response
+    })
+  }, [adapter, eventBus, t, targetChain, targetCurrency])
 
   const setFees = (fees: { [B in Blockchains]?: string }) => {
     setSwap((st) => ({ ...st, fees }))

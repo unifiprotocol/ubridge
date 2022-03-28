@@ -29,23 +29,28 @@ export const useLiquidity = () => {
   const updateLiquidity = useCallback(async () => {
     const newState = { ...liquidity }
     for (const b of Object.keys(config)) {
-      const blockchain = b as Blockchains
-      const cfg = config[blockchain]
-      if (!cfg) break
-      const tokens = Object.values(cfg.tokens)
-      const connector = offlineConnectors[blockchain]
-      await connector.connect()
-      const { adapter } = connector
-      if (!adapter) break
-      const balanceOfCalls = tokens.map(
-        (t) => new BalanceOf({ owner: cfg.bridgeContract, tokenAddress: t.address })
-      )
-      await Promise.all(tokens.map((t) => adapter.adapter.initializeToken(t.address)))
-      const results = await adapter.multicall.execute(balanceOfCalls)
-      newState[blockchain] = results.map((r, idx) => ({
-        currency: tokens[idx],
-        balance: r.value ?? '0'
-      }))
+      try {
+        const blockchain = b as Blockchains
+        const cfg = config[blockchain]
+        if (!cfg) break
+        const tokens = Object.values(cfg.tokens)
+        const connector = offlineConnectors[blockchain]
+        await connector.connect()
+        const { adapter } = connector
+        if (!adapter) break
+        const balanceOfCalls = tokens.map(
+          (t) => new BalanceOf({ owner: cfg.bridgeContract, tokenAddress: t.address })
+        )
+        await Promise.all(tokens.map((t) => adapter.adapter.initializeToken(t.address)))
+        const results = await adapter.multicall.execute(balanceOfCalls)
+        newState[blockchain] = results.map((r, idx) => ({
+          currency: tokens[idx],
+          balance: r.value ?? '0'
+        }))
+      } catch (err) {
+        console.error(`Something wrong happened fetching the liquidity:`, b)
+        console.error(err)
+      }
     }
     setLiquidity(newState)
   }, [config, liquidity, setLiquidity])

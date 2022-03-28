@@ -12,7 +12,7 @@ export interface DepositParams {
 
 export class Deposit extends ContractUseCase<UBridgeContractMethods, DepositParams, string> {
   constructor(params: DepositParams) {
-    super(params.contractAddress, UBridgeContractMethods.deposit, params, false)
+    super(params.contractAddress, UBridgeContractMethods.deposit, params, true)
   }
 
   getCallValue() {

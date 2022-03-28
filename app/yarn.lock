@@ -4582,6 +4582,27 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
+"@unifiprotocol/core-sdk@^6.0.26":
+  version "6.0.26"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.26.tgz#8e3a5cbc9f9fd8bb174e017cdc1231f91429841c"
+  integrity sha512-vwNEaCU0gso87CcGda30NYUy0QgdaW9trlyrniYG+sEE7+1pcUMndckX1ERfMbAIjUZUN6v9NS42B2PRAYlRjg==
+  dependencies:
+    "@harmony-js/account" "^0.1.57"
+    "@harmony-js/core" "^0.1.57"
+    "@harmony-js/utils" "^0.1.56"
+    "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
+    "@types/reflect-metadata" "^0.1.0"
+    "@unifiprotocol/utils" "^2.2.13"
+    bignumber.js "^9.0.1"
+    ethereum-multicall "^2.4.0"
+    ethers "^5.2.0"
+    eventemitter3 "^4.0.7"
+    promise-parallel-throttle "^3.3.0"
+    reflect-metadata "^0.1.13"
+    tron-format-address "^0.1.8"
+    tronweb "^4.1.0"
+    tslib "^2.1.0"
+
 "@unifiprotocol/shell@^0.2.17":
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.17.tgz#e0532d65ca96b89a8620c8570fce7e34b14a8e60"
@@ -4678,7 +4699,7 @@
 
 "@unifiprotocol/utrade-v2-localization@git+https://github.com/unifiprotocol/utrade-v2-localization.git":
   version "1.0.0"
-  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#897d754d6ebbae9d836088e1a89c7489b078d5ea"
+  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#2798087b049c98d4d4e3da48429b7d9bb91ded64"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"

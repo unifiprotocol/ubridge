@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@types/luxon": "^2.3.1",
-    "@unifiprotocol/core-sdk": "^6.0.22",
+    "@unifiprotocol/core-sdk": "^6.0.26",
     "@unifiprotocol/shell": "^0.2.17",
     "@unifiprotocol/uikit": "^1.13.1",
     "@unifiprotocol/utils": "^2.2.13",
