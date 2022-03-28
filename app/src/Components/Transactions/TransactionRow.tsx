@@ -75,7 +75,10 @@ export const TransactionRow: React.FC<{ tx: SwapTransaction }> = ({ tx }) => {
       <RowColumn title={t('bridge.transactions.row.amount')} align="right">
         <ColumnBody align="right">
           <TransactionsAmountWrapper>
-            <TokenLogo token={{ address: token.currency.address, symbol: token.currency.symbol }} />
+            <TokenLogo
+              token={{ address: token.currency.address, symbol: token.currency.symbol }}
+              blockchain={tx.blockchain}
+            />
             <span>
               {token.currency.toFactorized(deposit.args.amount)} {token.currency.symbol}
             </span>
