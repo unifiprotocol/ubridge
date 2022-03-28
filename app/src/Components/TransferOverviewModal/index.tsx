@@ -29,6 +29,7 @@ export interface TransferOverviewModalProps extends ModalProps {}
 export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ close }) => {
   const { t } = useTranslation()
   const [confirmed, setConfirmed] = useState(false)
+  const [approving, setApproving] = useState(false)
   const { targetChain, targetCurrency, destinationAddress, amount, allowances, approve, deposit } =
     useSwap()
   const { blockchainConfig, adapter } = useAdapter()
@@ -50,6 +51,11 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
       close()
     })
   }, [close, deposit])
+
+  const onApprove = useCallback(() => {
+    setApproving(true)
+    approve()
+  }, [approve])
 
   const disabledApprove = useMemo(() => {
     return (targetCurrency && !allowances[targetCurrency.address]) || !confirmed || isApproved
@@ -98,8 +104,13 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
           />
         </Confirm>
         <TransferActions>
-          <PrimaryButton disabled={disabledApprove} block={true} size="xl" onClick={approve}>
-            {t('bridge.swap.overview.approve')}
+          <PrimaryButton
+            disabled={disabledApprove || approving}
+            block={true}
+            size="xl"
+            onClick={onApprove}
+          >
+            {approving ? t('bridge.swap.overview.approving') : t('bridge.swap.overview.approve')}
           </PrimaryButton>
           <PrimaryButton disabled={disabledSubmit} block={true} size="xl" onClick={onSubmit}>
             {t('bridge.swap.overview.perform_swap')}
