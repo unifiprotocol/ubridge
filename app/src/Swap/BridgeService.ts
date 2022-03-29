@@ -11,7 +11,6 @@ import { Allowance, AllowanceParams } from '../Contracts/ERC20/allowance'
 class BridgeService {
   connector: IConnector | undefined
   config: TConfig = {}
-  swapFee: { [B in Blockchains]?: string } = {}
   blockchain: Blockchains | undefined
 
   get chainID() {

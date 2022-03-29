@@ -28,9 +28,11 @@ export const TransactionDetails: React.FC = () => {
   const { blockchainConfig } = useAdapter()
 
   const targetFee = useMemo(() => {
-    if (!targetChain || !blockchainConfig || !fees[targetChain]) return undefined
-    const fee = blockchainConfig.nativeToken.toFactorized(fees[targetChain] || '0')
-    return `${fee} ${blockchainConfig.nativeToken.symbol}`
+    let fee = '0'
+    if (targetChain && blockchainConfig && fees[targetChain]) {
+      fee = blockchainConfig.nativeToken.toFactorized(fees[targetChain] || '0')
+    }
+    return `${fee} ${blockchainConfig?.nativeToken.symbol}`
   }, [blockchainConfig, fees, targetChain])
 
   return targetCurrency ? (
