@@ -29,4 +29,5 @@ export const BlockchainLogo = styled.img`
   width: 1.5rem;
   height: auto;
   margin-right: 0.75rem;
+  border-radius: 50%;
 `
