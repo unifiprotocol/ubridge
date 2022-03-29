@@ -4561,10 +4561,31 @@
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.0.28", "@unifiprotocol/core-sdk@^6.0.29":
+"@unifiprotocol/core-sdk@^6.0.28":
   version "6.0.29"
   resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.29.tgz#29e68123be912bb779d3c2a090c6669b372a3bc7"
   integrity sha512-ims9xlUeierWzqwesfAwQWwrEG+dUEBCSCJTE3xYyTluJQBpfJVP42/ETO9jNF19sTiawp6VS3W1T+mJufoaTw==
+  dependencies:
+    "@harmony-js/account" "^0.1.57"
+    "@harmony-js/core" "^0.1.57"
+    "@harmony-js/utils" "^0.1.56"
+    "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
+    "@types/reflect-metadata" "^0.1.0"
+    "@unifiprotocol/utils" "^2.3.0"
+    bignumber.js "^9.0.1"
+    ethereum-multicall "^2.4.0"
+    ethers "^5.2.0"
+    eventemitter3 "^4.0.7"
+    promise-parallel-throttle "^3.3.0"
+    reflect-metadata "^0.1.13"
+    tron-format-address "^0.1.8"
+    tronweb "^4.1.0"
+    tslib "^2.1.0"
+
+"@unifiprotocol/core-sdk@^6.0.30":
+  version "6.0.30"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.30.tgz#27127813a085fe152ac3d98fe4ff00034ec61b3d"
+  integrity sha512-hIvA1pBxdlIUbWSRF4hDPNtWAjICRtzg/6f8+GjsX3xTGVOR5UPxxpe3TX/44lri5mbh90MTcteB3Mdwcbu50Q==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
