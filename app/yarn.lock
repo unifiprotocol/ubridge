@@ -4561,17 +4561,17 @@
     "@typescript-eslint/types" "5.12.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.0.22":
-  version "6.0.22"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.22.tgz#c9fb04d8674cbb0db38fac17eaeb2f17d3fda624"
-  integrity sha512-weKuZVXWI5aLwPRnHQZni2svO8+WRX182pLYN6gQoaYY67ghvrcoutzQ3nogMNtQ5dZM3r7VaYFnskSm+db4+g==
+"@unifiprotocol/core-sdk@^6.0.28", "@unifiprotocol/core-sdk@^6.0.29":
+  version "6.0.29"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.29.tgz#29e68123be912bb779d3c2a090c6669b372a3bc7"
+  integrity sha512-ims9xlUeierWzqwesfAwQWwrEG+dUEBCSCJTE3xYyTluJQBpfJVP42/ETO9jNF19sTiawp6VS3W1T+mJufoaTw==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
     "@harmony-js/utils" "^0.1.56"
     "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
     "@types/reflect-metadata" "^0.1.0"
-    "@unifiprotocol/utils" "^2.2.13"
+    "@unifiprotocol/utils" "^2.3.0"
     bignumber.js "^9.0.1"
     ethereum-multicall "^2.4.0"
     ethers "^5.2.0"
@@ -4582,31 +4582,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/core-sdk@^6.0.26":
-  version "6.0.26"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.0.26.tgz#8e3a5cbc9f9fd8bb174e017cdc1231f91429841c"
-  integrity sha512-vwNEaCU0gso87CcGda30NYUy0QgdaW9trlyrniYG+sEE7+1pcUMndckX1ERfMbAIjUZUN6v9NS42B2PRAYlRjg==
-  dependencies:
-    "@harmony-js/account" "^0.1.57"
-    "@harmony-js/core" "^0.1.57"
-    "@harmony-js/utils" "^0.1.56"
-    "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
-    "@types/reflect-metadata" "^0.1.0"
-    "@unifiprotocol/utils" "^2.2.13"
-    bignumber.js "^9.0.1"
-    ethereum-multicall "^2.4.0"
-    ethers "^5.2.0"
-    eventemitter3 "^4.0.7"
-    promise-parallel-throttle "^3.3.0"
-    reflect-metadata "^0.1.13"
-    tron-format-address "^0.1.8"
-    tronweb "^4.1.0"
-    tslib "^2.1.0"
-
-"@unifiprotocol/shell@^0.2.17":
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.17.tgz#e0532d65ca96b89a8620c8570fce7e34b14a8e60"
-  integrity sha512-o8f8QRwMgwsLWSEvZmGLVYKuH7ffyW/K7Dy6PNdLtgk/s7cUTk7nQUTXlPsmA3b6+BKBrbRfVhiL+zAJQW1GkQ==
+"@unifiprotocol/shell@^0.2.18":
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.18.tgz#89aa1cfd5a7827d0d7bee04423e0cb281a0ce13f"
+  integrity sha512-2tC9PTaa8zRSd9/FqCbUo3u38MZrK+9Sf5UWawoe6EP8APZNcmz3Gulb49HIwdFtMTCCPCP0G+z/3NYupQlBEA==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -4618,9 +4597,9 @@
     "@types/node" "^16.7.13"
     "@types/react" "^17.0.20"
     "@types/react-dom" "^17.0.9"
-    "@unifiprotocol/core-sdk" "^6.0.22"
-    "@unifiprotocol/uikit" "^1.13.0"
-    "@unifiprotocol/utils" "^2.2.13"
+    "@unifiprotocol/core-sdk" "^6.0.28"
+    "@unifiprotocol/uikit" "^1.13.4"
+    "@unifiprotocol/utils" "^2.3.0"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"
     assert "^2.0.0"
     bech32 "^2.0.0"
@@ -4647,10 +4626,10 @@
     typescript "^4.4.2"
     web-vitals "^2.1.0"
 
-"@unifiprotocol/uikit@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.0.tgz#e9a280b3a157c1df21a78e646623ad0e948f53be"
-  integrity sha512-U4Wxwa/Q3+k5FrWPQeXGKDXmZm2glrD58/n6zk24mrHC8KhhLOyxAL1JEexsT6xUhoE1FBTtVcSPdjodm7s3BQ==
+"@unifiprotocol/uikit@^1.13.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.3.tgz#ad46e6aae469404b75048963046c69a65c97b7db"
+  integrity sha512-guX7nHS+nfuCKS9G53BXiv9zi0huOa/d3g+4zOy+WIw7vQ52dObpStX8hIgfskDP6M2sD6PTBZ0tX2gzo0PFEA==
   dependencies:
     "@unifiprotocol/utils" "^2.2.1"
     animated-number-react "^0.1.2"
@@ -4663,12 +4642,12 @@
     react-select "^4.3.1"
     styled-components "^5.2.0"
 
-"@unifiprotocol/uikit@^1.13.3":
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.3.tgz#ad46e6aae469404b75048963046c69a65c97b7db"
-  integrity sha512-guX7nHS+nfuCKS9G53BXiv9zi0huOa/d3g+4zOy+WIw7vQ52dObpStX8hIgfskDP6M2sD6PTBZ0tX2gzo0PFEA==
+"@unifiprotocol/uikit@^1.13.4":
+  version "1.13.4"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.4.tgz#60a073d5482a3bda7e5f2926882e79bd0cd43379"
+  integrity sha512-9FUTRV89sNdTs1sYB8Ez9EhXGh9/3ei5qHAFuE9GU7dXxKSwJS34o6hfKZ8DSS8sB+f0H75n6cEutLRD0lCYaw==
   dependencies:
-    "@unifiprotocol/utils" "^2.2.1"
+    "@unifiprotocol/utils" "^2.3.0"
     animated-number-react "^0.1.2"
     flatted "^3.2.4"
     react "^17.0.2"
@@ -4692,6 +4671,15 @@
   version "2.2.13"
   resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.2.13.tgz#6e25fbeb3413e65b87e18d98e34ac45d8423a91a"
   integrity sha512-MHvH+zcyMgcNdcpi0IhIbHcIGPeZwYpFuxHt1Wur/Q6Kx7g7ktIFJajfCQAqhUXH9BNxvIglD9XHo393Fu4Ycw==
+  dependencies:
+    bignumber.js "^9.0.1"
+    keccak "^3.0.2"
+    tslib "^2.1.0"
+
+"@unifiprotocol/utils@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.3.0.tgz#be81f96e221e8b846d6a61a598c5d66e9cbf4790"
+  integrity sha512-C9xPDhUaVDn90bLd6qY4ktBmAoD71rYcqVICYb51wXIJZD68j7VB6nDvHJcVZyIEmL+VUtHPwXuqN2ZYujC4Kw==
   dependencies:
     bignumber.js "^9.0.1"
     keccak "^3.0.2"

@@ -2,7 +2,7 @@ import React from 'react'
 import { ShinyHeader } from '@unifiprotocol/uikit'
 import { BridgeForm } from '../../Components/BridgeForm'
 import { Hero, BridgePanel } from './Styles'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 export const Swap = () => {
   const { t } = useTranslation()
@@ -12,12 +12,15 @@ export const Swap = () => {
       <Hero>
         <ShinyHeader>{t('bridge.swap.tab.swap')}</ShinyHeader>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
+          <Trans key={'bridge.swap.header'}>
+            Bridge your UNFI to and from any of our supported chains! You wil receive native UNFI
+            directly into your wallet on the destination blockchain. It's that simple! Explore our
+            cross-chain Unifi Protocol ecosystem. For more information on our amazing uBridge, click{' '}
+            <a href="http://twitter.com/unifiprotocol" target="_blank" rel="noreferrer">
+              HERE
+            </a>
+            .
+          </Trans>
         </p>
       </Hero>
       <BridgePanel>
