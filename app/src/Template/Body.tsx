@@ -1,5 +1,7 @@
 import { ShinyHeader } from '@unifiprotocol/uikit'
+import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useAdapter } from '../Adapter'
 import { useConfig } from '../Config'
@@ -21,7 +23,8 @@ const BodyWrapper = styled.div`
 `
 
 export const Body: React.FC = ({ children }) => {
-  const { connection } = useAdapter()
+  const { t } = useTranslation()
+  const { connection, blockchainConfig } = useAdapter()
   const { config } = useConfig()
 
   if (connection && config[connection.config.blockchain]) {
@@ -37,14 +40,12 @@ export const Body: React.FC = ({ children }) => {
       <div>
         <Hero>
           <ShinyHeader>Blockchain not supported</ShinyHeader>
-          <p>Working in progress to give you the availability of UNFI crosschain.</p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
+            {t('bridge.common.blockchain_unavailable', {
+              blockchain: blockchainConfig?.blockchain
+                ? getVernacularBlockchain(blockchainConfig.blockchain)
+                : 'X'
+            })}
           </p>
         </Hero>
       </div>
