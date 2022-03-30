@@ -45,7 +45,7 @@ export const useTransactions = () => {
           const { time } = swap.transactions[0]
           const blockchain = ChainIdBlockchain[Number(origin_chain_id)]
           if (!transactions[blockchain]) transactions[blockchain] = []
-          const dt = DateTime.fromISO(time).setZone('UTC')
+          const dt = DateTime.fromISO(time, { zone: 'UTC' })
           const item = { ...swap, time: dt.toJSDate(), blockchain }
           swaps.push(item)
           transactions[blockchain].push(item)
