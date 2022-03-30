@@ -71,28 +71,37 @@ export const Swap = () => {
   }, [updateAllowance])
 
   useEffect(() => {
-    const fn = () => setInit(false)
+    const fn = () => {
+      updateAllowance()
+      setInit(false)
+    }
     eventBus?.on(NetworkChangedEvent, fn)
     return () => {
       eventBus?.off(NetworkChangedEvent, fn)
     }
-  }, [adapter, eventBus])
+  }, [adapter, eventBus, updateAllowance])
 
   useEffect(() => {
-    const fn = () => setInit(false)
+    const fn = () => {
+      updateAllowance()
+      setInit(false)
+    }
     eventBus?.on(AddressChangedEvent, fn)
     return () => {
       eventBus?.off(AddressChangedEvent, fn)
     }
-  }, [adapter, eventBus])
+  }, [adapter, eventBus, updateAllowance])
 
   useEffect(() => {
-    const fn = () => setInit(false)
+    const fn = () => {
+      updateAllowance()
+      setInit(false)
+    }
     eventBus?.on(AdapterConnectedEvent, fn)
     return () => {
       eventBus?.off(AdapterConnectedEvent, fn)
     }
-  }, [adapter, eventBus])
+  }, [adapter, eventBus, updateAllowance])
 
   return <></>
 }
