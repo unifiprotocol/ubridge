@@ -132,7 +132,7 @@ export const useSwap = () => {
           } else {
             eventBus.emit(
               SuccessNotification(
-                t('transactions.desc_approval_confirmed', { token: targetCurrency.symbol })
+                t('bridge.swap.notification.swap_confirmed', { token: targetCurrency.symbol })
               )
             )
           }
