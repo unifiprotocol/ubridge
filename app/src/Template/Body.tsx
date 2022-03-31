@@ -12,6 +12,7 @@ const BodyWrapper = styled.div`
   width: 100vw;
   display: flex;
   justify-content: center;
+  position: relative;
 
   @media (max-width: 576px) {
     padding: 0 1.25rem;

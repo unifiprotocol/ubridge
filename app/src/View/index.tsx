@@ -6,6 +6,7 @@ import { Swap } from './Components/Swap'
 import { Liquidity } from './Components/Liquidity'
 import { useAdapter } from '../Adapter'
 import { Transactions } from './Components/Transactions'
+import { TransactionBar } from '../Components/TransactionBar'
 
 export const Bridge: React.FC = () => {
   const [section, setSection] = useState('swap')
@@ -29,21 +30,24 @@ export const Bridge: React.FC = () => {
   )
 
   return (
-    <BridgeWrapper>
-      <SwitchWrapper>
-        <Switch
-          choices={[
-            { value: 'swap', label: t('bridge.swap.tab.swap') },
-            ...(adapter?.isConnected()
-              ? [{ value: 'transactions', label: t('bridge.swap.tab.transactions') }]
-              : []),
-            { value: 'liquidity', label: t('bridge.swap.tab.liquidity') }
-          ]}
-          onChange={setSection}
-          selected={section}
-        />
-      </SwitchWrapper>
-      <Section />
-    </BridgeWrapper>
+    <>
+      <TransactionBar />
+      <BridgeWrapper>
+        <SwitchWrapper>
+          <Switch
+            choices={[
+              { value: 'swap', label: t('bridge.swap.tab.swap') },
+              ...(adapter?.isConnected()
+                ? [{ value: 'transactions', label: t('bridge.swap.tab.transactions') }]
+                : []),
+              { value: 'liquidity', label: t('bridge.swap.tab.liquidity') }
+            ]}
+            onChange={setSection}
+            selected={section}
+          />
+        </SwitchWrapper>
+        <Section />
+      </BridgeWrapper>
+    </>
   )
 }
