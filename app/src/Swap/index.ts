@@ -54,7 +54,7 @@ export const useSwap = () => {
   const { liquidity } = useLiquidity()
   const { adapter, blockchainConfig, eventBus, getBalanceByCurrency } = useAdapter()
   const { config } = useConfig()
-  const { currentTransaction, setCurrentTransaction } = useTransactions()
+  const { setCurrentTransaction } = useTransactions()
   const { t } = useTranslation()
 
   // Auto select target chain
