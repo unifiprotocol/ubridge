@@ -5,7 +5,7 @@ import Clocks from '../Services/Clocks'
 
 export const Transactions = () => {
   const [init, setInit] = useState(false)
-  const { updateTransactions } = useTransactions()
+  const { currentTransaction, swaps, updateTransactions, setCurrentTransaction } = useTransactions()
   const { adapter } = useAdapter()
 
   useEffect(() => {
@@ -22,6 +22,19 @@ export const Transactions = () => {
       Clocks.off('THIRTY_SECONDS', fn)
     }
   }, [adapter, updateTransactions])
+
+  useEffect(() => {
+    if (currentTransaction) {
+      for (const swap of swaps) {
+        const actualTransaction = swap.transactions.some(
+          (t) => t.tx_hash === currentTransaction.transactions[0].tx_hash
+        )
+        if (actualTransaction) {
+          setCurrentTransaction(swap)
+        }
+      }
+    }
+  }, [currentTransaction, setCurrentTransaction, swaps])
 
   return <></>
 }

@@ -83,3 +83,18 @@ export const BlockchainTitleWrapper = styled.div`
     cursor: pointer;
   }
 `
+
+export const BridgeWatcherWrapper = styled.div`
+  width: 95%;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  > h1 {
+    margin-bottom: 0rem;
+  }
+
+  tr {
+    box-shadow: 0 0 33px -22px #00e676;
+  }
+`

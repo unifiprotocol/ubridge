@@ -9,6 +9,7 @@ import { ChainIdBlockchain } from '../Services/Connectors'
 export type SwapTransaction = { time: Date; blockchain: Blockchains } & TransactionsResponse
 
 export type TTransactions = {
+  currentTransaction: undefined | SwapTransaction
   swaps: SwapTransaction[]
   transactions: { [K in Blockchains]: SwapTransaction[] }
 }
@@ -22,6 +23,7 @@ function getInitialState() {
 }
 
 const initialState: TTransactions = {
+  currentTransaction: undefined,
   transactions: getInitialState(),
   swaps: []
 }
@@ -32,7 +34,8 @@ const TransactionsState = atom<TTransactions>({
 })
 
 export const useTransactions = () => {
-  const [{ swaps, transactions }, setTransactions] = useRecoilState(TransactionsState)
+  const [{ swaps, transactions, currentTransaction }, setTransactions] =
+    useRecoilState(TransactionsState)
   const { adapter } = useAdapter()
 
   const updateTransactions = useCallback(async () => {
@@ -54,9 +57,16 @@ export const useTransactions = () => {
         swaps.sort((a, b) => b.time.valueOf() - a.time.valueOf())
         return { swaps, transactions }
       })
-      setTransactions({ swaps, transactions })
+      setTransactions((st) => ({ ...st, swaps, transactions }))
     }
   }, [adapter, setTransactions])
 
-  return { swaps, transactions, updateTransactions }
+  const setCurrentTransaction = useCallback(
+    (swapTransaction: SwapTransaction) => {
+      setTransactions((st) => ({ ...st, currentTransaction: swapTransaction }))
+    },
+    [setTransactions]
+  )
+
+  return { swaps, transactions, currentTransaction, updateTransactions, setCurrentTransaction }
 }

@@ -13,6 +13,8 @@ import {
 } from '../Components/Notifications'
 import { useConfig } from '../Config'
 import { useLiquidity } from '../Liquidity'
+import { useTransactions } from '../Transactions'
+import { buildSwapTransaction } from '../Transactions/Helper'
 import BridgeService from './BridgeService'
 
 export type TSwap = {
@@ -52,6 +54,7 @@ export const useSwap = () => {
   const { liquidity } = useLiquidity()
   const { adapter, blockchainConfig, eventBus, getBalanceByCurrency } = useAdapter()
   const { config } = useConfig()
+  const { currentTransaction, setCurrentTransaction } = useTransactions()
   const { t } = useTranslation()
 
   // Auto select target chain
@@ -122,6 +125,16 @@ export const useSwap = () => {
     ).then((response) => {
       if (!eventBus) return response
       if (response.success) {
+        // Faked one
+        setCurrentTransaction(
+          buildSwapTransaction(adapter.blockchainConfig, response, {
+            withdrawalAddress: destinationAddress,
+            originTokenAddress: targetCurrency.address,
+            amount: targetCurrency.toPrecision(amount),
+            targetChainId
+          })
+        )
+
         adapter.waitForTransaction(response.hash).then((v) => {
           if (v === 'FAILED') {
             eventBus.emit(
@@ -158,6 +171,7 @@ export const useSwap = () => {
     destinationAddress,
     eventBus,
     fees,
+    setCurrentTransaction,
     t,
     targetChain,
     targetChainId,
