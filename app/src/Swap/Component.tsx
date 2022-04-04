@@ -64,9 +64,9 @@ export const Swap = () => {
 
   useEffect(() => {
     const fn = () => updateAllowance()
-    Clocks.on('THIRTY_SECONDS', fn)
+    Clocks.on('TEN_SECONDS', fn)
     return () => {
-      Clocks.off('THIRTY_SECONDS', fn)
+      Clocks.off('TEN_SECONDS', fn)
     }
   }, [updateAllowance])
 
