@@ -1,6 +1,6 @@
 import React from 'react'
 import { ShinyHeader, Table } from '@unifiprotocol/uikit'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useTransactions } from '../../Transactions'
 import { Hero } from './Styles'
 import { useWindow } from '../../Utils/useWindow'
@@ -17,12 +17,14 @@ export const Transactions = () => {
       <Hero>
         <ShinyHeader>{t('bridge.swap.tab.transactions')}</ShinyHeader>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
+          <Trans key={'bridge.transactions.header'}>
+            Track your pending and completed bridge transactions from the last 72 hours. If you are
+            experiencing any issues, please contact us for support at our{' '}
+            <a href="https://discord.gg/qf4Pv65yTG" target="_blank" rel="noreferrer">
+              Help Center
+            </a>
+            .
+          </Trans>
         </p>
       </Hero>
       <>
