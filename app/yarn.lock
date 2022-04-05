@@ -3518,10 +3518,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.2.19":
-  version "0.2.19"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.19.tgz#93990884ce78a17d28219424db2ab5b1c6caf611"
-  integrity sha512-dwO36jSBQW7Nt043GZF2H6lhtTK40vF/3G+1LIAEDwqHaX2fkGH76y2sTl4t0bbF6/7RKgvL9mT2/c7jlD3SRQ==
+"@unifiprotocol/shell@^0.2.20":
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.2.20.tgz#271af7c88e6c05c464d9f0a1dc0e91a6d170ffa7"
+  integrity sha512-+Ku3x6n5u20klLzXZnyuHgMw4W3PGqe7b+WCNsWDbQUeCInm0SIPbC2/OnNK8Mj5m2UWV2JGxcDHWFgi+W3aGQ==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -3534,7 +3534,7 @@
     "@types/react" "^17.0.20"
     "@types/react-dom" "^17.0.9"
     "@unifiprotocol/core-sdk" "^6.0.28"
-    "@unifiprotocol/uikit" "^1.13.4"
+    "@unifiprotocol/uikit" "^1.13.5"
     "@unifiprotocol/utils" "^2.3.0"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"
     assert "^2.0.0"
@@ -3562,10 +3562,26 @@
     typescript "^4.4.2"
     web-vitals "^2.1.0"
 
-"@unifiprotocol/uikit@^1.13.3", "@unifiprotocol/uikit@^1.13.4":
+"@unifiprotocol/uikit@^1.13.3":
   version "1.13.4"
   resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.4.tgz#60a073d5482a3bda7e5f2926882e79bd0cd43379"
   integrity sha512-9FUTRV89sNdTs1sYB8Ez9EhXGh9/3ei5qHAFuE9GU7dXxKSwJS34o6hfKZ8DSS8sB+f0H75n6cEutLRD0lCYaw==
+  dependencies:
+    "@unifiprotocol/utils" "^2.3.0"
+    animated-number-react "^0.1.2"
+    flatted "^3.2.4"
+    react "^17.0.2"
+    react-dom "^17.0.2"
+    react-hot-toast "^2.2.0"
+    react-icons "^4.2.0"
+    react-router-dom "^5.2.0"
+    react-select "^4.3.1"
+    styled-components "^5.2.0"
+
+"@unifiprotocol/uikit@^1.13.5":
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/uikit/-/uikit-1.13.5.tgz#3382b14eb260b647a9ab9731fbff37ae265be687"
+  integrity sha512-FztlfooG8whdbWHdW4HQ0MUwI2J///NYSXU+0LlNBgBvkVY44Hj37p9Zhid+oGV5Ii6vfJmKtTFIhKr7yISQvA==
   dependencies:
     "@unifiprotocol/utils" "^2.3.0"
     animated-number-react "^0.1.2"
