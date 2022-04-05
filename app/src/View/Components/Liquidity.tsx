@@ -16,7 +16,7 @@ export const Liquidity = () => {
       <Hero>
         <ShinyHeader>{t('bridge.swap.tab.liquidity')}</ShinyHeader>
         <p>
-          <Trans key="bridge.liquidity.header">
+          <Trans i18nKey="bridge.liquidity.header">
             During a swap, the UNFI gets deposited as liquidity on the origin chain, and an equal
             amount of UNFI is withdrawn from the liquidy pool on the destination chain. There must
             be enough liquidity on the destination chain to complete the transaction. The

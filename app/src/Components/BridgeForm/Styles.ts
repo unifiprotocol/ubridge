@@ -71,3 +71,25 @@ export const BlockchainFlow = styled.div`
     }
   }
 `
+
+export const tooltipStyles = {
+  tooltip: {
+    backgroundColor: '#fff',
+    color: 'rgba(0, 0, 0, 0.87)',
+    borderColor: '#fff',
+    width: '30vw',
+    maxWidth: 'max-content',
+    padding: '0.5rem',
+    borderRadius: '5px',
+    zIndex: '901',
+    alignText: 'justify',
+    whiteSpace: 'pre-line',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  arrow: {
+    color: '#ffffff',
+    width: '5px',
+    'z-index': '-1'
+  }
+}

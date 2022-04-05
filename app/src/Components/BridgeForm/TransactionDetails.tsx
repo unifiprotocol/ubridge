@@ -1,8 +1,10 @@
+import { BiHelpCircle, Tooltip } from '@unifiprotocol/uikit'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useAdapter } from '../../Adapter'
 import { useSwap } from '../../Swap'
+import { tooltipStyles } from './Styles'
 
 const TransactionDetailsWrapper = styled.ul`
   padding: 0;
@@ -48,7 +50,15 @@ export const TransactionDetails: React.FC = () => {
         <Value>{targetFee}</Value>
       </Line>
       <Line>
-        <Title>{t('bridge.common.estimated_time')}</Title>
+        <Title>
+          <span>{t('bridge.common.estimated_time')} </span>
+          <Tooltip
+            styles={tooltipStyles}
+            content={<span>{t('bridge.common.estimated_time.tooltip')}</span>}
+          >
+            <BiHelpCircle />
+          </Tooltip>
+        </Title>
         <Value>~2min</Value>
       </Line>
     </TransactionDetailsWrapper>

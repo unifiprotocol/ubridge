@@ -58,20 +58,12 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
   }, [approve])
 
   const disabledApprove = useMemo(() => {
-    return (targetCurrency && !allowances[targetCurrency.address]) || isApproved
-  }, [allowances, isApproved, targetCurrency])
+    return (targetCurrency && !allowances[targetCurrency.address]) || !confirmed || isApproved
+  }, [allowances, confirmed, isApproved, targetCurrency])
 
   const disabledSubmit = useMemo(() => {
-    return (targetCurrency && !allowances[targetCurrency.address]) || !disabledApprove
-  }, [allowances, disabledApprove, targetCurrency])
-
-  // const disabledApprove = useMemo(() => {
-  //   return (targetCurrency && !allowances[targetCurrency.address]) || !confirmed || isApproved
-  // }, [allowances, confirmed, isApproved, targetCurrency])
-
-  // const disabledSubmit = useMemo(() => {
-  //   return (targetCurrency && !allowances[targetCurrency.address]) || !disabledApprove || !confirmed
-  // }, [allowances, confirmed, disabledApprove, targetCurrency])
+    return (targetCurrency && !allowances[targetCurrency.address]) || !disabledApprove || !confirmed
+  }, [allowances, confirmed, disabledApprove, targetCurrency])
 
   return (
     <TransferOverviewModalWrapper>
@@ -101,15 +93,15 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
         </Swap>
         <TransactionDetails />
         <Confirm>
-          {/* <Checkbox
+          <Checkbox
             checked={confirmed}
             onChange={setConfirmed}
             label={
-              <Trans key={'bridge.swap.overview.terms_conditions'}>
+              <Trans i18nKey={'bridge.swap.overview.terms_conditions'}>
                 I read and accept the <a href="#xd">terms and conditions</a>
               </Trans>
             }
-          /> */}
+          />
         </Confirm>
         <TransferActions>
           <PrimaryButton

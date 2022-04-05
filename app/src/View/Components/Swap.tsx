@@ -18,10 +18,10 @@ export const Swap = () => {
       <Hero>
         <ShinyHeader>{t('bridge.swap.tab.swap')}</ShinyHeader>
         <p>
-          <Trans key={'bridge.swap.header'}>
+          <Trans i18nKey={'bridge.swap.header'}>
             Bridge your UNFI to and from any of our supported chains! You wil receive native UNFI
             directly into your wallet on the destination blockchain. It's that simple! Explore our
-            cross-chain Unifi Protocol ecosystem. For more information on our amazing uBridge, click{' '}
+            cross-chain Unifi Protocol ecosystem. For more information on our amazing uBridge, click
             <a href="http://twitter.com/unifiprotocol" target="_blank" rel="noreferrer">
               HERE
             </a>
