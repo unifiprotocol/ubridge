@@ -98,7 +98,10 @@ export const TransferOverviewModal: React.FC<TransferOverviewModalProps> = ({ cl
             onChange={setConfirmed}
             label={
               <Trans i18nKey={'bridge.swap.overview.terms_conditions'}>
-                I read and accept the <a href="#xd">terms and conditions</a>
+                I agree to the Terms and Conditions as set out in
+                <a href="https://unfi.in/3LAmPW4" target="_blank" rel="noreferrer">
+                  THIS ARTICLE
+                </a>
               </Trans>
             }
           />
