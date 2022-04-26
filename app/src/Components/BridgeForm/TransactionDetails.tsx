@@ -1,4 +1,5 @@
 import { BiHelpCircle, Tooltip } from '@unifiprotocol/uikit'
+import { BN } from '@unifiprotocol/utils'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -42,7 +43,7 @@ export const TransactionDetails: React.FC = () => {
       <Line>
         <Title>{t('bridge.common.max_swap_size')}</Title>
         <Value>
-          {maxSwapSize} {targetCurrency.symbol}
+          {BN(maxSwapSize).dp(4).toFixed()} {targetCurrency.symbol}
         </Value>
       </Line>
       <Line>
