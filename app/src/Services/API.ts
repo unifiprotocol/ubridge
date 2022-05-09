@@ -40,6 +40,13 @@ export async function fetchConfig(): Promise<APIResponse<BridgeConfigResponse>> 
   const response: APIResponse<BridgeConfigResponse> = await fetch(
     `${BASE_ENDPOINT}/v1/blockchains`
   ).then((res) => res.json())
+  response.result[Blockchains.BTTC] = {
+    bridgeContract: '0x20471F64D5ADD33c74d1180896e825Ad809D5109',
+    tokens: {
+      unfi: new Currency('0x4d6a69c8700393cbd161a1799789345cc393a441', 18, 'UNFI', 'UNFI')
+    },
+    type: 'mainnet'
+  }
   Object.keys(response.result).forEach((b) => {
     const blockchain = b as Blockchains
     const blockchainConfig = response.result[blockchain]!
@@ -53,6 +60,7 @@ export async function fetchConfig(): Promise<APIResponse<BridgeConfigResponse>> 
       )
     })
   })
+  debugger
   return { ...response }
 }
 
