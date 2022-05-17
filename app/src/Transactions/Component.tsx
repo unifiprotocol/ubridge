@@ -16,12 +16,16 @@ export const Transactions = () => {
   }, [adapter, init, updateTransactions])
 
   useEffect(() => {
+    const timer =
+      currentTransaction && currentTransaction.transactions.length < 2
+        ? 'TEN_SECONDS'
+        : 'THIRTY_SECONDS'
     const fn = () => adapter?.isConnected() && updateTransactions()
-    Clocks.on('THIRTY_SECONDS', fn)
+    Clocks.on(timer, fn)
     return () => {
-      Clocks.off('THIRTY_SECONDS', fn)
+      Clocks.off(timer, fn)
     }
-  }, [adapter, updateTransactions])
+  }, [adapter, currentTransaction, updateTransactions])
 
   useEffect(() => {
     if (currentTransaction) {
