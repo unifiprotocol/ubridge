@@ -12,6 +12,7 @@ import { Liquidty } from './Liquidity/Component'
 import { Swap } from './Swap/Component'
 import Clocks from './Services/Clocks'
 import { Transactions } from './Transactions/Component'
+import { RecoilRoot } from 'recoil'
 
 const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
   const blockchain = useMemo(
@@ -24,30 +25,32 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
   }, [])
 
   return (
-    <AdapterContext.Provider value={{ connection, balances, eventBus }}>
-      <I18nextProvider i18n={i18n}>
-        <UnifiThemeProvider
-          theme={Themes.Dark}
-          options={{
-            tokenLogoResolver: TokenLogoResolvers[blockchain]
-          }}
-        >
-          <Config />
-          <Liquidty />
-          <Swap />
-          <Transactions />
-          <Router>
-            <Body>
-              <Switch>
-                <Route path="/">
-                  <Bridge />
-                </Route>
-              </Switch>
-            </Body>
-          </Router>
-        </UnifiThemeProvider>
-      </I18nextProvider>
-    </AdapterContext.Provider>
+    <RecoilRoot>
+      <AdapterContext.Provider value={{ connection, balances, eventBus }}>
+        <I18nextProvider i18n={i18n}>
+          <UnifiThemeProvider
+            theme={Themes.Dark}
+            options={{
+              tokenLogoResolver: TokenLogoResolvers[blockchain]
+            }}
+          >
+            <Config />
+            <Liquidty />
+            <Swap />
+            <Transactions />
+            <Router>
+              <Body>
+                <Switch>
+                  <Route path="/">
+                    <Bridge />
+                  </Route>
+                </Switch>
+              </Body>
+            </Router>
+          </UnifiThemeProvider>
+        </I18nextProvider>
+      </AdapterContext.Provider>
+    </RecoilRoot>
   )
 }
 
