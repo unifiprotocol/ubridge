@@ -7,9 +7,7 @@ import { RecoilRoot } from 'recoil'
 
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
-      <Shell Wrapped={App} />
-    </RecoilRoot>
+    <Shell Wrapped={App} />
   </React.StrictMode>,
   document.getElementById('root')
 )
