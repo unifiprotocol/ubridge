@@ -2,7 +2,7 @@ import { UnifiThemeProvider, Themes } from '@unifiprotocol/uikit'
 import { Blockchains, TokenLogoResolvers } from '@unifiprotocol/utils'
 import { ShellWrappedComp } from '@unifiprotocol/shell'
 import { Body } from './Template/Body'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Bridge } from './View'
 import { I18nextProvider } from 'react-i18next'
 import { useEffect, useMemo } from 'react'
@@ -38,15 +38,14 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
             <Liquidty />
             <Swap />
             <Transactions />
-            <Router>
-              <Body>
-                <Switch>
-                  <Route path="/">
-                    <Bridge />
-                  </Route>
-                </Switch>
-              </Body>
-            </Router>
+            <Body>
+              <Routes>
+                <Route path="/bridge/swap" element={<Bridge section="swap" />} />
+                <Route path="/bridge/liquidity" element={<Bridge section="liquidity" />} />
+                <Route path="/bridge/transactions" element={<Bridge section="transactions" />} />
+                <Route path="/" element={<Navigate to="/bridge/swap" />} />
+              </Routes>
+            </Body>
           </UnifiThemeProvider>
         </I18nextProvider>
       </AdapterContext.Provider>

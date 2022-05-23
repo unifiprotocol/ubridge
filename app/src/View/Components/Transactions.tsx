@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ShinyHeader, Table } from '@unifiprotocol/uikit'
 import { Trans, useTranslation } from 'react-i18next'
 import { useTransactions } from '../../Transactions'
@@ -6,11 +6,21 @@ import { Hero } from './Styles'
 import { useWindow } from '../../Utils/useWindow'
 import { TransactionRow } from '../../Components/Transactions/TransactionRow'
 import { TransactionMobileRow } from '../../Components/Transactions/TransactionMobileRow'
+import { useNavigate } from 'react-router-dom'
+import { useAdapter } from '../../Adapter'
 
 export const Transactions = () => {
   const { t } = useTranslation()
   const { swaps } = useTransactions()
+  const { adapter } = useAdapter()
   const { windowSize } = useWindow()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!adapter?.isConnected()) {
+      navigate('/bridge/swap')
+    }
+  }, [adapter, navigate])
 
   return (
     <>
