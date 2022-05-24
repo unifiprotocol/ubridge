@@ -1,6 +1,6 @@
 {
   "name": "@unifiapps/ubridge",
-  "version": "1.0.0-beta.14",
+  "version": "1.0.0-beta.15",
   "private": false,
   "main": "build/index.pkg.js",
   "module": "build/index.pkg.esm.js",
