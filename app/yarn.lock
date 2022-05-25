@@ -3616,10 +3616,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^1.0.0-beta.10":
-  version "1.0.0-beta.10"
-  resolved "http://localhost:4873/@unifiprotocol%2fshell/-/shell-1.0.0-beta.10.tgz#86beabc3bae419820e76ece181146474202ff9ea"
-  integrity sha512-wNUzNhIoiZNIysn5rp83+HOyiTQAu9OkPhnVhjGB3eRmL+y2vev9s9CMV6vYy9orVFNUpGIzbj7BIsL6qlIYyg==
+"@unifiprotocol/shell@^1.0.0-beta.11":
+  version "1.0.0-beta.11"
+  resolved "http://localhost:4873/@unifiprotocol%2fshell/-/shell-1.0.0-beta.11.tgz#9be10283caa172a7f31d0e8e9e325c9c2058092b"
+  integrity sha512-Y+yqLo/A5AAwhWN1PyUJtHNFAPViotXeL0kviCnZqdK3jm7oNBgjiDNiGZD3lp96+vikXsGMFbWBNoXf2IbHsA==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -3654,7 +3654,6 @@
     stream "^0.0.2"
     stream-browserify "^3.0.0"
     stream-http "^3.2.0"
-    styled-components "^5.3.3"
     web-vitals "^2.1.0"
 
 "@unifiprotocol/uikit@^1.13.5":
