@@ -18,7 +18,7 @@ export const Transactions = () => {
 
   useEffect(() => {
     if (!adapter?.isConnected()) {
-      navigate('/bridge/swap')
+      navigate('swap')
     }
   }, [adapter, navigate])
 

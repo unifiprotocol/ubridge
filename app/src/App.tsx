@@ -40,10 +40,10 @@ const App: ShellWrappedComp = ({ i18n, connection, balances, eventBus }) => {
             <Transactions />
             <Body>
               <Routes>
-                <Route path="/bridge/swap" element={<Bridge section="swap" />} />
-                <Route path="/bridge/liquidity" element={<Bridge section="liquidity" />} />
-                <Route path="/bridge/transactions" element={<Bridge section="transactions" />} />
-                <Route path="/" element={<Navigate to="/bridge/swap" />} />
+                <Route path="/swap" element={<Bridge section="swap" />} />
+                <Route path="/liquidity" element={<Bridge section="liquidity" />} />
+                <Route path="/transactions" element={<Bridge section="transactions" />} />
+                <Route path="*" element={<Navigate to="/bridge/swap" />} />
               </Routes>
             </Body>
           </UnifiThemeProvider>
