@@ -3,7 +3,7 @@
   "version": "1.0.0-beta.27",
   "private": false,
   "main": "build/index.pkg.js",
-  "module": "build/index.pkg.esm.js",
+  "module": "build/index.pkg.js",
   "types": "build/types/index.pkg.d.ts",
   "files": [
     "build"

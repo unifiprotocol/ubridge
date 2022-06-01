@@ -18,14 +18,9 @@ const config = {
   input: 'src/index.pkg.ts',
   output: [
     {
-      file: packageJson.main,
-      format: 'cjs',
-      sourcemap: true
-    },
-    {
       file: packageJson.module,
       format: 'es',
-      sourcemap: true
+      sourcemap: false
     }
   ],
   plugins: [
