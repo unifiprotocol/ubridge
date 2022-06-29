@@ -54,7 +54,7 @@ export const useSwap = () => {
   const { liquidity } = useLiquidity()
   const { adapter, blockchainConfig, eventBus, getBalanceByCurrency } = useAdapter()
   const { config } = useConfig()
-  const { setCurrentTransaction } = useTransactions()
+  const { setCurrentTransaction, clearCurrentTransaction } = useTransactions()
   const { t } = useTranslation()
 
   // Auto select target chain
@@ -142,6 +142,7 @@ export const useSwap = () => {
                 t('bridge.swap.notification.swap_failed', { token: targetCurrency.symbol })
               )
             )
+            clearCurrentTransaction()
           } else {
             eventBus.emit(
               SuccessNotification(
@@ -162,6 +163,7 @@ export const useSwap = () => {
             t('bridge.swap.notification.swap_failed', { token: targetCurrency.symbol })
           )
         )
+        clearCurrentTransaction()
       }
       return response
     })

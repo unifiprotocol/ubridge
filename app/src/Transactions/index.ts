@@ -68,5 +68,15 @@ export const useTransactions = () => {
     [setTransactions]
   )
 
-  return { swaps, transactions, currentTransaction, updateTransactions, setCurrentTransaction }
+  const clearCurrentTransaction = () =>
+    setTransactions((st) => ({ ...st, currentTransaction: undefined }))
+
+  return {
+    swaps,
+    transactions,
+    currentTransaction,
+    updateTransactions,
+    setCurrentTransaction,
+    clearCurrentTransaction
+  }
 }
