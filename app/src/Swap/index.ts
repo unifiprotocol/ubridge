@@ -174,6 +174,7 @@ export const useSwap = () => {
     eventBus,
     fees,
     setCurrentTransaction,
+    clearCurrentTransaction,
     t,
     targetChain,
     targetChainId,

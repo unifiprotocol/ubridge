@@ -3569,10 +3569,10 @@
     "@typescript-eslint/types" "5.18.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.4.3":
-  version "6.4.3"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.4.3.tgz#20f782be98c5042bbabccefedb72bb5b7b5341dc"
-  integrity sha512-smBkruh0fE+XW4UNSPevGk7vcMujEYImsBRyrnk19Nl9uLZHf4kJ6GB/6NJ8f/cLB+ltirGOosQGgQNEirYJXw==
+"@unifiprotocol/core-sdk@^6.6.3":
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.6.3.tgz#ebae16809cc080df2d92eadf1bfbb1faca68e95f"
+  integrity sha512-8AEFsLOfwgi0dTocWyB/XspB/VNVbARwhv+z+LESsRMGZYKAli7mVVAQulG/GtvwjQoOubN9i7dusAegLfx3bg==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
@@ -3582,7 +3582,7 @@
     "@unifiprotocol/utils" "^2.3.3"
     "@walletconnect/ethereum-provider" "^1.7.8"
     bignumber.js "^9.0.1"
-    ethereum-multicall "^2.4.0"
+    ethereum-multicall "^2.14.0"
     ethers "^5.6.2"
     eventemitter3 "^4.0.7"
     promise-parallel-throttle "^3.3.0"
@@ -3591,10 +3591,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.3.tgz#327e199ff4febd0c59d2a8a1461dbbbdd776ee13"
-  integrity sha512-GphetEBN/6dUhxFHsTciWxT89fm5axEPQAo/9VKzjbqoOzOKUZioKhoZ3qI4hvSYTdkKztOFfeviE1B0P/6H2g==
+"@unifiprotocol/shell@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.6.tgz#8b8237876f5178e6982f5984688dbced571efce5"
+  integrity sha512-oNuBw1nyLiRPoSIaRSkl8j4jzPSIBgZrkJMbaaT6EiOce9B11/XaUNrFOnqsPvUdC5mgeLwhWgcJc8uhbWfztA==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -3602,7 +3602,7 @@
     "@testing-library/jest-dom" "^5.14.1"
     "@testing-library/react" "^12.0.0"
     "@testing-library/user-event" "^13.2.1"
-    "@unifiprotocol/core-sdk" "^6.4.3"
+    "@unifiprotocol/core-sdk" "^6.6.3"
     "@unifiprotocol/uikit" "^1.13.5"
     "@unifiprotocol/utils" "^2.3.3"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"
@@ -8097,10 +8097,10 @@ ethereum-blockies-png@^0.1.3:
     parse-color "^1.0.0"
     pngjs "^3.2.0"
 
-ethereum-multicall@^2.4.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/ethereum-multicall/-/ethereum-multicall-2.10.0.tgz#db8e41109e01c63058cf99a1b00770c93e8abb75"
-  integrity sha512-H5rYoNJ+ukV5Z932AkxsEzV9MveJgb1Y5aFfS5SmenFuUkTwx9gje1d1JSl44+Wa8PBLuu9+7BHIX1mdJdQLSg==
+ethereum-multicall@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/ethereum-multicall/-/ethereum-multicall-2.14.0.tgz#aa1e8cdf2932de5e96af51be93c79131aae6695d"
+  integrity sha512-nyfepMbvFqgv1il/gky6J+dyT/kvaNFTNvmiEp+E7xluwKUGnyCfA6/q4oyi2TLvg4yGYnmrwr3D9jcAd1hVYQ==
   dependencies:
     "@ethersproject/providers" "^5.0.10"
     ethers "^5.0.15"

@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@types/luxon": "^2.3.1",
-    "@unifiprotocol/core-sdk": "^6.4.3",
-    "@unifiprotocol/shell": "^0.5.3",
+    "@unifiprotocol/core-sdk": "^6.6.3",
+    "@unifiprotocol/shell": "^0.5.6",
     "@unifiprotocol/uikit": "^1.13.3",
     "@unifiprotocol/utils": "^2.3.3",
     "@unifiprotocol/utrade-v2-localization": "git+https://github.com/unifiprotocol/utrade-v2-localization.git",

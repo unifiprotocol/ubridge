@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   AdapterConnectedEvent,
   AddressChangedEvent,
@@ -22,7 +22,7 @@ export const Config = () => {
         Object.values(cfg.tokens).forEach((currency) => {
           addToken(currency)
         })
-        setTimeout(() => eventBus?.emit(new RefreshBalances()))
+        setTimeout(() => eventBus?.emit(new RefreshBalances()), 1000)
       }
     }
   }, [adapter, config, eventBus, addToken])
@@ -42,7 +42,10 @@ export const Config = () => {
   }, [])
 
   useEffect(() => {
-    const fn = () => setInit(false)
+    const fn = () => {
+      setInit(false)
+      console.log('network changed')
+    }
     eventBus?.on(NetworkChangedEvent, fn)
     return () => {
       eventBus?.off(NetworkChangedEvent, fn)
