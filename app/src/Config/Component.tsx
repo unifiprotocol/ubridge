@@ -42,10 +42,7 @@ export const Config = () => {
   }, [])
 
   useEffect(() => {
-    const fn = () => {
-      setInit(false)
-      console.log('network changed')
-    }
+    const fn = () => setInit(false)
     eventBus?.on(NetworkChangedEvent, fn)
     return () => {
       eventBus?.off(NetworkChangedEvent, fn)
