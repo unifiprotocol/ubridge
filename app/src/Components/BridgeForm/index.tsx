@@ -141,7 +141,6 @@ export const BridgeForm: React.FC = () => {
               onAmountChange={setAmount}
               onTokenChange={setToken0}
               tokenList={tokenList}
-              maxPercentage={'0.9999999999'}
             />
           </From>
           <BridgeDirection>

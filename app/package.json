@@ -14,7 +14,7 @@
     "@types/luxon": "^2.3.1",
     "@unifiprotocol/core-sdk": "^6.6.3",
     "@unifiprotocol/shell": "^0.5.6",
-    "@unifiprotocol/uikit": "^1.13.3",
+    "@unifiprotocol/uikit": "^1.14.2",
     "@unifiprotocol/utils": "^2.3.3",
     "@unifiprotocol/utrade-v2-localization": "git+https://github.com/unifiprotocol/utrade-v2-localization.git",
     "ethereum-blockies-png": "^0.1.3",
