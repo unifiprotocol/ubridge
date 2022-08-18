@@ -3577,17 +3577,17 @@
     "@typescript-eslint/types" "5.18.0"
     eslint-visitor-keys "^3.0.0"
 
-"@unifiprotocol/core-sdk@^6.6.6":
-  version "6.6.6"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.6.6.tgz#06676346420cebc35b47385a3e0f991bdd66586b"
-  integrity sha512-Xc18zBplgJEWVk6gOGaqeA4/GCX/UpR5HT+C09gFbZasjK3XeuhYsRgl9Zy3aGWQvqe6B0IiKXkr6y7WHCsNRg==
+"@unifiprotocol/core-sdk@^6.6.7":
+  version "6.6.7"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/core-sdk/-/core-sdk-6.6.7.tgz#a93cd710ed3a43bd6e5e71351993c543e1780b2f"
+  integrity sha512-adJFVwO4A6+jqK8y0kHSJ1RCRT8RKOfBtLlEjiS/6cYLzK9CcdY0t67+gN26qnfKtFPsDjKuy3VX6DRMyUu3+w==
   dependencies:
     "@harmony-js/account" "^0.1.57"
     "@harmony-js/core" "^0.1.57"
     "@harmony-js/utils" "^0.1.56"
     "@maticnetwork/eth-decoder" "git+https://github.com/deblanco/eth-decoder.git"
     "@types/reflect-metadata" "^0.1.0"
-    "@unifiprotocol/utils" "^2.3.4"
+    "@unifiprotocol/utils" "^2.3.5"
     "@walletconnect/ethereum-provider" "^1.7.8"
     bignumber.js "^9.0.1"
     ethereum-multicall "^2.14.0"
@@ -3599,10 +3599,10 @@
     tronweb "^4.1.0"
     tslib "^2.1.0"
 
-"@unifiprotocol/shell@^0.5.8":
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.8.tgz#73344b2cd183bbaab617fc29e2811d20ecade196"
-  integrity sha512-Wf5aNUOTs5WNc3vRWv/vydqX07GctgVgRnO2IwrmmtN0AeZvYdAeR1jnSz0fIdkKVoJJ5uiSkGeYvluTZ+jegg==
+"@unifiprotocol/shell@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.9.tgz#7a2e5e38010cb0b8cc8d6797c2774a4894904190"
+  integrity sha512-1SomkGDEZy7rdxTG/t6ncYTIct83i6Tr7EUdvVqf5BkAzMHElvVvpYR3x8IYDwfBTzq9z/qkzRnQB/kfehvirQ==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -3610,9 +3610,9 @@
     "@testing-library/jest-dom" "^5.14.1"
     "@testing-library/react" "^12.0.0"
     "@testing-library/user-event" "^13.2.1"
-    "@unifiprotocol/core-sdk" "^6.6.6"
+    "@unifiprotocol/core-sdk" "^6.6.7"
     "@unifiprotocol/uikit" "^1.13.5"
-    "@unifiprotocol/utils" "^2.3.4"
+    "@unifiprotocol/utils" "^2.3.5"
     "@unifiprotocol/utrade-v2-localization" "git+https://github.com/unifiprotocol/utrade-v2-localization.git"
     assert "^2.0.0"
     bech32 "^2.0.0"
@@ -3694,10 +3694,10 @@
     keccak "^3.0.2"
     tslib "^2.1.0"
 
-"@unifiprotocol/utils@^2.3.4":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.3.4.tgz#32a1cc05de98d9ceac83a27233206cfb501a389b"
-  integrity sha512-ToIKZouAvZxaUVhb3P081j/BmcO+AyKPCY67CkZ/tnTLTWqqoG03qWWDd6h9nGL7+i5zE6IkJcW9EVIk0JJNhA==
+"@unifiprotocol/utils@^2.3.5":
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/utils/-/utils-2.3.5.tgz#33172ef4cab14139cd5343a9c9c6a106c19a572d"
+  integrity sha512-WFRSv4R/4WNlr8QwYvVo+PiYNH6yIWKTBApQszGgedkDmNRp6w2hu0qD5eD6ReiFd6nfVvPhFu/RUxbmjlBAJQ==
   dependencies:
     bignumber.js "^9.0.1"
     keccak "^3.0.2"
