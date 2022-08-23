@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/luxon": "^2.3.1",
     "@unifiprotocol/core-sdk": "^6.6.7",
-    "@unifiprotocol/shell": "^0.5.9",
+    "@unifiprotocol/shell": "^0.5.10",
     "@unifiprotocol/uikit": "^1.14.2",
     "@unifiprotocol/utils": "^2.3.5",
     "@unifiprotocol/utrade-v2-localization": "git+https://github.com/unifiprotocol/utrade-v2-localization.git",
