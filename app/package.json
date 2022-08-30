@@ -10,7 +10,8 @@
     "lint": "eslint  src/**/*.ts*",
     "lint:fix": "yarn lint --fix",
     "webpack:start": "webpack-cli serve",
-    "webpack:build": "webpack --config webpack.config.prod.js --mode production"
+    "webpack:build": "webpack --mode development",
+    "webpack:build:prod": "webpack --config webpack.config.prod.js --mode production"
   },
   "dependencies": {
     "@types/luxon": "^2.3.1",
