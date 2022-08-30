@@ -14,7 +14,8 @@ module.exports = {
         port: 3002,
     },
     output: {
-        publicPath: 'auto',
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].[contenthash].js'
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
