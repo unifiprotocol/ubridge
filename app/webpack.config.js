@@ -60,6 +60,14 @@ module.exports = {
                     singleton: true,
                     requiredVersion: dependencies['react-dom'],
                 },
+                '@unifiprotocol/shell': {
+                    singleton: true,
+                    requiredVersion: dependencies['@unifiprotocol/shell'],
+                },
+                '@unifiprotocol/uikit': {
+                    singleton: true,
+                    requiredVersion: dependencies['@unifiprotocol/uikit'],
+                },
             },
         }),
         new HtmlWebpackPlugin({
