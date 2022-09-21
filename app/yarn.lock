@@ -4681,10 +4681,10 @@
     webpack "^5.74.0"
     webpack-cli "^4.10.0"
 
-"@unifiprotocol/shell@^0.5.12":
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.12.tgz#5d0b09c4788c99dd1e24412f59f8346b52d5027c"
-  integrity sha512-m0qsR74bhL9uIxdfvkgWed8iW5xXTTTcV3pt325/SXE6QtIXsDjyc7MGCv/XhsamuEIVaO4ona7ZoPo9Y1r06g==
+"@unifiprotocol/shell@^0.5.13":
+  version "0.5.13"
+  resolved "https://registry.yarnpkg.com/@unifiprotocol/shell/-/shell-0.5.13.tgz#e1737cea4aae66686be78d23289dab875fbc0a0f"
+  integrity sha512-o1UcDa0FS672gdfDYf/WnUgMAdDURYIg1udutGw0Lc8/dhbXo7GcuhGtx0wJpHb78QrfP7uir6kdaf2bAnzkfQ==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
