@@ -18,11 +18,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    plugins: [],
     fallback: {
       crypto: require.resolve('crypto-browserify'),
       scrypt: require.resolve('scrypt-js')
-    }
+    },
   },
   module: {
     rules: [
@@ -64,14 +63,14 @@ module.exports = {
           singleton: true,
           requiredVersion: dependencies['react-dom']
         },
-        '@unifiprotocol/shell': {
-          singleton: true,
-          requiredVersion: dependencies['@unifiprotocol/shell']
-        },
-        '@unifiprotocol/uikit': {
-          singleton: true,
-          requiredVersion: dependencies['@unifiprotocol/uikit']
-        }
+        // '@unifiprotocol/shell': {
+        //   singleton: true,
+        //   requiredVersion: dependencies['@unifiprotocol/shell']
+        // },
+        // '@unifiprotocol/uikit': {
+        //   singleton: true,
+        //   requiredVersion: dependencies['@unifiprotocol/uikit']
+        // }
       }
     }),
     new HtmlWebpackPlugin({
