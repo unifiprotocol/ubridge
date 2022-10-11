@@ -67,6 +67,10 @@ module.exports = {
           singleton: true,
           requiredVersion: dependencies['@unifiprotocol/shell']
         },
+        "react-i18next": {
+          singleton: true,
+          requiredVersion: dependencies["react-i18next"],
+        },
       }
     }),
     new HtmlWebpackPlugin({
