@@ -11,6 +11,7 @@
     "lint:fix": "yarn lint --fix",
     "webpack:start": "webpack-cli serve",
     "webpack:build": "webpack --mode development",
+    "webpack:clean": "rm -rf node_modules",
     "webpack:build:prod": "webpack --config webpack.config.prod.js --mode production"
   },
   "dependencies": {
