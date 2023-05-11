@@ -70,7 +70,7 @@ export const LiquidityCard: React.FC<{ blockchain: Blockchains }> = ({ blockchai
               blockchain={blockchain}
             />
             <span>{liq.currency.toFactorized(liq.balance, 4)}</span>
-            <span>{liq.currency.symbol}</span>
+            <span>{liq.currency.symbol === 'UNFI' ? 'UNIFI' : liq.currency.symbol}</span>
           </div>
         ))}
       </LiquidityCardContent>
