@@ -4681,10 +4681,10 @@
     webpack "^5.74.0"
     webpack-cli "^4.10.0"
 
-"@unifiprotocol/shell@^0.5.21":
-  version "0.5.21"
-  resolved "https://npm.pkg.github.com/download/@unifiprotocol/shell/0.5.21/06c3e09d7e092e371a054dc27c0e8b39c3bad51e#06c3e09d7e092e371a054dc27c0e8b39c3bad51e"
-  integrity sha512-L6fqMtt+NcnjHx6UKE3dGS002YjlKt+oa9COdvXWKOlNp5YCHaiaM/3sKP+Jtk9LuvvwO/qdz4J8k/IEpRYYyw==
+"@unifiprotocol/shell@^0.5.23":
+  version "0.5.23"
+  resolved "https://npm.pkg.github.com/download/@unifiprotocol/shell/0.5.23/c6fe9cdb6c373db80ffaf38ac144d9a08a52accd#c6fe9cdb6c373db80ffaf38ac144d9a08a52accd"
+  integrity sha512-/udhuvmAeV4MWtvS5sE33r2CND86RghHRoR4ib9CbR9pWMOeuQIP2vD2RN/uphfMbNJ6lr7vfAGKDAy4x3PXug==
   dependencies:
     "@craco/craco" "^6.4.3"
     "@react-hook/copy" "^2.0.1"
@@ -4724,10 +4724,10 @@
     util "^0.12.4"
     web-vitals "^2.1.0"
 
-"@unifiprotocol/uikit@^1.14.3":
-  version "1.14.3"
-  resolved "https://npm.pkg.github.com/download/@unifiprotocol/uikit/1.14.3/f71fd443e4a58f744610bed98b2c8f22f0c8cb23#f71fd443e4a58f744610bed98b2c8f22f0c8cb23"
-  integrity sha512-ug1XHYtziFGG+rTRWetF5rldImLLAhvOWM05tkWOui525nlP8sEXYv9vxcOgqrTVWZ+8ejFRoVKFb/7cxbfg3g==
+"@unifiprotocol/uikit@^1.14.5":
+  version "1.14.5"
+  resolved "https://npm.pkg.github.com/download/@unifiprotocol/uikit/1.14.5/9aeccf6075e8490a84d08a5481e8bdc0a9e79edf#9aeccf6075e8490a84d08a5481e8bdc0a9e79edf"
+  integrity sha512-lMr6LqpMtH9h1KUAMH7JEJ/bM8I4rq8qoJkXKuWhVrFhTKhbtqJfN3e+RXalWyPb7yFo4LKh6qfEtJzt1EyLXg==
   dependencies:
     "@rollup/plugin-image" "^2.1.1"
     "@unifiprotocol/utils" "^2.3.5"
@@ -4761,7 +4761,7 @@
 
 "@unifiprotocol/utrade-v2-localization@git+https://github.com/unifiprotocol/utrade-v2-localization.git":
   version "1.0.0"
-  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#090b17573402fbdf89940ce74d9df20989afc4ca"
+  resolved "git+https://github.com/unifiprotocol/utrade-v2-localization.git#5eb4c7bb801bbf5dc2a1bce3fb91a4b618732cbb"
 
 "@walletconnect/browser-utils@^1.7.8":
   version "1.7.8"
