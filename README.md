@@ -12,7 +12,7 @@ npx hardhat run ./scripts/deploy.ts --network NETWORK
 
 ## Description
 
-The objective of uBridge is to transfer pegged tokens from one blockchain to another. The first use case will enable users to transfer UNFI tokens between our available networks, and liquidity will be supplied by UNIFI at first.
+The objective of uBridge is to transfer pegged tokens from one blockchain to another. The first use case will enable users to transfer UNIFI tokens between our available networks, and liquidity will be supplied by UNIFI at first.
 
 The implemented solution isn’t trustless since it requires the deposits to be verified by the signers. This verification process is off-chain but in the destination blockchain it is checked that these signatures are valid.
 
