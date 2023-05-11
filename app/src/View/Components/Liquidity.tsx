@@ -5,7 +5,7 @@ import { getVernacularBlockchain } from '@unifiprotocol/utils'
 import { Blockchains, getBlockchainConfig } from '@unifiprotocol/core-sdk'
 import { useConfig } from '../../Config'
 import { useLiquidity } from '../../Liquidity'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 export const Liquidity = () => {
   const { t } = useTranslation()
@@ -16,16 +16,11 @@ export const Liquidity = () => {
       <Hero>
         <ShinyHeader>{t('bridge.swap.tab.liquidity')}</ShinyHeader>
         <p>
-          <Trans i18nKey="bridge.liquidity.header">
-            During a swap, the UNIFI gets deposited as liquidity on the origin chain, and an equal
-            amount of UNIFI is withdrawn from the liquidy pool on the destination chain. There must
-            be enough liquidity on the destination chain to complete the transaction. The
-            circulating supply of UNIFI remains the same. Liquidity for uBridge is currently being
-            funded by Unifi Protocol.{' '}
-            <a href="http://twitter.com/unifiprotocol" target="_blank" rel="noreferrer">
-              Stay tuned for when uBridge LP rewards come online!
-            </a>
-          </Trans>
+          During a swap, the UNIFI gets deposited as liquidity on the origin chain, and an equal
+          amount of UNIFI is withdrawn from the liquidity pool on the destination chain. There must
+          be enough liquidity on the destination chain to complete the transaction. The circulating
+          supply of UNIFI remains the same. Liquidity for uBridge is currently being funded by Unifi
+          Protocol.
         </p>
       </Hero>
       <BridgePanel>
